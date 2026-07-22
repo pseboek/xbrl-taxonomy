@@ -13,14 +13,17 @@ import javax.xml.stream.XMLStreamWriter;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.xbrl.context.ContextKey;
 import org.esrs.pipeline.xbrl.fact.XbrlFact;
+import org.esrs.pipeline.xbrl.unit.UnitCatalog;
+import org.esrs.pipeline.xbrl.unit.UnitCatalog.UnitDefinition;
 
 public class XbrlInstanceWriter {
-    private static final String NS_XBRLI = "http://www.xbrl.org/2003/instance";
+    private static final String NS_XBRLI = UnitCatalog.NS_XBRLI;
     private static final String NS_LINK = "http://www.xbrl.org/2003/linkbase";
     private static final String NS_XLINK = "http://www.w3.org/1999/xlink";
     private static final String NS_XBRLDI = "http://xbrl.org/2006/xbrldi";
     private static final String NS_ESRS = "https://xbrl.efrag.org/taxonomy/esrs/2023-12-22";
-    private static final String NS_ISO4217 = "http://www.xbrl.org/2003/iso4217";
+    private static final String NS_ISO4217 = UnitCatalog.NS_ISO4217;
+    private static final String NS_UOM = UnitCatalog.NS_UOM;
 
     public void write(Path outputFile,
                       ReportEnvelope envelope,
@@ -29,7 +32,7 @@ public class XbrlInstanceWriter {
                       String schemaRefHref) throws IOException {
         Files.createDirectories(outputFile.getParent());
 
-        Map<String, String> units = collectUnits(facts);
+        Map<String, UnitDefinition> units = collectUnits(facts);
 
         XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newFactory();
         try (OutputStream outputStream = Files.newOutputStream(outputFile)) {
@@ -43,6 +46,7 @@ public class XbrlInstanceWriter {
             writer.setPrefix("xbrldi", NS_XBRLDI);
             writer.setPrefix("esrs", NS_ESRS);
             writer.setPrefix("iso4217", NS_ISO4217);
+            writer.setPrefix("uom", NS_UOM);
 
             writer.writeStartElement("xbrli", "xbrl", NS_XBRLI);
             writer.writeNamespace("xbrli", NS_XBRLI);
@@ -51,6 +55,7 @@ public class XbrlInstanceWriter {
             writer.writeNamespace("xbrldi", NS_XBRLDI);
             writer.writeNamespace("esrs", NS_ESRS);
             writer.writeNamespace("iso4217", NS_ISO4217);
+            writer.writeNamespace("uom", NS_UOM);
 
             writeSchemaRef(writer, schemaRefHref);
             writeContexts(writer, contexts);
@@ -93,14 +98,21 @@ public class XbrlInstanceWriter {
 
             writer.writeCharacters("\n    ");
             writer.writeStartElement("xbrli", "period", NS_XBRLI);
-            writer.writeCharacters("\n      ");
-            writer.writeStartElement("xbrli", "startDate", NS_XBRLI);
-            writer.writeCharacters(key.startDate().toString());
-            writer.writeEndElement();
-            writer.writeCharacters("\n      ");
-            writer.writeStartElement("xbrli", "endDate", NS_XBRLI);
-            writer.writeCharacters(key.endDate().toString());
-            writer.writeEndElement();
+            if (key.instant()) {
+                writer.writeCharacters("\n      ");
+                writer.writeStartElement("xbrli", "instant", NS_XBRLI);
+                writer.writeCharacters(key.endDate().toString());
+                writer.writeEndElement();
+            } else {
+                writer.writeCharacters("\n      ");
+                writer.writeStartElement("xbrli", "startDate", NS_XBRLI);
+                writer.writeCharacters(key.startDate().toString());
+                writer.writeEndElement();
+                writer.writeCharacters("\n      ");
+                writer.writeStartElement("xbrli", "endDate", NS_XBRLI);
+                writer.writeCharacters(key.endDate().toString());
+                writer.writeEndElement();
+            }
             writer.writeCharacters("\n    ");
             writer.writeEndElement();
 
@@ -123,15 +135,45 @@ public class XbrlInstanceWriter {
         }
     }
 
-    private void writeUnits(XMLStreamWriter writer, Map<String, String> units) throws XMLStreamException {
-        for (Map.Entry<String, String> e : units.entrySet()) {
+    private void writeUnits(XMLStreamWriter writer, Map<String, UnitDefinition> units) throws XMLStreamException {
+        for (Map.Entry<String, UnitDefinition> e : units.entrySet()) {
+            UnitDefinition definition = e.getValue();
             writer.writeCharacters("\n  ");
             writer.writeStartElement("xbrli", "unit", NS_XBRLI);
             writer.writeAttribute("id", e.getKey());
-            writer.writeCharacters("\n    ");
-            writer.writeStartElement("xbrli", "measure", NS_XBRLI);
-            writer.writeCharacters(e.getValue());
-            writer.writeEndElement();
+            if (definition.isDivide()) {
+                writer.writeCharacters("\n    ");
+                writer.writeStartElement("xbrli", "divide", NS_XBRLI);
+                writer.writeCharacters("\n      ");
+                writer.writeStartElement("xbrli", "unitNumerator", NS_XBRLI);
+                for (String measure : definition.numeratorMeasures()) {
+                    writer.writeCharacters("\n        ");
+                    writer.writeStartElement("xbrli", "measure", NS_XBRLI);
+                    writer.writeCharacters(measure);
+                    writer.writeEndElement();
+                }
+                writer.writeCharacters("\n      ");
+                writer.writeEndElement();
+                writer.writeCharacters("\n      ");
+                writer.writeStartElement("xbrli", "unitDenominator", NS_XBRLI);
+                for (String measure : definition.denominatorMeasures()) {
+                    writer.writeCharacters("\n        ");
+                    writer.writeStartElement("xbrli", "measure", NS_XBRLI);
+                    writer.writeCharacters(measure);
+                    writer.writeEndElement();
+                }
+                writer.writeCharacters("\n      ");
+                writer.writeEndElement();
+                writer.writeCharacters("\n    ");
+                writer.writeEndElement();
+            } else {
+                for (String measure : definition.numeratorMeasures()) {
+                    writer.writeCharacters("\n    ");
+                    writer.writeStartElement("xbrli", "measure", NS_XBRLI);
+                    writer.writeCharacters(measure);
+                    writer.writeEndElement();
+                }
+            }
             writer.writeCharacters("\n  ");
             writer.writeEndElement();
         }
@@ -155,21 +197,14 @@ public class XbrlInstanceWriter {
         writer.writeCharacters("\n");
     }
 
-    private Map<String, String> collectUnits(List<XbrlFact> facts) {
-        Map<String, String> unitMap = new LinkedHashMap<>();
+    private Map<String, UnitDefinition> collectUnits(List<XbrlFact> facts) {
+        Map<String, UnitDefinition> unitMap = new LinkedHashMap<>();
         for (XbrlFact fact : facts) {
             if (fact.unitRef() == null) {
                 continue;
             }
-            if (fact.unitRef().contains("EUR")) {
-                unitMap.putIfAbsent(fact.unitRef(), "iso4217:EUR");
-            } else if (fact.unitRef().contains("kWh")) {
-                unitMap.putIfAbsent(fact.unitRef(), "xbrli:pure");
-            } else if (fact.unitRef().contains("tCO2e")) {
-                unitMap.putIfAbsent(fact.unitRef(), "xbrli:pure");
-            } else {
-                unitMap.putIfAbsent(fact.unitRef(), "xbrli:pure");
-            }
+            String unitKey = fact.unitRef().startsWith("u_") ? fact.unitRef().substring(2) : fact.unitRef();
+            unitMap.putIfAbsent(fact.unitRef(), UnitCatalog.resolve(unitKey));
         }
         return unitMap;
     }

@@ -36,7 +36,10 @@ class ReportingPipelineOrchestratorTest {
         assertTrue(ixbrl.contains("<link:schemaRef"));
         assertTrue(ixbrl.contains("<ix:nonFraction"));
         assertTrue(ixbrl.contains("<ix:nonNumeric"));
+        assertTrue(ixbrl.contains("Vollstaendige Faktentabelle"));
+        assertTrue(ixbrl.contains("facts-table"));
         assertTrue(!ixbrl.contains("{{fact:"), "All fact placeholders should be embedded in iXBRL output.");
+        assertTrue(!ixbrl.contains("{{facts:all}}"), "Dynamic fact table marker should be replaced in iXBRL output.");
     }
 
     @Test

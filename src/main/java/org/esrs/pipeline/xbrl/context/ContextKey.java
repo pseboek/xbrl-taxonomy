@@ -7,5 +7,6 @@ public record ContextKey(String entityScheme,
                          String entityIdentifier,
                          LocalDate startDate,
                          LocalDate endDate,
+                         boolean instant,
                          Map<String, String> dimensions) {
 }
