@@ -1,9 +1,5 @@
 package org.esrs.pipeline.mapping;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.esrs.pipeline.model.DimensionSelection;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,6 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.esrs.pipeline.model.DimensionSelection;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MappingRegistry {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();

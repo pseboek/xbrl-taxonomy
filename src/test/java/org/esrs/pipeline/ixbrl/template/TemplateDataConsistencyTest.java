@@ -1,10 +1,5 @@
 package org.esrs.pipeline.ixbrl.template;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.esrs.pipeline.mapping.MappingRegistry;
-import org.junit.jupiter.api.Test;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,8 +9,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.esrs.pipeline.mapping.MappingRegistry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 class TemplateDataConsistencyTest {
     private static final Pattern FACT_PLACEHOLDER = Pattern.compile("\\{\\{fact:([a-zA-Z0-9_]+)\\}\\}");
