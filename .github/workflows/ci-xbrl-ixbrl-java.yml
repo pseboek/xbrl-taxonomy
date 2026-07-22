@@ -1,0 +1,52 @@
+name: ci-xbrl-ixbrl-java
+
+on:
+  push:
+    paths:
+      - "pom.xml"
+      - "src/**"
+      - "mapping/**"
+      - "templates/**"
+      - ".github/workflows/ci-xbrl-ixbrl-java.yml"
+  pull_request:
+    paths:
+      - "pom.xml"
+      - "src/**"
+      - "mapping/**"
+      - "templates/**"
+      - ".github/workflows/ci-xbrl-ixbrl-java.yml"
+
+jobs:
+  build-test-pipeline:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+
+      - name: Build and test
+        run: mvn -B test
+
+      - name: Run pipeline (Arelle skipped)
+        shell: pwsh
+        run: |
+          $env:SKIP_ARELLE = "true"
+          mvn -B exec:java
+
+      - name: Upload generated artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: esrs-pipeline-output
+          path: |
+            output/report-instance.xml
+            output/report-ixbrl.xhtml
+            output/report-interaktiv.html
+            output/arelle-xbrl.log
+            output/arelle-ixbrl.log
