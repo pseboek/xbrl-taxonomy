@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ix="http://www.xbrl.org/2013/inlineXBRL"
+      xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs"
+      lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ESRS Bericht - Muster AG</title>
+    <link rel="stylesheet" href="assets/report.css" />
+</head>
+<body>
+<header class="hero">
+    <h1>ESRS Nachhaltigkeitsbericht</h1>
+    <p class="meta">Unternehmen: Muster AG (529900T8BM49AURSDO55)</p>
+    <p class="meta">Berichtszeitraum: 2025-01-01 bis 2025-12-31</p>
+</header>
+
+<main class="content">
+    <section>
+        <h2>Energie und Klima</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Kennzahl</th>
+                <th>Wert</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Gesamtenergieverbrauch</td>
+                <td><ix:nonFraction name="esrs:TotalEnergyConsumption" contextRef="c01" unitRef="u_kWh" decimals="2">1250000.50</ix:nonFraction></td>
+            </tr>
+            <tr>
+                <td>Scope-1-Emissionen</td>
+                <td><ix:nonFraction name="esrs:GrossScope1GHGEmissions" contextRef="c11" unitRef="u_tCO2e" decimals="2">6321.75</ix:nonFraction></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Governance</h2>
+        <p>Korruptionsrichtlinie vorhanden: <ix:nonNumeric name="esrs:PoliciesRelatedToCorruptionAndBribery" contextRef="c01">esrs:YesMember</ix:nonNumeric></p>
+    </section>
+</main>
+
+<script src="assets/report.js"></script>
+</body>
+</html>

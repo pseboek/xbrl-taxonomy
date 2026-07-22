@@ -1,0 +1,7 @@
+{
+  "placeholders": {
+    "energyConsumption": "company.totalEnergyConsumption",
+    "scope1Emissions": "climate.scope1GrossEmissions",
+    "corruptionPolicy": "governance.corruptionPolicyExists"
+  }
+}

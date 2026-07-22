@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbrli:xbrl xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xbrldi="http://xbrl.org/2006/xbrldi" xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs" xmlns:iso4217="http://www.xbrl.org/2003/iso4217">
+  <link:schemaRef xlink:type="simple" xlink:href="xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs_all.xsd"/>
+  <xbrli:context id="c01">
+    <xbrli:entity>
+      <xbrli:identifier scheme="https://www.lei-identifier.com">529900T8BM49AURSDO55</xbrli:identifier>
+    </xbrli:entity>
+    <xbrli:period>
+      <xbrli:startDate>2025-01-01</xbrli:startDate>
+      <xbrli:endDate>2025-12-31</xbrli:endDate>
+    </xbrli:period>
+  </xbrli:context>
+  <xbrli:context id="c11">
+    <xbrli:entity>
+      <xbrli:identifier scheme="https://www.lei-identifier.com">529900T8BM49AURSDO55</xbrli:identifier>
+    </xbrli:entity>
+    <xbrli:period>
+      <xbrli:startDate>2025-01-01</xbrli:startDate>
+      <xbrli:endDate>2025-12-31</xbrli:endDate>
+    </xbrli:period>
+    <xbrli:scenario>
+      <xbrldi:explicitMember dimension="esrs:ConsolidationApproachAxis">esrs:OperationalControlMember</xbrldi:explicitMember>
+    </xbrli:scenario>
+  </xbrli:context>
+  <xbrli:unit id="u_kWh">
+    <xbrli:measure>xbrli:pure</xbrli:measure>
+  </xbrli:unit>
+  <xbrli:unit id="u_tCO2e">
+    <xbrli:measure>xbrli:pure</xbrli:measure>
+  </xbrli:unit>
+  <esrs:TotalEnergyConsumption contextRef="c01" unitRef="u_kWh" decimals="2">1250000.50</esrs:TotalEnergyConsumption>
+  <esrs:GrossScope1GHGEmissions contextRef="c11" unitRef="u_tCO2e" decimals="2">6321.75</esrs:GrossScope1GHGEmissions>
+  <esrs:PoliciesRelatedToCorruptionAndBribery contextRef="c01">esrs:YesMember</esrs:PoliciesRelatedToCorruptionAndBribery>
+</xbrli:xbrl>
