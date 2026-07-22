@@ -3,6 +3,7 @@ package org.esrs.pipeline.xbrl.context;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.esrs.pipeline.mapping.MappingEntry;
 import org.esrs.pipeline.mapping.MappingRegistry;
 import org.esrs.pipeline.model.DimensionSelection;

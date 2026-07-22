@@ -7,9 +7,11 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.xbrl.context.ContextKey;
 import org.esrs.pipeline.xbrl.fact.FactBuilder;

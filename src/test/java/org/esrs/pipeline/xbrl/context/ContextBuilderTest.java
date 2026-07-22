@@ -9,10 +9,9 @@ import org.esrs.pipeline.model.DisclosureFact;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.model.ReportingEntity;
 import org.esrs.pipeline.model.ReportingPeriod;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 class ContextBuilderTest {
     @Test
