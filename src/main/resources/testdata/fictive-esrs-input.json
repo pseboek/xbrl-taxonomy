@@ -1,0 +1,40 @@
+{
+  "entity": {
+    "scheme": "https://www.lei-identifier.com",
+    "identifier": "529900T8BM49AURSDO55",
+    "name": "Muster AG"
+  },
+  "period": {
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31",
+    "instant": false
+  },
+  "facts": [
+    {
+      "field": "company.totalEnergyConsumption",
+      "value": "1250000.50",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "climate.scope1GrossEmissions",
+      "value": "6321.75",
+      "dimensions": [
+        {
+          "axisQname": "esrs:ConsolidationApproachAxis",
+          "memberQname": "esrs:OperationalControlMember"
+        }
+      ],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "governance.corruptionPolicyExists",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    }
+  ]
+}

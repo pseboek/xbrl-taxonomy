@@ -1,0 +1,32 @@
+{
+  "fieldMappings": {
+    "company.totalEnergyConsumption": {
+      "concept": "esrs:TotalEnergyConsumption",
+      "type": "numeric",
+      "unit": "kWh",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": []
+    },
+    "climate.scope1GrossEmissions": {
+      "concept": "esrs:GrossScope1GHGEmissions",
+      "type": "numeric",
+      "unit": "tCO2e",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": [
+        {
+          "axis": "esrs:ConsolidationApproachAxis",
+          "member": "esrs:OperationalControlMember"
+        }
+      ]
+    },
+    "governance.corruptionPolicyExists": {
+      "concept": "esrs:PoliciesRelatedToCorruptionAndBribery",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "dimensions": []
+    }
+  }
+}
