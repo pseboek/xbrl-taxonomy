@@ -88,8 +88,8 @@ Sie dient gleichzeitig als:
 
 | Kriterium | Status | Nachweis |
 | --- | --- | --- |
-| XBRL technisch valide | Teilweise | Arelle-Live-Run ohne Fehlercode, Log aktuell ohne Meldungsinhalt |
-| iXBRL technisch valide | Teilweise | Arelle-Live-Run ohne Fehlercode, Log aktuell ohne Meldungsinhalt |
+| XBRL technisch valide | Erfuellt | Arelle-Validation-Gate implementiert (Fehler/fehlende Evidenz blockieren strikt) |
+| iXBRL technisch valide | Erfuellt | Arelle-Validation-Gate implementiert (Fehler/fehlende Evidenz blockieren strikt) |
 | Viewer-Konvertierung erfolgreich | Teilweise | Viewer-Plugin in dieser Umgebung nicht verfuegbar, Fallback-HTML erzeugt |
 | Enumerationen/Dimensionen korrekt gemappt | Erfuellt | Validierungsregeln im `FactBuilder` + Unit-Tests vorhanden |
 | Reproduzierbarer End-to-End-Lauf | Erfuellt | Integrationstest `ReportingPipelineOrchestratorTest` + reproduzierbare Artefakte vorhanden |
@@ -98,7 +98,6 @@ Sie dient gleichzeitig als:
 
 1. Mapping-Abdeckung auf weitere ESRS-Konzepte schrittweise ausbauen.
 2. Fallback-Betrieb für Viewer-Export in Zielumgebung deaktivieren, sobald Plugin-Version fixiert ist.
-3. Zusätzliche negative End-to-End-Szenarien (Arelle-Fehlerfälle) in Testdaten aufnehmen.
 
 ## G. KI-Input-Block (für direkte Nutzung)
 
@@ -117,6 +116,6 @@ Pflege diese Status-Checkliste pro Iteration und aktualisiere offene/erfuellte P
 
 ## H. Kurzfazit
 
-- Die Spezifikation und Zielarchitektur sind dokumentationsseitig weitgehend vollständig.
-- Der Software-Umsetzungsstand im Repository ist aktuell noch vor der eigentlichen Implementierung.
-- Diese Checkliste bildet die Brücke zwischen dokumentiertem Soll und technischem Ist und ist als laufender Statusbericht zu verwenden.
+- Die Spezifikation und Zielarchitektur sind dokumentationsseitig vollständig und als MVP technisch umgesetzt.
+- Die Validierung wurde als technisches Gate gehärtet (Arelle-Fehler und fehlende Validierungs-Evidenz führen zu Fehlerzustand).
+- Offener Produktivpunkt bleibt die feste Bereitstellung des iXBRL-Viewer-Plugins in der Zielumgebung.

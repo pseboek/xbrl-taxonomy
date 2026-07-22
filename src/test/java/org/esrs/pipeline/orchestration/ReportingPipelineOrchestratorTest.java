@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ReportingPipelineOrchestratorTest {
@@ -27,5 +28,25 @@ class ReportingPipelineOrchestratorTest {
         assertTrue(Files.exists(outputDir.resolve("report-instance.xml")));
         assertTrue(Files.exists(outputDir.resolve("report-ixbrl.xhtml")));
         assertTrue(Files.exists(outputDir.resolve("report-interaktiv.html")));
+    }
+
+    @Test
+    void shouldFailWhenValidationGateIsEnabledAndArelleExecutionFails() {
+        Path root = Path.of(".").toAbsolutePath().normalize();
+
+        ReportingPipelineOrchestrator orchestrator = new ReportingPipelineOrchestrator("missing-arelle-command-xyz");
+        assertThrows(IllegalStateException.class, () ->
+            orchestrator.run(
+                root.resolve("src/main/resources/testdata/fictive-esrs-input.json"),
+                root.resolve("mapping/map-esrs-2023-12-22.json"),
+                root.resolve("templates/report-base.xhtml"),
+                root.resolve("mapping/report-layout-map.json"),
+                Files.createTempDirectory("esrs-output-strict"),
+                root,
+                false,
+                true,
+                false
+            )
+        );
     }
 }

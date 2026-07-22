@@ -14,7 +14,7 @@ public class IxbrlViewerExporter {
         this.arelleCommand = arelleCommand;
     }
 
-    public void export(Path ixbrlXhtml, Path htmlOutput) throws IOException, InterruptedException {
+    public ViewerExportResult export(Path ixbrlXhtml, Path htmlOutput) throws IOException, InterruptedException {
         Files.createDirectories(htmlOutput.getParent());
         List<String> cmd = new ArrayList<>();
         cmd.add(arelleCommand);
@@ -25,9 +25,23 @@ public class IxbrlViewerExporter {
         cmd.add("--save-viewer");
         cmd.add(htmlOutput.toString());
 
-        Process process = new ProcessBuilder(cmd).redirectErrorStream(true).start();
-        int code = process.waitFor();
+        int code = -1;
+        boolean fallback = false;
+        String reason = "";
+
+        try {
+            Process process = new ProcessBuilder(cmd).redirectErrorStream(true).start();
+            code = process.waitFor();
+        } catch (IOException e) {
+            fallback = true;
+            reason = "Failed to start viewer export command: " + e.getMessage();
+        }
+
         if (code != 0 || !Files.exists(htmlOutput)) {
+            fallback = true;
+            if (reason.isBlank()) {
+                reason = "Viewer plugin not available or export command returned code " + code;
+            }
             // Fallback artifact keeps the pipeline deterministic when the plugin is unavailable.
             Files.writeString(
                 htmlOutput,
@@ -37,5 +51,10 @@ public class IxbrlViewerExporter {
                 StandardCharsets.UTF_8
             );
         }
+
+        return new ViewerExportResult(fallback, code, reason);
+    }
+
+    public record ViewerExportResult(boolean fallbackUsed, int processExitCode, String reason) {
     }
 }

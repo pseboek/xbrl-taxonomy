@@ -46,6 +46,18 @@ public class ReportingPipelineOrchestrator {
                               Path outputDir,
                               Path taxonomyRoot,
                               boolean skipArelle) throws IOException, InterruptedException {
+        return run(inputJson, mappingFile, templateFile, layoutMap, outputDir, taxonomyRoot, skipArelle, false, false);
+    }
+
+    public PipelineResult run(Path inputJson,
+                              Path mappingFile,
+                              Path templateFile,
+                              Path layoutMap,
+                              Path outputDir,
+                              Path taxonomyRoot,
+                              boolean skipArelle,
+                              boolean failOnValidationIssues,
+                              boolean requireViewerPlugin) throws IOException, InterruptedException {
         Files.createDirectories(outputDir);
 
         ReportEnvelope envelope = ingestionService.loadFromJson(inputJson);
@@ -79,8 +91,16 @@ public class ReportingPipelineOrchestrator {
         }
 
         Path viewerOut = outputDir.resolve("report-interaktiv.html");
+        IxbrlViewerExporter.ViewerExportResult viewerExportResult;
         if (!skipArelle) {
-            viewerExporter.export(ixbrlOut, viewerOut);
+            viewerExportResult = viewerExporter.export(ixbrlOut, viewerOut);
+            if (requireViewerPlugin && viewerExportResult.fallbackUsed()) {
+                validationIssues.add(new ValidationIssue(
+                    "ERROR",
+                    "VIEWER_PLUGIN_REQUIRED",
+                    "Viewer plugin is required but fallback export was used. " + viewerExportResult.reason()
+                ));
+            }
         } else {
             Files.writeString(
                 viewerOut,
@@ -88,11 +108,42 @@ public class ReportingPipelineOrchestrator {
                     + "<body><h1>Interaktive Berichtssicht (Stub)</h1><p>Viewer-Export wurde im Testlauf uebersprungen.</p></body></html>",
                 StandardCharsets.UTF_8
             );
+            viewerExportResult = new IxbrlViewerExporter.ViewerExportResult(false, 0, "Viewer export skipped by configuration.");
         }
 
-        return new PipelineResult(xbrlOut, ixbrlOut, viewerOut, validationIssues);
+        if (failOnValidationIssues && hasBlockingIssues(validationIssues)) {
+            throw new IllegalStateException("Validation gate failed: " + summarize(validationIssues));
+        }
+
+        return new PipelineResult(xbrlOut, ixbrlOut, viewerOut, validationIssues, viewerExportResult.fallbackUsed());
     }
 
-    public record PipelineResult(Path xbrlPath, Path ixbrlPath, Path interactiveHtmlPath, List<ValidationIssue> validationIssues) {
+    private boolean hasBlockingIssues(List<ValidationIssue> issues) {
+        for (ValidationIssue issue : issues) {
+            if ("ERROR".equalsIgnoreCase(issue.severity())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String summarize(List<ValidationIssue> issues) {
+        StringBuilder sb = new StringBuilder();
+        for (ValidationIssue issue : issues) {
+            if ("ERROR".equalsIgnoreCase(issue.severity())) {
+                if (!sb.isEmpty()) {
+                    sb.append(" | ");
+                }
+                sb.append(issue.code()).append(": ").append(issue.message());
+            }
+        }
+        return sb.toString();
+    }
+
+    public record PipelineResult(Path xbrlPath,
+                                 Path ixbrlPath,
+                                 Path interactiveHtmlPath,
+                                 List<ValidationIssue> validationIssues,
+                                 boolean viewerFallbackUsed) {
     }
 }
