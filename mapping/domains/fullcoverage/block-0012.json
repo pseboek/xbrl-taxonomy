@@ -1,0 +1,472 @@
+{
+  "fieldMappings": {
+    "full.block0012.targetRelatesToIncreaseOfCircularMaterialUseRate": {
+      "concept": "esrs:TargetRelatesToIncreaseOfCircularMaterialUseRate",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToIncreaseOfCircularProductDesign": {
+      "concept": "esrs:TargetRelatesToIncreaseOfCircularProductDesign",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToManagementOfMaterialImpactsRisksAndOpportunitiesRelatedToAreasAtWaterRiskIncludingImprovementOfWaterQuality": {
+      "concept": "esrs:TargetRelatesToManagementOfMaterialImpactsRisksAndOpportunitiesRelatedToAreasAtWaterRiskIncludingImprovementOfWaterQuality",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToMinimisationOfPrimaryRawMaterial": {
+      "concept": "esrs:TargetRelatesToMinimisationOfPrimaryRawMaterial",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToPreventionAndControlOfAirPollutantsAndRespectiveSpecificLoads": {
+      "concept": "esrs:TargetRelatesToPreventionAndControlOfAirPollutantsAndRespectiveSpecificLoads",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToReductionOfWaterConsumptionIncludingInAreasAtWaterRiskAndOrInAreasOfHighWaterstress": {
+      "concept": "esrs:TargetRelatesToReductionOfWaterConsumptionIncludingInAreasAtWaterRiskAndOrInAreasOfHighWaterstress",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToReductionOfWaterDischarges": {
+      "concept": "esrs:TargetRelatesToReductionOfWaterDischarges",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToReductionOfWaterWithdrawals": {
+      "concept": "esrs:TargetRelatesToReductionOfWaterWithdrawals",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToResponsibleManagementOfMarineResourcesImpactsRisksAndOpportunitiesIncludingNatureAndOrQuantityOfMarineResourcesrelatedCommoditiesUsedByUndertaking": {
+      "concept": "esrs:TargetRelatesToResponsibleManagementOfMarineResourcesImpactsRisksAndOpportunitiesIncludingNatureAndOrQuantityOfMarineResourcesrelatedCommoditiesUsedByUndertaking",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelatesToSustainableSourcingAndOrUseOfRenewableResources": {
+      "concept": "esrs:TargetRelatesToSustainableSourcingAndOrUseOfRenewableResources",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetRelationshipToImpactsRisksAndOpportunities": {
+      "concept": "esrs:TargetRelationshipToImpactsRisksAndOpportunities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.targetsRelatedToBiodiversityAndEcosystemsAreBasedOnConclusiveScientificEvidence": {
+      "concept": "esrs:TargetsRelatedToBiodiversityAndEcosystemsAreBasedOnConclusiveScientificEvidence",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.thirdpartyStandardOfConductUsedInPolicyConformsToIsealCodeOfGoodPractice": {
+      "concept": "esrs:ThirdpartyStandardOfConductUsedInPolicyConformsToIsealCodeOfGoodPractice",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.thirdpartyStandardOfConductUsedInPolicyEncouragesStepwiseApproachAndContinuousImprovementInStandardAndItsApplicationOfBetterManagementPracticesAndRequiresEstablishmentOfMeaningfulTargetsAndSpecificMilestonesToIndicateProgressAgainstPrinciplesAndCriteriaOverTime": {
+      "concept": "esrs:ThirdpartyStandardOfConductUsedInPolicyEncouragesStepwiseApproachAndContinuousImprovementInStandardAndItsApplicationOfBetterManagementPracticesAndRequiresEstablishmentOfMeaningfulTargetsAndSpecificMilestonesToIndicateProgressAgainstPrinciplesAndCriteriaOverTime",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.thirdpartyStandardOfConductUsedInPolicyIsEitherDevelopedOrMaintainedThroughProcessOfOngoingConsultationWithRelevantStakeholdersWithBalancedInputFromAllRelevantStakeholderGroupsAndNoGroupHoldingUndueAuthorityAndOrVetoPowerOverContent": {
+      "concept": "esrs:ThirdpartyStandardOfConductUsedInPolicyIsEitherDevelopedOrMaintainedThroughProcessOfOngoingConsultationWithRelevantStakeholdersWithBalancedInputFromAllRelevantStakeholderGroupsAndNoGroupHoldingUndueAuthorityAndOrVetoPowerOverContent",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.thirdpartyStandardOfConductUsedInPolicyIsEitherObjectiveAndAchievableBasedOnScientificApproachToIdentifyingIssuesOrRealisticInAssessingHowTheseIssuesCanBeAddressedUnderVarietyOfPracticalCircumstances": {
+      "concept": "esrs:ThirdpartyStandardOfConductUsedInPolicyIsEitherObjectiveAndAchievableBasedOnScientificApproachToIdentifyingIssuesOrRealisticInAssessingHowTheseIssuesCanBeAddressedUnderVarietyOfPracticalCircumstances",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.thirdpartyStandardOfConductUsedInPolicyIsVerifiableThroughIndependentCertifyingOrVerifyingBodiesWhichHaveDefinedAndRigorousAssessmentProceduresThatAvoidConflictsOfInterestAndAreCompliantWithIsoGuidanceOnAccreditationAndVerificationProceduresOrArticle52OfRegulationEcNo765NO2008": {
+      "concept": "esrs:ThirdpartyStandardOfConductUsedInPolicyIsVerifiableThroughIndependentCertifyingOrVerifyingBodiesWhichHaveDefinedAndRigorousAssessmentProceduresThatAvoidConflictsOfInterestAndAreCompliantWithIsoGuidanceOnAccreditationAndVerificationProceduresOrArticle52OfRegulationEcNo765NO2008",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.timeHorizonsAppliedForResilienceAnalysis": {
+      "concept": "esrs:TimeHorizonsAppliedForResilienceAnalysis",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.timeHorizonsUnderWhichKeyActionIsToBeCompleted": {
+      "concept": "esrs:TimeHorizonsUnderWhichKeyActionIsToBeCompleted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.topicHasBeenAssessedToBeMaterialPhasein": {
+      "concept": "esrs:TopicHasBeenAssessedToBeMaterialPhasein",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.topicsCoveredByAnticorruptionAndAntibriberyTraining": {
+      "concept": "esrs:TopicsCoveredByAnticorruptionAndAntibriberyTraining",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.tradeoffsAssociatedWithImpactsRisksAndOpportunitiesHaveBeenConsideredByAdministrativeManagementAndSupervisoryBodies": {
+      "concept": "esrs:TradeoffsAssociatedWithImpactsRisksAndOpportunitiesHaveBeenConsideredByAdministrativeManagementAndSupervisoryBodies",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.transitionAndOrPhysicalRisksAndOpportunitiesRelatedToBiodiversityAndEcosystemsHaveBeenIdentifiedAndAssessed": {
+      "concept": "esrs:TransitionAndOrPhysicalRisksAndOpportunitiesRelatedToBiodiversityAndEcosystemsHaveBeenIdentifiedAndAssessed",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.transitionEventsHaveBeenIdentifiedEitherOverShortMediumOrLongtermTimeHorizons": {
+      "concept": "esrs:TransitionEventsHaveBeenIdentifiedEitherOverShortMediumOrLongtermTimeHorizons",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typeOfExternalBodyOtherThanAssuranceProviderThatProvidesValidationExplanatory": {
+      "concept": "esrs:TypeOfExternalBodyOtherThanAssuranceProviderThatProvidesValidationExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typeOfGHGsConcernedForRemovalAndStorageActivity": {
+      "concept": "esrs:TypeOfGHGsConcernedForRemovalAndStorageActivity",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfCarbonCreditsFromRemovalProjects": {
+      "concept": "esrs:TypesOfCarbonCreditsFromRemovalProjects",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfClimaterelatedRisks": {
+      "concept": "esrs:TypesOfClimaterelatedRisks",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfCommunitiesSubjectToMaterialImpactsByOwnOperationsOrThroughUpstreamAndDownstreamValueChain": {
+      "concept": "esrs:TypesOfCommunitiesSubjectToMaterialImpactsByOwnOperationsOrThroughUpstreamAndDownstreamValueChain",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfConsumersAndEndusersSubjectToMaterialImpactsByOwnOperationsOrThroughValueChain": {
+      "concept": "esrs:TypesOfConsumersAndEndusersSubjectToMaterialImpactsByOwnOperationsOrThroughValueChain",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfEmployeesAndNonemployeesInOwnWorkforceSubjectToMaterialImpactsByOwnOperations": {
+      "concept": "esrs:TypesOfEmployeesAndNonemployeesInOwnWorkforceSubjectToMaterialImpactsByOwnOperations",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfInternalCarbonPricingScheme": {
+      "concept": "esrs:TypesOfInternalCarbonPricingScheme",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfRemovalAndStorage": {
+      "concept": "esrs:TypesOfRemovalAndStorage",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.typesOfValueChainWorkersSubjectToMaterialImpacts": {
+      "concept": "esrs:TypesOfValueChainWorkersSubjectToMaterialImpacts",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.understandingOfHowAffectedCommunitiesWithParticularCharacteristicsLivingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDeveloped": {
+      "concept": "esrs:UnderstandingOfHowAffectedCommunitiesWithParticularCharacteristicsLivingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDeveloped",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.understandingOfHowConsumersAndEndusersWithParticularCharacteristicsOrThoseUsingParticularProductsOrServicesMayBeAtGreaterRiskOfHarmHasBeenDeveloped": {
+      "concept": "esrs:UnderstandingOfHowConsumersAndEndusersWithParticularCharacteristicsOrThoseUsingParticularProductsOrServicesMayBeAtGreaterRiskOfHarmHasBeenDeveloped",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.understandingOfHowPeopleInOwnWorkforceNOValueChainWorkersWithParticularCharacteristicsWorkingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDeveloped": {
+      "concept": "esrs:UnderstandingOfHowPeopleInOwnWorkforceNOValueChainWorkersWithParticularCharacteristicsWorkingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDeveloped",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingAssessesThatPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersAreAwareOfAndTrustStructuresOrProcessesAsWayToRaiseTheirConcernsOrNeedsAndHaveThemAddressed": {
+      "concept": "esrs:UndertakingAssessesThatPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersAreAwareOfAndTrustStructuresOrProcessesAsWayToRaiseTheirConcernsOrNeedsAndHaveThemAddressed",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingAssessesThatRemedyProvidedForMaterialNegativeImpactOnPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersIsEffective": {
+      "concept": "esrs:UndertakingAssessesThatRemedyProvidedForMaterialNegativeImpactOnPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersIsEffective",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingAssignsResponsibilityAtTopManagementLevelForEqualTreatmentAndOpportunitiesInEmploymentIssueClearCompanywidePoliciesAndProceduresToGuideEqualEmploymentPracticesAndOrLinksAdvancementToDesiredPerformanceInThisArea": {
+      "concept": "esrs:UndertakingAssignsResponsibilityAtTopManagementLevelForEqualTreatmentAndOpportunitiesInEmploymentIssueClearCompanywidePoliciesAndProceduresToGuideEqualEmploymentPracticesAndOrLinksAdvancementToDesiredPerformanceInThisArea",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingEnsuresThatOwnPracticesDoNotCauseOrContributeToMaterialNegativeImpactsOnOwnWorkforce": {
+      "concept": "esrs:UndertakingEnsuresThatOwnPracticesDoNotCauseOrContributeToMaterialNegativeImpactsOnOwnWorkforce",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingEvaluatesWhetherJobRequirementsHaveBeenDefinedInWayThatCouldSystematicallyDisadvantageCertainGroups": {
+      "concept": "esrs:UndertakingEvaluatesWhetherJobRequirementsHaveBeenDefinedInWayThatCouldSystematicallyDisadvantageCertainGroups",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingHasOneOrMoreCollectiveBargainingAgreementsEea": {
+      "concept": "esrs:UndertakingHasOneOrMoreCollectiveBargainingAgreementsEea",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingHasScreenedWhetherAssetsAndOrBusinessActivitiesMayBeExposedToClimaterelatedHazards": {
+      "concept": "esrs:UndertakingHasScreenedWhetherAssetsAndOrBusinessActivitiesMayBeExposedToClimaterelatedHazards",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingHasScreenedWhetherAssetsAndOrBusinessActivitiesMayBeExposedToTransitionEvents": {
+      "concept": "esrs:UndertakingHasScreenedWhetherAssetsAndOrBusinessActivitiesMayBeExposedToTransitionEvents",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingHasSitesLocatedInOrNearBiodiversitysensitiveAreas": {
+      "concept": "esrs:UndertakingHasSitesLocatedInOrNearBiodiversitysensitiveAreas",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingHasSupplierCodeOfConduct": {
+      "concept": "esrs:UndertakingHasSupplierCodeOfConduct",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsActiveInChemicalsProduction": {
+      "concept": "esrs:UndertakingIsActiveInChemicalsProduction",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsActiveInControversialWeapons": {
+      "concept": "esrs:UndertakingIsActiveInControversialWeapons",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsActiveInCultivationAndOrProductionOfTobacco": {
+      "concept": "esrs:UndertakingIsActiveInCultivationAndOrProductionOfTobacco",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsActiveInFossilFuelCoalOilAndGasSector": {
+      "concept": "esrs:UndertakingIsActiveInFossilFuelCoalOilAndGasSector",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsExcludedFromEUParisalignedBenchmarks": {
+      "concept": "esrs:UndertakingIsExcludedFromEUParisalignedBenchmarks",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsInvolvedWithMaterialImpactsBecauseOfItsBusinessRelationships": {
+      "concept": "esrs:UndertakingIsInvolvedWithMaterialImpactsBecauseOfItsBusinessRelationships",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsInvolvedWithMaterialImpactsThroughItsActivities": {
+      "concept": "esrs:UndertakingIsInvolvedWithMaterialImpactsThroughItsActivities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsLegallyObligedToBeMemberOfChamberOfCommerceOrOtherOrganisationThatRepresentsItsInterests": {
+      "concept": "esrs:UndertakingIsLegallyObligedToBeMemberOfChamberOfCommerceOrOtherOrganisationThatRepresentsItsInterests",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsNotRequiredToDrawupFinancialStatements": {
+      "concept": "esrs:UndertakingIsNotRequiredToDrawupFinancialStatements",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsRelyingSolelyOnInformationProvidedByItsBusinessRelationshipsAboutExistenceOfChannelsToRaiseConcernsOrNeeds": {
+      "concept": "esrs:UndertakingIsRelyingSolelyOnInformationProvidedByItsBusinessRelationshipsAboutExistenceOfChannelsToRaiseConcernsOrNeeds",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingIsSubjectToLegalRequirementsUnderNationalLawTransposingDirectiveEU2019NO1937OrToEquivalentLegalRequirementsWithRegardToProtectionOfWhistleblowers": {
+      "concept": "esrs:UndertakingIsSubjectToLegalRequirementsUnderNationalLawTransposingDirectiveEU2019NO1937OrToEquivalentLegalRequirementsWithRegardToProtectionOfWhistleblowers",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingPutsInPlaceGrievanceProceduresToAddressComplaintsHandleAppealsAndProvideRecourseForEmployeesWhenDiscriminationIsIdentifiedAndIsAlertToFormalStructuresAndInformalCulturalIssuesThatCanPreventEmployeesFromRaisingConcernsAndGrievances": {
+      "concept": "esrs:UndertakingPutsInPlaceGrievanceProceduresToAddressComplaintsHandleAppealsAndProvideRecourseForEmployeesWhenDiscriminationIsIdentifiedAndIsAlertToFormalStructuresAndInformalCulturalIssuesThatCanPreventEmployeesFromRaisingConcernsAndGrievances",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.undertakingSeeksToUseLeverageInBusinessRelationshipsToManageMaterialNegativeImpactsAffectingOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusers": {
+      "concept": "esrs:UndertakingSeeksToUseLeverageInBusinessRelationshipsToManageMaterialNegativeImpactsAffectingOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusers",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.uptodateRecordsOnRecruitmentTrainingAndPromotionThatProvideTransparentViewOfOpportunitiesForEmployeesAndTheirProgressionWithinUndertakingHaveBeenKept": {
+      "concept": "esrs:UptodateRecordsOnRecruitmentTrainingAndPromotionThatProvideTransparentViewOfOpportunitiesForEmployeesAndTheirProgressionWithinUndertakingHaveBeenKept",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.useOfLandArea": {
+      "concept": "esrs:UseOfLandArea",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.valueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrLegitimateRepresentativesOrTheirCredibleProxiesPlayRoleInDecisionsRegardingDesignAndImplementationOfProgrammesOrProcesses": {
+      "concept": "esrs:ValueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrLegitimateRepresentativesOrTheirCredibleProxiesPlayRoleInDecisionsRegardingDesignAndImplementationOfProgrammesOrProcesses",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.valueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrTheirLegitimateRepresentativesOrCredibleProxiesWereEngagedDirectlyInIdentifyingLessonsOrImprovementsAsResultOfUndertakingsPerformance": {
+      "concept": "esrs:ValueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrTheirLegitimateRepresentativesOrCredibleProxiesWereEngagedDirectlyInIdentifyingLessonsOrImprovementsAsResultOfUndertakingsPerformance",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.valueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrTheirLegitimateRepresentativesOrCredibleProxiesWereEngagedDirectlyInSettingTargets": {
+      "concept": "esrs:ValueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrTheirLegitimateRepresentativesOrCredibleProxiesWereEngagedDirectlyInSettingTargets",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.valueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrTheirLegitimateRepresentativesOrCredibleProxiesWereEngagedDirectlyInTrackingPerformanceAgainstTargets": {
+      "concept": "esrs:ValueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrTheirLegitimateRepresentativesOrCredibleProxiesWereEngagedDirectlyInTrackingPerformanceAgainstTargets",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.wasteGenerated": {
+      "concept": "esrs:WasteGenerated",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.wasteGeneratedDirectedToDisposal": {
+      "concept": "esrs:WasteGeneratedDirectedToDisposal",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.wasteGeneratedDivertedFromDisposal": {
+      "concept": "esrs:WasteGeneratedDivertedFromDisposal",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.waterConsumptionInAreasAtWaterRisk": {
+      "concept": "esrs:WaterConsumptionInAreasAtWaterRisk",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.waterConsumptionInAreasOfHighwaterStress": {
+      "concept": "esrs:WaterConsumptionInAreasOfHighwaterStress",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.waterDischarges": {
+      "concept": "esrs:WaterDischarges",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.waterIntensityTotalWaterConsumptionPerNetRevenue": {
+      "concept": "esrs:WaterIntensityTotalWaterConsumptionPerNetRevenue",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.waterRecycledAndReused": {
+      "concept": "esrs:WaterRecycledAndReused",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.waterStored": {
+      "concept": "esrs:WaterStored",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.waterWithdrawals": {
+      "concept": "esrs:WaterWithdrawals",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.widerIndustryOrCollaborativeActionWithOtherRelevantPartiesWillBeRequired": {
+      "concept": "esrs:WiderIndustryOrCollaborativeActionWithOtherRelevantPartiesWillBeRequired",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0012.workplaceAccidentPreventionPolicyOrManagementSystemAreInPlace": {
+      "concept": "esrs:WorkplaceAccidentPreventionPolicyOrManagementSystemAreInPlace",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    }
+  }
+}

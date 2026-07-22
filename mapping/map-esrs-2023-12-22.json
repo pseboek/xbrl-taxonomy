@@ -3,7 +3,19 @@
     "domains/environment.json",
     "domains/social.json",
     "domains/governance.json",
-    "domains/strategy.json"
+    "domains/strategy.json",
+    "domains/fullcoverage/block-0001.json",
+    "domains/fullcoverage/block-0002.json",
+    "domains/fullcoverage/block-0003.json",
+    "domains/fullcoverage/block-0004.json",
+    "domains/fullcoverage/block-0005.json",
+    "domains/fullcoverage/block-0006.json",
+    "domains/fullcoverage/block-0007.json",
+    "domains/fullcoverage/block-0008.json",
+    "domains/fullcoverage/block-0009.json",
+    "domains/fullcoverage/block-0010.json",
+    "domains/fullcoverage/block-0011.json",
+    "domains/fullcoverage/block-0012.json"
   ],
   "fieldMappings": {
     "strategy.climateTransitionPlanExists": {
@@ -11,7 +23,12 @@
       "type": "enumeration",
       "period": "duration",
       "enumerationDomain": "esrs:YesNoDomain",
-      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ],
       "dimensions": []
     }
   }

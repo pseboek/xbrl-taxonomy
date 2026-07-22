@@ -1,0 +1,604 @@
+{
+  "fieldMappings": {
+    "full.block0011.processFocusesOnSpecificActivitiesBusinessRelationshipsGeographiesOrOtherFactorsThatGiveRiseToHeightenedRiskOfAdverseImpacts": {
+      "concept": "esrs:ProcessFocusesOnSpecificActivitiesBusinessRelationshipsGeographiesOrOtherFactorsThatGiveRiseToHeightenedRiskOfAdverseImpacts",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.processIncludesConsultationWithAffectedStakeholdersAndOrWithExternalExpertsToUnderstandHowTheyMayBeImpacted": {
+      "concept": "esrs:ProcessIncludesConsultationWithAffectedStakeholdersAndOrWithExternalExpertsToUnderstandHowTheyMayBeImpacted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.processPrioritisesNegativeImpactsBasedOnTheirRelativeSeverityAndLikelihoodAndPositiveImpactsBasedOnTheirRelativeScaleScopeAndLikelihoodAndDeterminesWhichSustainabilityMattersAreMaterialForReportingPurposes": {
+      "concept": "esrs:ProcessPrioritisesNegativeImpactsBasedOnTheirRelativeSeverityAndLikelihoodAndPositiveImpactsBasedOnTheirRelativeScaleScopeAndLikelihoodAndDeterminesWhichSustainabilityMattersAreMaterialForReportingPurposes",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.processToIdentifyAssessAndManageImpactsRisksAndOpportunitiesHasChangedComparedToPriorReportingPeriod": {
+      "concept": "esrs:ProcessToIdentifyAssessAndManageImpactsRisksAndOpportunitiesHasChangedComparedToPriorReportingPeriod",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.productsAndTechnicalAndBiologicalMaterialsUsed": {
+      "concept": "esrs:ProductsAndTechnicalAndBiologicalMaterialsUsed",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.programsToPromoteAccessToSkillsDevelopmentAreInPlace": {
+      "concept": "esrs:ProgramsToPromoteAccessToSkillsDevelopmentAreInPlace",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.progressIsInLineWithWhatHadBeenInitiallyPlanned": {
+      "concept": "esrs:ProgressIsInLineWithWhatHadBeenInitiallyPlanned",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.provisionsForEnvironmentalProtectionAndRemediationCosts": {
+      "concept": "esrs:ProvisionsForEnvironmentalProtectionAndRemediationCosts",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.publicClaimsOfGHGNeutralityThatInvolveUseOfCarbonCreditsAreAccompaniedByGHGEmissionReductionTargets": {
+      "concept": "esrs:PublicClaimsOfGHGNeutralityThatInvolveUseOfCarbonCreditsAreAccompaniedByGHGEmissionReductionTargets",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.publicClaimsOfGHGNeutralityThatInvolveUseOfCarbonCreditsHaveBeenMade": {
+      "concept": "esrs:PublicClaimsOfGHGNeutralityThatInvolveUseOfCarbonCreditsHaveBeenMade",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.quantitativeMetricAbsoluteValue": {
+      "concept": "esrs:QuantitativeMetricAbsoluteValue",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.quantitativeMetricPercentage": {
+      "concept": "esrs:QuantitativeMetricPercentage",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.radioactiveWaste": {
+      "concept": "esrs:RadioactiveWaste",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.rateOfRecordableWorkrelatedAccidents": {
+      "concept": "esrs:RateOfRecordableWorkrelatedAccidents",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.reasonablyExpectedTimeHorizonsOfAnticipatedFinancialEffectsOfMaterialRisksAndOpportunitiesOnFinancialPerformanceAndCashFlows": {
+      "concept": "esrs:ReasonablyExpectedTimeHorizonsOfAnticipatedFinancialEffectsOfMaterialRisksAndOpportunitiesOnFinancialPerformanceAndCashFlows",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.reasonablyExpectedTimeHorizonsOfAnticipatedFinancialEffectsOfMaterialRisksAndOpportunitiesOnFinancialPosition": {
+      "concept": "esrs:ReasonablyExpectedTimeHorizonsOfAnticipatedFinancialEffectsOfMaterialRisksAndOpportunitiesOnFinancialPosition",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.reasonablyExpectedTimeHorizonsOfMaterialImpacts": {
+      "concept": "esrs:ReasonablyExpectedTimeHorizonsOfMaterialImpacts",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.referenceForIdentificationOfAspectsOfPolicyThatSatisfyRequirementsOfDisclosureOfPoliciesRelatedToOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusers": {
+      "concept": "esrs:ReferenceForIdentificationOfAspectsOfPolicyThatSatisfyRequirementsOfDisclosureOfPoliciesRelatedToOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusers",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.referenceToLocationInSustainabilityStatementOfDisclosureRequirementsCompliedWithInPreparingSustainabilityStatement": {
+      "concept": "esrs:ReferenceToLocationInSustainabilityStatementOfDisclosureRequirementsCompliedWithInPreparingSustainabilityStatement",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.referenceToThirdpartyStandardsOrInitiativesThatAreRespectedThroughImplementationOfPolicy": {
+      "concept": "esrs:ReferenceToThirdpartyStandardsOrInitiativesThatAreRespectedThroughImplementationOfPolicy",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.remunerationRatioAdjustedForPurchasingPowerDifferencesBetweenCountries": {
+      "concept": "esrs:RemunerationRatioAdjustedForPurchasingPowerDifferencesBetweenCountries",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.renewableEnergyProduction": {
+      "concept": "esrs:RenewableEnergyProduction",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.reportingPeriodEndDate": {
+      "concept": "esrs:ReportingPeriodEndDate",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.reportingPeriodStartDate": {
+      "concept": "esrs:ReportingPeriodStartDate",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesCoverActionsTakenToPreventWasteGenerationInUpstreamAndDownstreamValueChain": {
+      "concept": "esrs:ResourcesCoverActionsTakenToPreventWasteGenerationInUpstreamAndDownstreamValueChain",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesCoverApplicationOfCircularBusinessPractices": {
+      "concept": "esrs:ResourcesCoverApplicationOfCircularBusinessPractices",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesCoverApplicationOfCircularDesignAndOrHigherRatesOfEitherReuseRepairRefurbishingRemanufactureRepurposingOrRecycling": {
+      "concept": "esrs:ResourcesCoverApplicationOfCircularDesignAndOrHigherRatesOfEitherReuseRepairRefurbishingRemanufactureRepurposingOrRecycling",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesCoverHigherLevelsOfResourceEfficiencyInUseOfTechnicalAndBiologicalMaterialsAndWater": {
+      "concept": "esrs:ResourcesCoverHigherLevelsOfResourceEfficiencyInUseOfTechnicalAndBiologicalMaterialsAndWater",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesCoverHigherRatesOfUseOfSecondaryRawMaterialsRecyclates": {
+      "concept": "esrs:ResourcesCoverHigherRatesOfUseOfSecondaryRawMaterialsRecyclates",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesCoverOptimisationOfWasteManagementInLineWithWasteHierarchy": {
+      "concept": "esrs:ResourcesCoverOptimisationOfWasteManagementInLineWithWasteHierarchy",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesRelateToAreasAtWaterRisk": {
+      "concept": "esrs:ResourcesRelateToAreasAtWaterRisk",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.resourcesRelateToAreasOfHighwaterStress": {
+      "concept": "esrs:ResourcesRelateToAreasOfHighwaterStress",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenue": {
+      "concept": "esrs:Revenue",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromActivitiesInHighClimateImpactSectors": {
+      "concept": "esrs:RevenueFromActivitiesInHighClimateImpactSectors",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromActivitiesOtherThanInHighClimateImpactSectors": {
+      "concept": "esrs:RevenueFromActivitiesOtherThanInHighClimateImpactSectors",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromBusinessActivitiesAtMaterialPhysicalRisk": {
+      "concept": "esrs:RevenueFromBusinessActivitiesAtMaterialPhysicalRisk",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromBusinessActivitiesAtMaterialTransitionRisk": {
+      "concept": "esrs:RevenueFromBusinessActivitiesAtMaterialTransitionRisk",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromChemicalsProduction": {
+      "concept": "esrs:RevenueFromChemicalsProduction",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromCoal": {
+      "concept": "esrs:RevenueFromCoal",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromControversialWeapons": {
+      "concept": "esrs:RevenueFromControversialWeapons",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromCultivationAndOrProductionOfTobacco": {
+      "concept": "esrs:RevenueFromCultivationAndOrProductionOfTobacco",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromCustomersOperatingInCoalRelatedActivities": {
+      "concept": "esrs:RevenueFromCustomersOperatingInCoalRelatedActivities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromCustomersOperatingInGasRelatedActivities": {
+      "concept": "esrs:RevenueFromCustomersOperatingInGasRelatedActivities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromCustomersOperatingInOilRelatedActivities": {
+      "concept": "esrs:RevenueFromCustomersOperatingInOilRelatedActivities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromFossilFuelCoalOilAndGasSector": {
+      "concept": "esrs:RevenueFromFossilFuelCoalOilAndGasSector",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromGas": {
+      "concept": "esrs:RevenueFromGas",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromOil": {
+      "concept": "esrs:RevenueFromOil",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.revenueFromTaxonomyalignedEconomicActivitiesRelatedToFossilGas": {
+      "concept": "esrs:RevenueFromTaxonomyalignedEconomicActivitiesRelatedToFossilGas",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.reversals": {
+      "concept": "esrs:Reversals",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.scenariosAreInformedByExpectationsPublishedByAuthoritativeIntergovernmentalBodiesAndOrByScientificConsensus": {
+      "concept": "esrs:ScenariosAreInformedByExpectationsPublishedByAuthoritativeIntergovernmentalBodiesAndOrByScientificConsensus",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.scopeOfConsolidationOfConsolidatedSustainabilityStatementIsSameAsForFinancialStatements": {
+      "concept": "esrs:ScopeOfConsolidationOfConsolidatedSustainabilityStatementIsSameAsForFinancialStatements",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sealedArea": {
+      "concept": "esrs:SealedArea",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.secondaryReusedOrRecycledComponentsSecondaryIntermediaryProductsAndSecondaryMaterialsUsedToManufactureProductsAndServices": {
+      "concept": "esrs:SecondaryReusedOrRecycledComponentsSecondaryIntermediaryProductsAndSecondaryMaterialsUsedToManufactureProductsAndServices",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.severeHumanRightsIssuesAndIncidentsConnectedToUpstreamAndDownstreamValueChainNOAffectedCommunitiesNOConsumersAndEndusersHaveBeenReported": {
+      "concept": "esrs:SevereHumanRightsIssuesAndIncidentsConnectedToUpstreamAndDownstreamValueChainNOAffectedCommunitiesNOConsumersAndEndusersHaveBeenReported",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.significantCapExForCoalrelatedEconomicActivities": {
+      "concept": "esrs:SignificantCapExForCoalrelatedEconomicActivities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.significantCapExForGasrelatedEconomicActivities": {
+      "concept": "esrs:SignificantCapExForGasrelatedEconomicActivities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.significantCapExForOilrelatedEconomicActivities": {
+      "concept": "esrs:SignificantCapExForOilrelatedEconomicActivities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.siteLocationsAndBusinessActivitiesHaveBeenScreenedInOrderToIdentifyActualAndPotentialPollutionrelatedImpactsRisksAndOpportunitiesInOwnOperationsAndUpstreamAndDownstreamValueChain": {
+      "concept": "esrs:SiteLocationsAndBusinessActivitiesHaveBeenScreenedInOrderToIdentifyActualAndPotentialPollutionrelatedImpactsRisksAndOpportunitiesInOwnOperationsAndUpstreamAndDownstreamValueChain",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.socialAndOrEnvironmentalCriteriaAreTakenIntoAccountForSelectionOfSuppliers": {
+      "concept": "esrs:SocialAndOrEnvironmentalCriteriaAreTakenIntoAccountForSelectionOfSuppliers",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.specificPoliciesAimedAtEliminationOfDiscriminationAreInPlace": {
+      "concept": "esrs:SpecificPoliciesAimedAtEliminationOfDiscriminationAreInPlace",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.specificPolicyCommitmentsRelatedToInclusionOrPositiveActionForPeopleFromGroupsAtParticularRiskOfVulnerabilityInOwnWorkforceAreInPlace": {
+      "concept": "esrs:SpecificPolicyCommitmentsRelatedToInclusionOrPositiveActionForPeopleFromGroupsAtParticularRiskOfVulnerabilityInOwnWorkforceAreInPlace",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.staffTrainingOnNondiscriminationPoliciesAndPracticesHasBeenProvided": {
+      "concept": "esrs:StaffTrainingOnNondiscriminationPoliciesAndPracticesHasBeenProvided",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.stakeholdersHaveBeenInvolvedInTargetSettingForEachMaterialSustainabilityMatter": {
+      "concept": "esrs:StakeholdersHaveBeenInvolvedInTargetSettingForEachMaterialSustainabilityMatter",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.statusOfKeyAction": {
+      "concept": "esrs:StatusOfKeyAction",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.supplierCodesOfConductProvisions": {
+      "concept": "esrs:SupplierCodesOfConductProvisions",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersAddressedByAction": {
+      "concept": "esrs:SustainabilityMattersAddressedByAction",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersAddressedByMetrics": {
+      "concept": "esrs:SustainabilityMattersAddressedByMetrics",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersAddressedByPolicy": {
+      "concept": "esrs:SustainabilityMattersAddressedByPolicy",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersAddressedByTarget": {
+      "concept": "esrs:SustainabilityMattersAddressedByTarget",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersForWhichActionsHaveNotBeenAdopted": {
+      "concept": "esrs:SustainabilityMattersForWhichActionsHaveNotBeenAdopted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersForWhichMeasurableOutcomeorientedTargetsHaveNotBeenAdopted": {
+      "concept": "esrs:SustainabilityMattersForWhichMeasurableOutcomeorientedTargetsHaveNotBeenAdopted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersForWhichPoliciesHaveNotBeenAdopted": {
+      "concept": "esrs:SustainabilityMattersForWhichPoliciesHaveNotBeenAdopted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersForWhichTargetsHaveNotBeenAdopted": {
+      "concept": "esrs:SustainabilityMattersForWhichTargetsHaveNotBeenAdopted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityMattersRelatedToImpactsRisksAndOpportunities": {
+      "concept": "esrs:SustainabilityMattersRelatedToImpactsRisksAndOpportunities",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainabilityrelatedPerformanceMetricsAreConsideredAsPerformanceBenchmarksOrIncludedInRemunerationPolicies": {
+      "concept": "esrs:SustainabilityrelatedPerformanceMetricsAreConsideredAsPerformanceBenchmarksOrIncludedInRemunerationPolicies",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainableDevelopmentGoalsToWhichPolicyIsConnected": {
+      "concept": "esrs:SustainableDevelopmentGoalsToWhichPolicyIsConnected",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainableDevelopmentGoalsToWhichTransitionPlanIsConnected": {
+      "concept": "esrs:SustainableDevelopmentGoalsToWhichTransitionPlanIsConnected",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainableDevelopmentGoalsWhichInitiativesOrProcessesWhosePrimaryAimIsToDeliverPositiveImpactsForPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersAreDesignedToSupportAchievementOf": {
+      "concept": "esrs:SustainableDevelopmentGoalsWhichInitiativesOrProcessesWhosePrimaryAimIsToDeliverPositiveImpactsForPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersAreDesignedToSupportAchievementOf",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainableLandOrAgriculturePracticesOrPoliciesHaveBeenAdopted": {
+      "concept": "esrs:SustainableLandOrAgriculturePracticesOrPoliciesHaveBeenAdopted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.sustainableOceansOrSeasPracticesOrPoliciesHaveBeenAdopted": {
+      "concept": "esrs:SustainableOceansOrSeasPracticesOrPoliciesHaveBeenAdopted",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.systemicRisksHaveBeenConsidered": {
+      "concept": "esrs:SystemicRisksHaveBeenConsidered",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForBiodiversity": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForBiodiversity",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForCircularEconomy": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForCircularEconomy",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForPollutionPreventionAndControl": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForPollutionPreventionAndControl",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForWaterAndMarineResources": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToDoNoSignificantHarmCriteriaForWaterAndMarineResources",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForBiodiversity": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForBiodiversity",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForCircularEconomy": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForCircularEconomy",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForPollutionPreventionAndControl": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForPollutionPreventionAndControl",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForWaterAndMarineResources": {
+      "concept": "esrs:TargetAddressesShortcomingsRelatedToSubstantialContributionCriteriaForWaterAndMarineResources",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetCoverage": {
+      "concept": "esrs:TargetCoverage",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetHasBeenExternallyAssured": {
+      "concept": "esrs:TargetHasBeenExternallyAssured",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetIsDerivedUsingSectoralDecarbonisationPathway": {
+      "concept": "esrs:TargetIsDerivedUsingSectoralDecarbonisationPathway",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetIsInformedByAndOrAlignedWithKunmingmontrealGlobalBiodiversityFramework": {
+      "concept": "esrs:TargetIsInformedByAndOrAlignedWithKunmingmontrealGlobalBiodiversityFramework",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetIsInformedByAndOrAlignedWithOtherBiodiversityAndEcosystemrelatedNationalPoliciesAndLegislation": {
+      "concept": "esrs:TargetIsInformedByAndOrAlignedWithOtherBiodiversityAndEcosystemrelatedNationalPoliciesAndLegislation",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetIsInformedByAndOrAlignedWithRelevantAspectsOfEuBiodiversityStrategyFor2030": {
+      "concept": "esrs:TargetIsInformedByAndOrAlignedWithRelevantAspectsOfEuBiodiversityStrategyFor2030",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetIsMandatoryRequiredByLegislation": {
+      "concept": "esrs:TargetIsMandatoryRequiredByLegislation",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetRelatedToEnvironmentalMattersIsBasedOnConclusiveScientificEvidence": {
+      "concept": "esrs:TargetRelatedToEnvironmentalMattersIsBasedOnConclusiveScientificEvidence",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetRelatesToEitherPreventionOrControlOfEmissionsToWaterAndOrToRespectiveSpecificLoads": {
+      "concept": "esrs:TargetRelatesToEitherPreventionOrControlOfEmissionsToWaterAndOrToRespectiveSpecificLoads",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetRelatesToEitherPreventionOrControlOfPollutionToSoilAndOrToRespectiveSpecificLoads": {
+      "concept": "esrs:TargetRelatesToEitherPreventionOrControlOfPollutionToSoilAndOrToRespectiveSpecificLoads",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0011.targetRelatesToEitherPreventionOrControlOfSubstancesOfConcernAndOrSubstancesOfVeryHighConcern": {
+      "concept": "esrs:TargetRelatesToEitherPreventionOrControlOfSubstancesOfConcernAndOrSubstancesOfVeryHighConcern",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    }
+  }
+}

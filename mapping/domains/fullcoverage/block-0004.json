@@ -1,0 +1,604 @@
+{
+  "fieldMappings": {
+    "full.block0004.disclosureOfExpectedDurabilityOfProductPlacedOnMarketInRelationToIndustryAverageExplanatory": {
+      "concept": "esrs:DisclosureOfExpectedDurabilityOfProductPlacedOnMarketInRelationToIndustryAverageExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExpectedOutcomesOfKeyActionAndHowItsImplementationContributesToAchievementOfPolicyObjectivesAndTargetsExplanatory": {
+      "concept": "esrs:DisclosureOfExpectedOutcomesOfKeyActionAndHowItsImplementationContributesToAchievementOfPolicyObjectivesAndTargetsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExpertiseOfAdministrativeManagementAndSupervisoryBodiesOnBusinessConductMattersExplanatory": {
+      "concept": "esrs:DisclosureOfExpertiseOfAdministrativeManagementAndSupervisoryBodiesOnBusinessConductMattersExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExplanationsForSignificantChangesToPoliciesAdoptedDuringReportingYearExplanatory": {
+      "concept": "esrs:DisclosureOfExplanationsForSignificantChangesToPoliciesAdoptedDuringReportingYearExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentOfUseAndQualityCriteriaUsedForCarbonCreditsExplanatory": {
+      "concept": "esrs:DisclosureOfExtentOfUseAndQualityCriteriaUsedForCarbonCreditsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichCasesOfNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprisesThatInvolveAffectedCommunitiesHaveBeenReportedInOwnOperationsOrInUpstreamAndDownstreamValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichCasesOfNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprisesThatInvolveAffectedCommunitiesHaveBeenReportedInOwnOperationsOrInUpstreamAndDownstreamValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichCasesOfNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprisesThatInvolveConsumersAndEndusersHaveBeenReportedInDownstreamValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichCasesOfNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprisesThatInvolveConsumersAndEndusersHaveBeenReportedInDownstreamValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichCasesOfNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprisesThatInvolveValueChainWorkersHaveBeenReportedInUpstreamAndDownstreamValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichCasesOfNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprisesThatInvolveValueChainWorkersHaveBeenReportedInUpstreamAndDownstreamValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichDataAndProcessesThatAreUsedForSustainabilityReportingPurposesHaveBeenVerifiedByExternalAssuranceProviderAndFoundToConformToCorrespondingIsoNOIecOrCenNOCenelecStandardExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichDataAndProcessesThatAreUsedForSustainabilityReportingPurposesHaveBeenVerifiedByExternalAssuranceProviderAndFoundToConformToCorrespondingIsoNOIecOrCenNOCenelecStandardExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichEmployeesAreEntitledToAndMakeUseOfFamilyrelatedLeaveExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichEmployeesAreEntitledToAndMakeUseOfFamilyrelatedLeaveExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichOwnWorkforceIsCoveredByHealthAndSafetyManagementSystemExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichOwnWorkforceIsCoveredByHealthAndSafetyManagementSystemExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichScope3GHGEmissionsAreMeasuredUsingInputsFromSpecificActivitiesWithinUpstreamAndDownstreamValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichScope3GHGEmissionsAreMeasuredUsingInputsFromSpecificActivitiesWithinUpstreamAndDownstreamValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichSustainabilityStatementCoversUpstreamAndDownstreamValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichSustainabilityStatementCoversUpstreamAndDownstreamValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichTrainingAndSkillsDevelopmentIsProvidedToEmployeesExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichTrainingAndSkillsDevelopmentIsProvidedToEmployeesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichWorkingConditionsAndTermsOfEmploymentOfEmployeesAreDeterminedOrInfluencedByCollectiveBargainingAgreementsAndExtentToWhichEmployeesAreRepresentedInSocialDialogueInEuropeanEconomicAreaEeaExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichWorkingConditionsAndTermsOfEmploymentOfEmployeesAreDeterminedOrInfluencedByCollectiveBargainingAgreementsAndExtentToWhichEmployeesAreRepresentedInSocialDialogueInEuropeanEconomicAreaEeaExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfExtentToWhichWorkingConditionsAndTermsOfEmploymentOfNonemployeesInOwnWorkforceAreDeterminedOrInfluencedByCollectiveBargainingAgreementsExplanatory": {
+      "concept": "esrs:DisclosureOfExtentToWhichWorkingConditionsAndTermsOfEmploymentOfNonemployeesInOwnWorkforceAreDeterminedOrInfluencedByCollectiveBargainingAgreementsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfFrameworkAndMethodologyThatHasBeenUsedToDetermineGHGEmissionReductionTargetUnderlyingClimateAndPolicyScenariosForTargetHowFutureDevelopmentsHaveBeenConsideredAndHowTheseWillPotentiallyImpactGHGEmissionsAndEmissionsReductionsExplanatory": {
+      "concept": "esrs:DisclosureOfFrameworkAndMethodologyThatHasBeenUsedToDetermineGHGEmissionReductionTargetUnderlyingClimateAndPolicyScenariosForTargetHowFutureDevelopmentsHaveBeenConsideredAndHowTheseWillPotentiallyImpactGHGEmissionsAndEmissionsReductionsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfFunctionAndMostSeniorRoleWithinUndertakingThatHasOperationalResponsibilityForEnsuringThatEngagementHappensAndThatResultsInformUndertakingSApproachExplanatory": {
+      "concept": "esrs:DisclosureOfFunctionAndMostSeniorRoleWithinUndertakingThatHasOperationalResponsibilityForEnsuringThatEngagementHappensAndThatResultsInformUndertakingSApproachExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfFunctionsWithinUndertakingThatAreMostAtRiskInRespectOfCorruptionAndBriberyExplanatory": {
+      "concept": "esrs:DisclosureOfFunctionsWithinUndertakingThatAreMostAtRiskInRespectOfCorruptionAndBriberyExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGenderDistributionAtTopManagementAndAgeDistributionAmongstEmployeesExplanatory": {
+      "concept": "esrs:DisclosureOfGenderDistributionAtTopManagementAndAgeDistributionAmongstEmployeesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGeneralAndSpecificApproachesToAddressingMaterialNegativeImpactsExplanatory": {
+      "concept": "esrs:DisclosureOfGeneralAndSpecificApproachesToAddressingMaterialNegativeImpactsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGeneralApproachToAndProcessesForProvidingOrContributingToRemedyWhereUndertakingHasCausedOrContributedToMaterialNegativeImpactOnPeopleInOwnWorkforceNOValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersExplanatory": {
+      "concept": "esrs:DisclosureOfGeneralApproachToAndProcessesForProvidingOrContributingToRemedyWhereUndertakingHasCausedOrContributedToMaterialNegativeImpactOnPeopleInOwnWorkforceNOValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGeneralBasisForPreparationOfSustainabilityStatementExplanatory": {
+      "concept": "esrs:DisclosureOfGeneralBasisForPreparationOfSustainabilityStatementExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGeneralProcessesForEngagingWithPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersAndTheirRepresentativesAboutActualAndPotentialImpactsExplanatory": {
+      "concept": "esrs:DisclosureOfGeneralProcessesForEngagingWithPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersAndTheirRepresentativesAboutActualAndPotentialImpactsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGeographiesOrCommoditiesForWhichThereIsSignificantRiskOfChildLabourOrOfForcedLabourOrCompulsoryLabourAmongWorkersInUndertakingSValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfGeographiesOrCommoditiesForWhichThereIsSignificantRiskOfChildLabourOrOfForcedLabourOrCompulsoryLabourAmongWorkersInUndertakingSValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGHGEmissionsExplanatory": {
+      "concept": "esrs:DisclosureOfGHGEmissionsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGHGRemovalsAndGHGMitigationProjectsFinancedThroughCarbonCreditsExplanatory": {
+      "concept": "esrs:DisclosureOfGHGRemovalsAndGHGMitigationProjectsFinancedThroughCarbonCreditsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGlobalFrameworkAgreementOrOtherAgreementsWithWorkersRepresentativesRelatedToRespectOfHumanRightsOfOwnWorkforceExplanatory": {
+      "concept": "esrs:DisclosureOfGlobalFrameworkAgreementOrOtherAgreementsWithWorkersRepresentativesRelatedToRespectOfHumanRightsOfOwnWorkforceExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfGlobalFrameworkAgreementsOrAgreementsWithGlobalUnionFederationsRelatedToRespectOfHumanRightsOfWorkersInValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfGlobalFrameworkAgreementsOrAgreementsWithGlobalUnionFederationsRelatedToRespectOfHumanRightsOfWorkersInValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowActionIsTakenToAddressMaterialNegativeAndPositiveImpactsAndToManageMaterialRisksAndPursueMaterialOpportunitiesRelatedToOwnWorkforceNOValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersAndEffectivenessOfThoseActionsExplanatory": {
+      "concept": "esrs:DisclosureOfHowActionIsTakenToAddressMaterialNegativeAndPositiveImpactsAndToManageMaterialRisksAndPursueMaterialOpportunitiesRelatedToOwnWorkforceNOValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersAndEffectivenessOfThoseActionsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowActionIsTakenToAvoidCausingOrContributingToMaterialNegativeImpactsOnValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersThroughOwnPracticesExplanatory": {
+      "concept": "esrs:DisclosureOfHowActionIsTakenToAvoidCausingOrContributingToMaterialNegativeImpactsOnValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersThroughOwnPracticesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowActualAndPotentialImpactsOnBiodiversityAndEcosystemsAtOwnSiteLocationsAndOrInUpstreamAndDownstreamValueChainHaveBeenIdentifiedAndAssessedExplanatory": {
+      "concept": "esrs:DisclosureOfHowActualAndPotentialImpactsOnBiodiversityAndEcosystemsAtOwnSiteLocationsAndOrInUpstreamAndDownstreamValueChainHaveBeenIdentifiedAndAssessedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowActualAndPotentialImpactsOnOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersInformAndContributeToAdaptingStrategyAndBusinessModelExplanatory": {
+      "concept": "esrs:DisclosureOfHowActualAndPotentialImpactsOnOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersInformAndContributeToAdaptingStrategyAndBusinessModelExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowActualAndPotentialImpactsOnOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersOriginateFromOrAreConnectedToStrategyAndBusinessModelsExplanatory": {
+      "concept": "esrs:DisclosureOfHowActualAndPotentialImpactsOnOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersOriginateFromOrAreConnectedToStrategyAndBusinessModelsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAdministrativeManagementAndSupervisoryBodiesAndSeniorExecutiveManagementOverseeSettingOfTargetsRelatedToMaterialImpactsRisksAndOpportunitiesAndHowProgressTowardsThemIsMonitoredExplanatory": {
+      "concept": "esrs:DisclosureOfHowAdministrativeManagementAndSupervisoryBodiesAndSeniorExecutiveManagementOverseeSettingOfTargetsRelatedToMaterialImpactsRisksAndOpportunitiesAndHowProgressTowardsThemIsMonitoredExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAdministrativeManagementAndSupervisoryBodiesAreInformedAboutSustainabilityMattersAndHowTheseMattersWereAddressedExplanatory": {
+      "concept": "esrs:DisclosureOfHowAdministrativeManagementAndSupervisoryBodiesAreInformedAboutSustainabilityMattersAndHowTheseMattersWereAddressedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAdministrativeManagementAndSupervisoryBodiesConsiderImpactsRisksAndOpportunitiesWhenOverseeingStrategyDecisionsOnMajorTransactionsAndRiskManagementProcessExplanatory": {
+      "concept": "esrs:DisclosureOfHowAdministrativeManagementAndSupervisoryBodiesConsiderImpactsRisksAndOpportunitiesWhenOverseeingStrategyDecisionsOnMajorTransactionsAndRiskManagementProcessExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAdministrativeManagementAndSupervisoryBodiesDetermineWhetherAppropriateSkillsAndExpertiseAreAvailableOrWillBeDevelopedToOverseeSustainabilityMattersExplanatory": {
+      "concept": "esrs:DisclosureOfHowAdministrativeManagementAndSupervisoryBodiesDetermineWhetherAppropriateSkillsAndExpertiseAreAvailableOrWillBeDevelopedToOverseeSustainabilityMattersExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAffectedCommunitiesConsumersAndEndusersThatMayBeAffectedAreAbleToAccessChannelsAtLevelOfUndertakingTheyAreAffectedByExplanatory": {
+      "concept": "esrs:DisclosureOfHowAffectedCommunitiesConsumersAndEndusersThatMayBeAffectedAreAbleToAccessChannelsAtLevelOfUndertakingTheyAreAffectedByExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAffectedCommunitiesWereInvolvedInMaterialityAssessmentExplanatory": {
+      "concept": "esrs:DisclosureOfHowAffectedCommunitiesWereInvolvedInMaterialityAssessmentExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAndWhenResilienceAnalysisHasBeenConductedExplanatory": {
+      "concept": "esrs:DisclosureOfHowAndWhenResilienceAnalysisHasBeenConductedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAnticipatedFinancialEffectsForAssetsAndOrBusinessActivitiesAtMaterialPhysicalRiskHaveBeenAssessedExplanatory": {
+      "concept": "esrs:DisclosureOfHowAnticipatedFinancialEffectsForAssetsAndOrBusinessActivitiesAtMaterialPhysicalRiskHaveBeenAssessedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAssessmentOfAssetsAndOrBusinessActivitiesConsideredToBeAtMaterialPhysicalRiskEitherReliesOnOrIsPartOfProcessToDetermineMaterialPhysicalRiskOrToDetermineClimateScenariosExplanatory": {
+      "concept": "esrs:DisclosureOfHowAssessmentOfAssetsAndOrBusinessActivitiesConsideredToBeAtMaterialPhysicalRiskEitherReliesOnOrIsPartOfProcessToDetermineMaterialPhysicalRiskOrToDetermineClimateScenariosExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAssessmentOfAssetsAndOrBusinessActivitiesConsideredToBeAtMaterialTransitionRiskEitherReliesOnOrIsPartOfProcessToDetermineMaterialTransitionRisksOrToDetermineScenariosExplanatory": {
+      "concept": "esrs:DisclosureOfHowAssessmentOfAssetsAndOrBusinessActivitiesConsideredToBeAtMaterialTransitionRiskEitherReliesOnOrIsPartOfProcessToDetermineMaterialTransitionRisksOrToDetermineScenariosExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowAssetsAndOrActivitiesHaveBeenScreenedInOrderToIdentifyActualAndPotentialImpactsRisksAndOpportunitiesInEitherOwnOperationsOrUpstreamAndDownstreamValueChainAndMethodologiesAssumptionsAndToolsUsedInScreeningExplanatory": {
+      "concept": "esrs:DisclosureOfHowAssetsAndOrActivitiesHaveBeenScreenedInOrderToIdentifyActualAndPotentialImpactsRisksAndOpportunitiesInEitherOwnOperationsOrUpstreamAndDownstreamValueChainAndMethodologiesAssumptionsAndToolsUsedInScreeningExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowBiodiversityAndEcosystemsScenarioAnalysisHasBeenUsedToInformIdentificationAndAssessmentOfMaterialRisksAndOpportunitiesOverShortMediumAndLongtermTimeHorizonsExplanatory": {
+      "concept": "esrs:DisclosureOfHowBiodiversityAndEcosystemsScenarioAnalysisHasBeenUsedToInformIdentificationAndAssessmentOfMaterialRisksAndOpportunitiesOverShortMediumAndLongtermTimeHorizonsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowBodysOrIndividualSWithinBodyResponsibilitiesForImpactsRisksAndOpportunitiesAreReflectedInUndertakingsTermsOfReferenceBoardMandatesAndOtherRelatedPoliciesExplanatory": {
+      "concept": "esrs:DisclosureOfHowBodysOrIndividualSWithinBodyResponsibilitiesForImpactsRisksAndOpportunitiesAreReflectedInUndertakingsTermsOfReferenceBoardMandatesAndOtherRelatedPoliciesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowBusinessModelAndStrategyTakeAccountOfImpactsRelatedToSustainabilityMattersAssessedToBeMaterialPhaseinExplanatory": {
+      "concept": "esrs:DisclosureOfHowBusinessModelAndStrategyTakeAccountOfImpactsRelatedToSustainabilityMattersAssessedToBeMaterialPhaseinExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowCarbonPriceUsedInInternalCarbonPricingSchemeIsConsistentWithCarbonPriceUsedInFinancialStatementsExplanatory": {
+      "concept": "esrs:DisclosureOfHowCarbonPriceUsedInInternalCarbonPricingSchemeIsConsistentWithCarbonPriceUsedInFinancialStatementsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowClimaterelatedConsiderationsAreFactoredIntoRemunerationOfMembersOfAdministrativeManagementAndSupervisoryBodiesExplanatory": {
+      "concept": "esrs:DisclosureOfHowClimaterelatedConsiderationsAreFactoredIntoRemunerationOfMembersOfAdministrativeManagementAndSupervisoryBodiesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowConsideredScenariosAreUpdatedAccordingToEvolvingConditionsAndEmergingTrendsExplanatory": {
+      "concept": "esrs:DisclosureOfHowConsideredScenariosAreUpdatedAccordingToEvolvingConditionsAndEmergingTrendsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowConsultationsHaveBeenConductedExplanatory": {
+      "concept": "esrs:DisclosureOfHowConsultationsHaveBeenConductedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowConsultationsWithAffectedCommunitiesOnSustainabilityAssessmentsOfSharedBiologicalResourcesAndOrEcosystemsHaveBeenConductedExplanatory": {
+      "concept": "esrs:DisclosureOfHowConsultationsWithAffectedCommunitiesOnSustainabilityAssessmentsOfSharedBiologicalResourcesAndOrEcosystemsHaveBeenConductedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowDedicatedControlsAndProceduresAppliedToManagementOfImpactsRisksAndOpportunitiesAreIntegratedWithOtherInternalFunctionsExplanatory": {
+      "concept": "esrs:DisclosureOfHowDedicatedControlsAndProceduresAppliedToManagementOfImpactsRisksAndOpportunitiesAreIntegratedWithOtherInternalFunctionsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowDependenciesOnBiodiversityAndEcosystemsAndOrTheirServicesHaveBeenIdentifiedAndAssessedAtEitherOwnSiteLocationsOrInUpstreamAndDownstreamValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfHowDependenciesOnBiodiversityAndEcosystemsAndOrTheirServicesHaveBeenIdentifiedAndAssessedAtEitherOwnSiteLocationsOrInUpstreamAndDownstreamValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowDiverseRangeOfClimateScenariosHaveBeenConsideredToDetectRelevantEnvironmentalSocietalTechnologyMarketAndPolicyrelatedDevelopmentsAndDetermineDecarbonisationLeversExplanatory": {
+      "concept": "esrs:DisclosureOfHowDiverseRangeOfClimateScenariosHaveBeenConsideredToDetectRelevantEnvironmentalSocietalTechnologyMarketAndPolicyrelatedDevelopmentsAndDetermineDecarbonisationLeversExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowEcologicalEntityspecificThresholdsWereDeterminedExplanatory": {
+      "concept": "esrs:DisclosureOfHowEcologicalEntityspecificThresholdsWereDeterminedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowEffectivenessOfEngagementWithOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersIsAssessedExplanatory": {
+      "concept": "esrs:DisclosureOfHowEffectivenessOfEngagementWithOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersIsAssessedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowFarUndertakingHasProgressedInEffortsDuringReportingPeriodExplanatory": {
+      "concept": "esrs:DisclosureOfHowFarUndertakingHasProgressedInEffortsDuringReportingPeriodExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowGHGEmissionsReductionTargetsAndOrAnyOtherTargetsHaveBeenSetToManageMaterialClimaterelatedImpactsRisksAndOpportunitiesExplanatory": {
+      "concept": "esrs:DisclosureOfHowGHGEmissionsReductionTargetsAndOrAnyOtherTargetsHaveBeenSetToManageMaterialClimaterelatedImpactsRisksAndOpportunitiesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowGovernanceBodiesEnsureThatAppropriateMechanismForPerformanceMonitoringIsInPlaceExplanatory": {
+      "concept": "esrs:DisclosureOfHowGovernanceBodiesEnsureThatAppropriateMechanismForPerformanceMonitoringIsInPlaceExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowImpactsOriginateFromOrAreConnectedToStrategyAndBusinessModelExplanatory": {
+      "concept": "esrs:DisclosureOfHowImpactsOriginateFromOrAreConnectedToStrategyAndBusinessModelExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowIndigenousPeoplesHaveBeenConsultedOnModeAndOrParametersOfEngagementExplanatory": {
+      "concept": "esrs:DisclosureOfHowIndigenousPeoplesHaveBeenConsultedOnModeAndOrParametersOfEngagementExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowInterestsAndViewsOfStakeholdersAreTakenIntoAccountByStrategyAndBusinessModelExplanatory": {
+      "concept": "esrs:DisclosureOfHowInterestsAndViewsOfStakeholdersAreTakenIntoAccountByStrategyAndBusinessModelExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowIssuesRaisedAndAddressedAreTrackedAndMonitoredAndHowEffectivenessOfChannelsIsEnsuredIncludingThroughInvolvementOfStakeholdersWhoAreIntendedUsersExplanatory": {
+      "concept": "esrs:DisclosureOfHowIssuesRaisedAndAddressedAreTrackedAndMonitoredAndHowEffectivenessOfChannelsIsEnsuredIncludingThroughInvolvementOfStakeholdersWhoAreIntendedUsersExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowMaterialNegativeAndPositiveImpactsAffectOrAreLikelyToAffectPeopleOrEnvironmentExplanatory": {
+      "concept": "esrs:DisclosureOfHowMaterialNegativeAndPositiveImpactsAffectOrAreLikelyToAffectPeopleOrEnvironmentExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowMitigationHierarchyHasBeenAppliedWithRegardToActionsExplanatory": {
+      "concept": "esrs:DisclosureOfHowMitigationHierarchyHasBeenAppliedWithRegardToActionsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowMonetaryValueOfInkindContributionsIsEstimatedExplanatory": {
+      "concept": "esrs:DisclosureOfHowMonetaryValueOfInkindContributionsIsEstimatedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowNegativeImpactsOnEcosystemServicesOfRelevanceToAffectedCommunitiesMayBeAvoidedExplanatory": {
+      "concept": "esrs:DisclosureOfHowNegativeImpactsOnEcosystemServicesOfRelevanceToAffectedCommunitiesMayBeAvoidedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowOftenAnticorruptionAndAntibriberyTrainingIsRequiredExplanatory": {
+      "concept": "esrs:DisclosureOfHowOftenAnticorruptionAndAntibriberyTrainingIsRequiredExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowOwnWorkforceOrWorkersRepresentativesWereEngagedDirectlyInIdentifyingLessonsOrImprovementsAsResultOfUndertakingsPerformanceExplanatory": {
+      "concept": "esrs:DisclosureOfHowOwnWorkforceOrWorkersRepresentativesWereEngagedDirectlyInIdentifyingLessonsOrImprovementsAsResultOfUndertakingsPerformanceExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowOwnWorkforceOrWorkersRepresentativesWereEngagedDirectlyInTrackingPerformanceAgainstTargetsExplanatory": {
+      "concept": "esrs:DisclosureOfHowOwnWorkforceOrWorkersRepresentativesWereEngagedDirectlyInTrackingPerformanceAgainstTargetsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowParticipationInIndustryOrMultistakeholderInitiativeAndUndertakingsOwnInvolvementIsAimingToAddressMaterialNegativeImpactsExplanatory": {
+      "concept": "esrs:DisclosureOfHowParticipationInIndustryOrMultistakeholderInitiativeAndUndertakingsOwnInvolvementIsAimingToAddressMaterialNegativeImpactsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPeopleInOwnWorkforceAndOrWorkersRepresentativesPlayRoleInDecisionsRegardingEitherDesignOrImplementationOfProgrammesOrProcessesWhosePrimaryAimIsToDeliverPositiveImpactsExplanatory": {
+      "concept": "esrs:DisclosureOfHowPeopleInOwnWorkforceAndOrWorkersRepresentativesPlayRoleInDecisionsRegardingEitherDesignOrImplementationOfProgrammesOrProcessesWhosePrimaryAimIsToDeliverPositiveImpactsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPeopleInOwnWorkforceAreProvidedWithInformationThatIsUnderstandableAndAccessibleThroughAppropriateCommunicationChannelsExplanatory": {
+      "concept": "esrs:DisclosureOfHowPeopleInOwnWorkforceAreProvidedWithInformationThatIsUnderstandableAndAccessibleThroughAppropriateCommunicationChannelsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPeopleInOwnWorkforceValueChainWorkersThatMayBeAffectedAreAbleToAccessChannelsAtLevelOfUndertakingTheyAreEmployedByOrContractedToWorkForInRelationToEachMaterialImpactExplanatory": {
+      "concept": "esrs:DisclosureOfHowPeopleInOwnWorkforceValueChainWorkersThatMayBeAffectedAreAbleToAccessChannelsAtLevelOfUndertakingTheyAreEmployedByOrContractedToWorkForInRelationToEachMaterialImpactExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPerspectivesOfOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersInformDecisionsAndOrActivitiesAimedAtManagingActualAndPotentialImpactsExplanatory": {
+      "concept": "esrs:DisclosureOfHowPerspectivesOfOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersInformDecisionsAndOrActivitiesAimedAtManagingActualAndPotentialImpactsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPoliciesAreImplementedThroughSpecificProceduresToEnsureDiscriminationIsPreventedMitigatedAndActedUponOnceDetectedAndOrToAdvanceDiversityAndInclusionExplanatory": {
+      "concept": "esrs:DisclosureOfHowPoliciesAreImplementedThroughSpecificProceduresToEnsureDiscriminationIsPreventedMitigatedAndActedUponOnceDetectedAndOrToAdvanceDiversityAndInclusionExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPolicyAddressesRawMaterialsOriginatingFromEcosystemsThatHaveBeenManagedToMaintainOrEnhanceConditionsForBiodiversityExplanatory": {
+      "concept": "esrs:DisclosureOfHowPolicyAddressesRawMaterialsOriginatingFromEcosystemsThatHaveBeenManagedToMaintainOrEnhanceConditionsForBiodiversityExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPolicyEnablesToAvoidNegativeImpactsOnBiodiversityAndEcosystemsInOwnOperationsAndRelatedUpstreamAndDownstreamValueChainExplanatory": {
+      "concept": "esrs:DisclosureOfHowPolicyEnablesToAvoidNegativeImpactsOnBiodiversityAndEcosystemsInOwnOperationsAndRelatedUpstreamAndDownstreamValueChainExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPolicyEnablesToReduceAndMinimiseNegativeImpactsOnBiodiversityAndEcosystemsInOwnOperationsAndThroughoutUpstreamAndDownstreamValueChainThatCannotBeAvoidedExplanatory": {
+      "concept": "esrs:DisclosureOfHowPolicyEnablesToReduceAndMinimiseNegativeImpactsOnBiodiversityAndEcosystemsInOwnOperationsAndThroughoutUpstreamAndDownstreamValueChainThatCannotBeAvoidedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPolicyEnablesToRestoreAndRehabilitateDegradedEcosystemsOrRestoreClearedEcosystemsFollowingExposureToImpactsThatCannotBeCompletelyAvoidedAndOrMinimisedExplanatory": {
+      "concept": "esrs:DisclosureOfHowPolicyEnablesToRestoreAndRehabilitateDegradedEcosystemsOrRestoreClearedEcosystemsFollowingExposureToImpactsThatCannotBeCompletelyAvoidedAndOrMinimisedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPolicyLimitsProcurementFromSuppliersThatCannotDemonstrateThatTheyAreNotContributingToSignificantDamageToProtectedAreasOrKeyBiodiversityAreasExplanatory": {
+      "concept": "esrs:DisclosureOfHowPolicyLimitsProcurementFromSuppliersThatCannotDemonstrateThatTheyAreNotContributingToSignificantDamageToProtectedAreasOrKeyBiodiversityAreasExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPolicyRefersToRecognisedStandardsOrThirdpartyCertificationsOverseenByRegulatorsExplanatory": {
+      "concept": "esrs:DisclosureOfHowPolicyRefersToRecognisedStandardsOrThirdpartyCertificationsOverseenByRegulatorsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPotentialBarriersToEngagementWithPeopleInOwnWorkforceAreTakenIntoAccountExplanatory": {
+      "concept": "esrs:DisclosureOfHowPotentialBarriersToEngagementWithPeopleInOwnWorkforceAreTakenIntoAccountExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowPotentialEffectsOnFutureFinancialPerformanceAndPositionForAssetsAndBusinessActivitiesAtMaterialTransitionRiskHaveBeenAssessedExplanatory": {
+      "concept": "esrs:DisclosureOfHowPotentialEffectsOnFutureFinancialPerformanceAndPositionForAssetsAndBusinessActivitiesAtMaterialTransitionRiskHaveBeenAssessedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowRespectForIndigenousPeoplesParticularRightsInStakeholderEngagementApproachIsTakenIntoAccountAndEnsuredWithRegardToActivitiesAffectingTheirLandsAndTerritoriesExplanatory": {
+      "concept": "esrs:DisclosureOfHowRespectForIndigenousPeoplesParticularRightsInStakeholderEngagementApproachIsTakenIntoAccountAndEnsuredWithRegardToActivitiesAffectingTheirLandsAndTerritoriesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowRespectForIndigenousPeoplesParticularRightsInStakeholderEngagementApproachIsTakenIntoAccountAndEnsuredWithRegardToLegislativeOrAdministrativeMeasuresThatAffectThemExplanatory": {
+      "concept": "esrs:DisclosureOfHowRespectForIndigenousPeoplesParticularRightsInStakeholderEngagementApproachIsTakenIntoAccountAndEnsuredWithRegardToLegislativeOrAdministrativeMeasuresThatAffectThemExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowRespectForIndigenousPeoplesParticularRightsInStakeholderEngagementApproachIsTakenIntoAccountAndEnsuredWithRegardToTheirCulturalIntellectualReligiousAndSpiritualPropertyExplanatory": {
+      "concept": "esrs:DisclosureOfHowRespectForIndigenousPeoplesParticularRightsInStakeholderEngagementApproachIsTakenIntoAccountAndEnsuredWithRegardToTheirCulturalIntellectualReligiousAndSpiritualPropertyExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowResponsibilityForRespectingIdentifiedEcologicalThresholdsIsAllocatedExplanatory": {
+      "concept": "esrs:DisclosureOfHowResponsibilityForRespectingIdentifiedEcologicalThresholdsIsAllocatedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowSocialAndOrEnvironmentalCriteriaAreTakenIntoAccountForSelectionOfSuppliersExplanatory": {
+      "concept": "esrs:DisclosureOfHowSocialAndOrEnvironmentalCriteriaAreTakenIntoAccountForSelectionOfSuppliersExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowStakeholdersHaveBeenInvolvedInTargetSettingForEachMaterialSustainabilityMatterExplanatory": {
+      "concept": "esrs:DisclosureOfHowStakeholdersHaveBeenInvolvedInTargetSettingForEachMaterialSustainabilityMatterExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowSustainabilityrelatedPerformanceMetricsAreConsideredAsPerformanceBenchmarksOrIncludedInRemunerationPoliciesExplanatory": {
+      "concept": "esrs:DisclosureOfHowSustainabilityrelatedPerformanceMetricsAreConsideredAsPerformanceBenchmarksOrIncludedInRemunerationPoliciesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowSustainabilityrelatedSkillsAndExpertiseRelateToUndertakingsMaterialImpactsRisksAndOpportunitiesExplanatory": {
+      "concept": "esrs:DisclosureOfHowSustainabilityrelatedSkillsAndExpertiseRelateToUndertakingsMaterialImpactsRisksAndOpportunitiesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowSystemicRisksHaveBeenConsideredExplanatory": {
+      "concept": "esrs:DisclosureOfHowSystemicRisksHaveBeenConsideredExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowTargetRelatesToEitherPreventionOrControlOfSubstancesOfConcernAndOrSubstancesOfVeryHighConcernExplanatory": {
+      "concept": "esrs:DisclosureOfHowTargetRelatesToEitherPreventionOrControlOfSubstancesOfConcernAndOrSubstancesOfVeryHighConcernExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowTransitionAndOrPhysicalRisksAndOpportunitiesRelatedToBiodiversityAndEcosystemsHaveBeenIdentifiedAndAssessedExplanatory": {
+      "concept": "esrs:DisclosureOfHowTransitionAndOrPhysicalRisksAndOpportunitiesRelatedToBiodiversityAndEcosystemsHaveBeenIdentifiedAndAssessedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowUnderstandingOfHowAffectedCommunitiesWithParticularCharacteristicsLivingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDevelopedExplanatory": {
+      "concept": "esrs:DisclosureOfHowUnderstandingOfHowAffectedCommunitiesWithParticularCharacteristicsLivingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDevelopedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowUnderstandingOfHowConsumersAndEndusersWithParticularCharacteristicsOrThoseUsingParticularProductsOrServicesMayBeAtGreaterRiskOfHarmHasBeenDevelopedExplanatory": {
+      "concept": "esrs:DisclosureOfHowUnderstandingOfHowConsumersAndEndusersWithParticularCharacteristicsOrThoseUsingParticularProductsOrServicesMayBeAtGreaterRiskOfHarmHasBeenDevelopedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "full.block0004.disclosureOfHowUnderstandingOfHowPeopleInOwnWorkforceValueChainWorkersWithParticularCharacteristicsWorkingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDevelopedExplanatory": {
+      "concept": "esrs:DisclosureOfHowUnderstandingOfHowPeopleInOwnWorkforceValueChainWorkersWithParticularCharacteristicsWorkingInParticularContextsOrUndertakingParticularActivitiesMayBeAtGreaterRiskOfHarmHasBeenDevelopedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    }
+  }
+}
