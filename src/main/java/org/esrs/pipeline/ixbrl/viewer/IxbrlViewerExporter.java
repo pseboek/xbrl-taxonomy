@@ -17,6 +17,8 @@ public class IxbrlViewerExporter {
     public ViewerExportResult export(Path ixbrlXhtml, Path htmlOutput) throws IOException, InterruptedException {
         Files.createDirectories(htmlOutput.getParent());
         String viewerPlugin = System.getenv().getOrDefault("IXBRL_VIEWER_PLUGIN", "iXBRLViewerPlugin");
+        String sourceContent = Files.readString(ixbrlXhtml, StandardCharsets.UTF_8);
+        boolean sourceHasInlineFacts = sourceContent.contains("<ix:nonFraction") || sourceContent.contains("<ix:nonNumeric");
 
         List<String> cmd = new ArrayList<>();
         cmd.add(arelleCommand);
@@ -44,17 +46,36 @@ public class IxbrlViewerExporter {
             if (reason.isBlank()) {
                 reason = "Viewer plugin not available or export command returned code " + code;
             }
+        } else {
+            String viewerHtml = Files.readString(htmlOutput, StandardCharsets.UTF_8);
+            if (!isUsableViewerOutput(viewerHtml, sourceHasInlineFacts)) {
+                fallback = true;
+                reason = "Viewer export produced unusable payload (missing viewer JSON or empty fact payload).";
+            }
+        }
+
+        if (fallback) {
             // Fallback artifact keeps the pipeline deterministic when the plugin is unavailable.
             Files.writeString(
                 htmlOutput,
                 "<!doctype html><html><head><meta charset=\"utf-8\"><title>Viewer Export Fallback</title></head>"
-                    + "<body><h1>Viewer export fallback</h1><p>Arelle iXBRL viewer plugin was not available.</p>"
+                    + "<body><h1>Viewer export fallback</h1><p>Arelle iXBRL viewer export failed or produced unusable output.</p>"
                     + "<p>Source: " + ixbrlXhtml.getFileName() + "</p></body></html>",
                 StandardCharsets.UTF_8
             );
         }
 
         return new ViewerExportResult(fallback, code, reason);
+    }
+
+    private boolean isUsableViewerOutput(String html, boolean sourceHasInlineFacts) {
+        if (!html.contains("application/x.ixbrl-viewer+json")) {
+            return false;
+        }
+        if (sourceHasInlineFacts && html.contains("\"facts\": {}")) {
+            return false;
+        }
+        return true;
     }
 
     public record ViewerExportResult(boolean fallbackUsed, int processExitCode, String reason) {

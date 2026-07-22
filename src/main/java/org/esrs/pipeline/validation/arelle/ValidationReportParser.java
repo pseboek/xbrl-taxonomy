@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.esrs.pipeline.model.ValidationIssue;
 
 public class ValidationReportParser {
@@ -27,10 +28,14 @@ public class ValidationReportParser {
             }
 
             String normalized = trimmed.toLowerCase();
-            if (normalized.contains("error")) {
+            if (normalized.startsWith("[info]")) {
+                issues.add(new ValidationIssue("INFO", "ARELLE", trimmed));
+            } else if (normalized.contains("error")) {
                 issues.add(new ValidationIssue("ERROR", "ARELLE", trimmed));
             } else if (normalized.contains("warning")) {
                 issues.add(new ValidationIssue("WARN", "ARELLE", trimmed));
+            } else if (normalized.startsWith("[")) {
+                issues.add(new ValidationIssue("ERROR", "ARELLE", trimmed));
             } else if (normalized.contains("arelle skipped")) {
                 issues.add(new ValidationIssue("INFO", "ARELLE_SKIPPED", trimmed));
             }

@@ -1,13 +1,12 @@
 package org.esrs.pipeline.orchestration;
 
-import org.junit.jupiter.api.Test;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 class ReportingPipelineOrchestratorTest {
     @Test
@@ -31,6 +30,9 @@ class ReportingPipelineOrchestratorTest {
         assertTrue(Files.exists(outputDir.resolve("report-interaktiv.html")));
 
         String ixbrl = Files.readString(outputDir.resolve("report-ixbrl.xhtml"), StandardCharsets.UTF_8);
+        assertTrue(ixbrl.contains("<ix:header>"));
+        assertTrue(ixbrl.contains("<ix:resources>"));
+        assertTrue(ixbrl.contains("<link:schemaRef"));
         assertTrue(ixbrl.contains("<ix:nonFraction"));
         assertTrue(ixbrl.contains("<ix:nonNumeric"));
         assertTrue(!ixbrl.contains("{{fact:"), "All fact placeholders should be embedded in iXBRL output.");

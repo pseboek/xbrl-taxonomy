@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.esrs.pipeline.mapping.MappingEntry;
 import org.esrs.pipeline.mapping.MappingRegistry;
 import org.esrs.pipeline.model.DimensionSelection;
@@ -130,8 +131,14 @@ public class FactBuilder {
         }
 
         if ("enumeration".equalsIgnoreCase(entry.type())) {
-            if ("esrs:YesNoDomain".equalsIgnoreCase(entry.enumerationDomain()) && !YES_NO_ENUM.contains(trimmed)) {
-                throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
+            if ("esrs:YesNoDomain".equalsIgnoreCase(entry.enumerationDomain())) {
+                if ("true".equalsIgnoreCase(trimmed) || "false".equalsIgnoreCase(trimmed)) {
+                    return trimmed.toLowerCase();
+                }
+                if (!YES_NO_ENUM.contains(trimmed)) {
+                    throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
+                }
+                return "esrs:YesMember".equals(trimmed) ? "true" : "false";
             }
             return trimmed;
         }

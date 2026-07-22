@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.esrs.pipeline.model.ValidationIssue;
 
 public class ArelleValidator {
@@ -23,8 +24,13 @@ public class ArelleValidator {
         cmd.add("--file");
         cmd.add(reportFile.toString());
         cmd.add("--validate");
-        cmd.add("--disclosureSystem");
-        cmd.add("esef");
+
+        String disclosureSystem = System.getenv("ARELLE_DISCLOSURE_SYSTEM");
+        if (disclosureSystem != null && !disclosureSystem.isBlank()) {
+            cmd.add("--disclosureSystem");
+            cmd.add(disclosureSystem);
+        }
+
         cmd.add("--packages");
         cmd.add(taxonomyPackageRoot.toString());
         cmd.add("--logFile");

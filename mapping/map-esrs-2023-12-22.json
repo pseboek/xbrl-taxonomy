@@ -1,7 +1,7 @@
 {
   "fieldMappings": {
     "company.totalEnergyConsumption": {
-      "concept": "esrs:TotalEnergyConsumption",
+      "concept": "esrs:EnergyConsumptionRelatedToOwnOperations",
       "type": "numeric",
       "unit": "kWh",
       "period": "duration",
@@ -9,7 +9,7 @@
       "dimensions": []
     },
     "climate.scope1GrossEmissions": {
-      "concept": "esrs:GrossScope1GHGEmissions",
+      "concept": "esrs:GrossScope1GreenhouseGasEmissions",
       "type": "numeric",
       "unit": "tCO2e",
       "period": "duration",
@@ -17,21 +17,21 @@
       "dimensions": []
     },
     "governance.corruptionPolicyExists": {
-      "concept": "esrs:PoliciesRelatedToCorruptionAndBribery",
+      "concept": "esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace",
       "type": "enumeration",
       "period": "duration",
       "enumerationDomain": "esrs:YesNoDomain",
       "dimensions": []
     },
     "strategy.climateTransitionPlanExists": {
-      "concept": "esrs:ClimateTransitionPlanAdopted",
+      "concept": "esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan",
       "type": "enumeration",
       "period": "duration",
       "enumerationDomain": "esrs:YesNoDomain",
       "dimensions": []
     },
     "workforce.totalEmployees": {
-      "concept": "esrs:TotalNumberOfEmployees",
+      "concept": "esrs:NumberOfEmployeesHeadCountDuringPeriod",
       "type": "numeric",
       "unit": "count",
       "period": "duration",
@@ -39,7 +39,7 @@
       "dimensions": []
     },
     "water.totalWaterConsumption": {
-      "concept": "esrs:TotalWaterConsumption",
+      "concept": "esrs:WaterConsumption",
       "type": "numeric",
       "unit": "m3",
       "period": "duration",
@@ -47,7 +47,7 @@
       "dimensions": []
     },
     "governance.whistleblowerChannelDescription": {
-      "concept": "esrs:DescriptionOfWhistleblowerChannel",
+      "concept": "esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory",
       "type": "text",
       "period": "duration",
       "dimensions": []

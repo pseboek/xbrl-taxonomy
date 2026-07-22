@@ -1,19 +1,18 @@
 package org.esrs.pipeline.xbrl.serializer;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.esrs.pipeline.model.DisclosureFact;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.model.ReportingEntity;
 import org.esrs.pipeline.model.ReportingPeriod;
 import org.esrs.pipeline.xbrl.context.ContextBuilder;
 import org.esrs.pipeline.xbrl.fact.XbrlFact;
-import org.junit.jupiter.api.Test;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDate;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 class XbrlInstanceWriterTest {
     @Test
@@ -27,7 +26,7 @@ class XbrlInstanceWriterTest {
         var ctx = contextBuilder.build(envelope);
 
         List<XbrlFact> facts = List.of(
-            new XbrlFact("company.totalEnergyConsumption", "company.totalEnergyConsumption#1", "esrs:TotalEnergyConsumption", "c1", "u_kWh", "100", "0", true, false)
+            new XbrlFact("company.totalEnergyConsumption", "company.totalEnergyConsumption#1", "esrs:EnergyConsumptionRelatedToOwnOperations", "c1", "u_kWh", "100", "0", true, false)
         );
 
         Path temp = Files.createTempDirectory("xbrl-test").resolve("instance.xml");
@@ -35,7 +34,7 @@ class XbrlInstanceWriterTest {
         writer.write(temp, envelope, ctx.contexts(), facts, "esrs_all.xsd");
 
         String xml = Files.readString(temp);
-        assertTrue(xml.contains("esrs:TotalEnergyConsumption") || xml.contains("TotalEnergyConsumption"));
+        assertTrue(xml.contains("esrs:EnergyConsumptionRelatedToOwnOperations") || xml.contains("EnergyConsumptionRelatedToOwnOperations"));
         assertTrue(xml.contains("contextRef"));
     }
 }

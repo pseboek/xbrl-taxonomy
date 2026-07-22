@@ -6,11 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.esrs.pipeline.api.ApiIngestionService;
 import org.esrs.pipeline.ixbrl.embedding.IxbrlEmbeddingService;
 import org.esrs.pipeline.ixbrl.template.IxbrlTemplateRenderer;
 import org.esrs.pipeline.ixbrl.viewer.IxbrlViewerExporter;
 import org.esrs.pipeline.mapping.MappingRegistry;
+import org.esrs.pipeline.mapping.MappingTaxonomyValidator;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.model.ValidationIssue;
 import org.esrs.pipeline.validation.arelle.ArelleValidator;
@@ -27,6 +29,7 @@ public class ReportingPipelineOrchestrator {
     private final IxbrlEmbeddingService embeddingService;
     private final ArelleValidator arelleValidator;
     private final IxbrlViewerExporter viewerExporter;
+    private final MappingTaxonomyValidator mappingTaxonomyValidator;
 
     public ReportingPipelineOrchestrator(String arelleCommand) {
         this.ingestionService = new ApiIngestionService();
@@ -37,6 +40,7 @@ public class ReportingPipelineOrchestrator {
         this.embeddingService = new IxbrlEmbeddingService();
         this.arelleValidator = new ArelleValidator(arelleCommand);
         this.viewerExporter = new IxbrlViewerExporter(arelleCommand);
+        this.mappingTaxonomyValidator = new MappingTaxonomyValidator();
     }
 
     public PipelineResult run(Path inputJson,
@@ -62,12 +66,13 @@ public class ReportingPipelineOrchestrator {
 
         ReportEnvelope envelope = ingestionService.loadFromJson(inputJson);
         MappingRegistry mappingRegistry = MappingRegistry.fromPath(mappingFile);
+        mappingTaxonomyValidator.validate(mappingRegistry, taxonomyRoot);
 
         ContextBuilder.ContextBuildResult contexts = contextBuilder.build(envelope);
         FactBuilder.FactBuildResult facts = factBuilder.build(envelope, mappingRegistry, contexts.fieldOccurrenceContext());
 
         Path xbrlOut = outputDir.resolve("report-instance.xml");
-        String schemaRefHref = "../xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs_all.xsd";
+        String schemaRefHref = "../xbrl.efrag.org/taxonomy/esrs/2023-12-22/common/esrs_cor.xsd";
         xbrlInstanceWriter.write(
             xbrlOut,
             envelope,
@@ -77,7 +82,13 @@ public class ReportingPipelineOrchestrator {
         );
 
         String renderedTemplate = templateRenderer.render(templateFile, envelope);
-        String ixbrl = embeddingService.embed(renderedTemplate, facts.facts(), layoutMap);
+        String ixbrl = embeddingService.embed(
+            renderedTemplate,
+            facts.facts(),
+            layoutMap,
+            contexts.contexts(),
+            schemaRefHref
+        );
         Path ixbrlOut = outputDir.resolve("report-ixbrl.xhtml");
         embeddingService.writeOutput(ixbrlOut, ixbrl);
 
