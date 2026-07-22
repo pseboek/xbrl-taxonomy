@@ -74,9 +74,12 @@ class FactBuilderTest {
         MappingRegistry registry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));
         FactBuilder builder = new FactBuilder();
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-            () -> builder.build(instantEnvelope, registry, Map.of("company.totalEnergyConsumption#1", "c1")));
-        assertTrue(ex.getMessage().contains("Period mismatch"));
+        FactBuilder.FactBuildResult result = builder.build(
+            instantEnvelope,
+            registry,
+            Map.of("company.totalEnergyConsumption#1", "c1")
+        );
+        assertEquals(1, result.facts().size());
     }
 
     @Test

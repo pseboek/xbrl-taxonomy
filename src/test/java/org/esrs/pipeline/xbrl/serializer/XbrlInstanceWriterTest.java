@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.esrs.pipeline.mapping.MappingRegistry;
 import org.esrs.pipeline.model.DisclosureFact;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.model.ReportingEntity;
@@ -23,8 +24,9 @@ class XbrlInstanceWriterTest {
             new ReportingPeriod(LocalDate.parse("2025-01-01"), LocalDate.parse("2025-12-31"), false),
             List.of(new DisclosureFact("company.totalEnergyConsumption", "100", List.of(), null, 0))
         );
+        MappingRegistry mappingRegistry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));
         ContextBuilder contextBuilder = new ContextBuilder();
-        var ctx = contextBuilder.build(envelope);
+        var ctx = contextBuilder.build(envelope, mappingRegistry);
 
         List<XbrlFact> facts = List.of(
             new XbrlFact("company.totalEnergyConsumption", "company.totalEnergyConsumption#1", "esrs:EnergyConsumptionRelatedToOwnOperations", "c1", "u_kWh", "100", "0", true, false)
@@ -45,13 +47,24 @@ class XbrlInstanceWriterTest {
         ReportEnvelope envelope = new ReportEnvelope(
             new ReportingEntity("scheme", "id", "entity"),
             new ReportingPeriod(LocalDate.parse("2025-12-31"), LocalDate.parse("2025-12-31"), true),
-            List.of(new DisclosureFact("workforce.totalEmployees", "10", List.of(), null, 0))
+            List.of(new DisclosureFact("full.block0001.adjustingItemsToAssetsAtMaterialPhysicalRiskInReconciliationWithFinancialStatement", "10", List.of(), null, 0))
         );
+        MappingRegistry mappingRegistry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));
         ContextBuilder contextBuilder = new ContextBuilder();
-        var ctx = contextBuilder.build(envelope);
+        var ctx = contextBuilder.build(envelope, mappingRegistry);
 
         List<XbrlFact> facts = List.of(
-            new XbrlFact("workforce.totalEmployees", "workforce.totalEmployees#1", "esrs:NumberOfEmployeesHeadCountDuringPeriod", "c1", "u_count", "10", "0", true, false)
+            new XbrlFact(
+                "full.block0001.adjustingItemsToAssetsAtMaterialPhysicalRiskInReconciliationWithFinancialStatement",
+                "full.block0001.adjustingItemsToAssetsAtMaterialPhysicalRiskInReconciliationWithFinancialStatement#1",
+                "esrs:AdjustingItemsToAssetsAtMaterialPhysicalRiskInReconciliationWithFinancialStatement",
+                "c1",
+                "u_ratio",
+                "10",
+                "0",
+                true,
+                false
+            )
         );
 
         Path temp = Files.createTempDirectory("xbrl-test-instant").resolve("instance.xml");

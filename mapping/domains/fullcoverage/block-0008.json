@@ -137,37 +137,49 @@
       "concept": "esrs:InkindPoliticalContributionsMade",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0008.intensityValueOfLocationBasedScope2GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfLocationBasedScope2GreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.intensityValueOfMarketBasedScope2GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfMarketBasedScope2GreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.intensityValueOfScope1GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfScope1GreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.intensityValueOfScope3GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfScope3GreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.intensityValueOfTotalGreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfTotalGreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.internalCarbonPricingSchemesAreApplied": {
       "concept": "esrs:InternalCarbonPricingSchemesAreApplied",
@@ -317,13 +329,17 @@
       "concept": "esrs:Liabilities",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0008.liabilitiesFromMaterialTransitionRisksThatMayHaveToBeRecognisedInFinancialStatements": {
       "concept": "esrs:LiabilitiesFromMaterialTransitionRisksThatMayHaveToBeRecognisedInFinancialStatements",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0008.listOfAdditionalSignificantESRSSectorsInWhichSignificantActivitiesAreDevelopedOrInWhichUndertakingIsOrMayBeConnectedToMaterialImpactsOtherThanDisclosedUnderBreakdownOfRevenue": {
       "concept": "esrs:ListOfAdditionalSignificantESRSSectorsInWhichSignificantActivitiesAreDevelopedOrInWhichUndertakingIsOrMayBeConnectedToMaterialImpactsOtherThanDisclosedUnderBreakdownOfRevenue",
@@ -394,9 +410,11 @@
     },
     "full.block0008.locationBasedGreenhouseGasEmissions": {
       "concept": "esrs:LocationBasedGreenhouseGasEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0008.lockedinGHGEmissionsMayJeopardiseAchievementOfGHGEmissionReductionTargetsAndOrDriveTransitionRisk": {
       "concept": "esrs:LockedinGHGEmissionsMayJeopardiseAchievementOfGHGEmissionReductionTargetsAndOrDriveTransitionRisk",
@@ -426,9 +444,11 @@
     },
     "full.block0008.marketBasedGreenhouseGasEmissions": {
       "concept": "esrs:MarketBasedGreenhouseGasEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0008.materialImpactRiskAndOrOpportunity": {
       "concept": "esrs:MaterialImpactRiskAndOrOpportunity",
@@ -504,13 +524,17 @@
       "concept": "esrs:MeasurableTargetAbsoluteValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.measurableTargetPercentage": {
       "concept": "esrs:MeasurableTargetPercentage",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.measurementOfQuantitativeMetricsIsValidatedByExternalBodyOtherThanAssuranceProvider": {
       "concept": "esrs:MeasurementOfQuantitativeMetricsIsValidatedByExternalBodyOtherThanAssuranceProvider",
@@ -591,21 +615,27 @@
     },
     "full.block0008.microplasticsGenerated": {
       "concept": "esrs:MicroplasticsGenerated",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.microplasticsGeneratedOrUsed": {
       "concept": "esrs:MicroplasticsGeneratedOrUsed",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.microplasticsUsed": {
       "concept": "esrs:MicroplasticsUsed",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.mitigationHierarchyWasConsidered": {
       "concept": "esrs:MitigationHierarchyWasConsidered",
@@ -624,13 +654,17 @@
       "concept": "esrs:MonetisedGrossScope1And2GHGEmissions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0008.monetisedTotalGHGEmissions": {
       "concept": "esrs:MonetisedTotalGHGEmissions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0008.nameAndReferenceToOtherLegislationOrGenerallyAcceptedSustainabilityReportingStandardsAndFrameworks": {
       "concept": "esrs:NameAndReferenceToOtherLegislationOrGenerallyAcceptedSustainabilityReportingStandardsAndFrameworks",
@@ -706,15 +740,19 @@
     },
     "full.block0008.natureorientedAreaOffSite": {
       "concept": "esrs:NatureorientedAreaOffSite",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.natureorientedAreaOnSite": {
       "concept": "esrs:NatureorientedAreaOnSite",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0008.negativeImpactsOnEcosystemServicesOfRelevanceToAffectedCommunitiesAreUnavoidable": {
       "concept": "esrs:NegativeImpactsOnEcosystemServicesOfRelevanceToAffectedCommunitiesAreUnavoidable",
@@ -733,19 +771,25 @@
       "concept": "esrs:NetRevenueAtMaterialPhysicalRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0008.netRevenueAtMaterialTransitionRisk": {
       "concept": "esrs:NetRevenueAtMaterialTransitionRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0008.netRevenueOtherThanUsedToCalculateGHGIntensity": {
       "concept": "esrs:NetRevenueOtherThanUsedToCalculateGHGIntensity",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     }
   }
 }

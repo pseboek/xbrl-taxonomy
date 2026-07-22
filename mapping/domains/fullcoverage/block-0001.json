@@ -138,31 +138,41 @@
       "concept": "esrs:AdjustingItemsToAssetsAtMaterialPhysicalRiskInReconciliationWithFinancialStatement",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.adjustingItemsToAssetsAtMaterialTransitionRiskInReconciliationWithFinancialStatement": {
       "concept": "esrs:AdjustingItemsToAssetsAtMaterialTransitionRiskInReconciliationWithFinancialStatement",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.adjustingItemsToLiabilitiesAtMaterialTransitionRiskInReconciliationWithFinancialStatement": {
       "concept": "esrs:AdjustingItemsToLiabilitiesAtMaterialTransitionRiskInReconciliationWithFinancialStatement",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.adjustingItemsToNetRevenueAtMaterialPhysicalRiskInReconciliationWithFinancialStatement": {
       "concept": "esrs:AdjustingItemsToNetRevenueAtMaterialPhysicalRiskInReconciliationWithFinancialStatement",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.adjustingItemsToNetRevenueAtMaterialTransitionRiskInReconciliationWithFinancialStatement": {
       "concept": "esrs:AdjustingItemsToNetRevenueAtMaterialTransitionRiskInReconciliationWithFinancialStatement",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.allEmployeesAndOrNonemployeesArePaidAdequateWageInLineWithApplicableBenchmarks": {
       "concept": "esrs:AllEmployeesAndOrNonemployeesArePaidAdequateWageInLineWithApplicableBenchmarks",
@@ -231,123 +241,163 @@
     },
     "full.block0001.amountOfCarbonCreditsOutsideValueChainPlannedToBeCancelledInFuture": {
       "concept": "esrs:AmountOfCarbonCreditsOutsideValueChainPlannedToBeCancelledInFuture",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0001.amountOfCarbonCreditsOutsideValueChainThatAreVerifiedAgainstRecognisedQualityStandardsAndCancelled": {
       "concept": "esrs:AmountOfCarbonCreditsOutsideValueChainThatAreVerifiedAgainstRecognisedQualityStandardsAndCancelled",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0001.amountOfFinesForViolationOfAnticorruptionAndAntibriberyLaws": {
       "concept": "esrs:AmountOfFinesForViolationOfAnticorruptionAndAntibriberyLaws",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.amountOfFinesPenaltiesAndCompensationForDamagesAsResultOfIncidentesAndComplaints": {
       "concept": "esrs:AmountOfFinesPenaltiesAndCompensationForDamagesAsResultOfIncidentesAndComplaints",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.amountOfFinesPenaltiesAndCompensationForDamagesForSevereHumanRightsIncidentsConnectedToOwnWorkforce": {
       "concept": "esrs:AmountOfFinesPenaltiesAndCompensationForDamagesForSevereHumanRightsIncidentsConnectedToOwnWorkforce",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.amountOfInternalAndExternalLobbyingExpenses": {
       "concept": "esrs:AmountOfInternalAndExternalLobbyingExpenses",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfConcernThatAreGeneratedOrUsedDuringProductionOrThatAreProcured": {
       "concept": "esrs:AmountOfSubstancesOfConcernThatAreGeneratedOrUsedDuringProductionOrThatAreProcured",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfConcernThatLeaveFacilitiesAsEmissions": {
       "concept": "esrs:AmountOfSubstancesOfConcernThatLeaveFacilitiesAsEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfConcernThatLeaveFacilitiesAsEmissionsAsProductsOrAsPartOfProductsOrServices": {
       "concept": "esrs:AmountOfSubstancesOfConcernThatLeaveFacilitiesAsEmissionsAsProductsOrAsPartOfProductsOrServices",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfConcernThatLeaveFacilitiesAsPartOfProducts": {
       "concept": "esrs:AmountOfSubstancesOfConcernThatLeaveFacilitiesAsPartOfProducts",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfConcernThatLeaveFacilitiesAsProducts": {
       "concept": "esrs:AmountOfSubstancesOfConcernThatLeaveFacilitiesAsProducts",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfConcernThatLeaveFacilitiesAsServices": {
       "concept": "esrs:AmountOfSubstancesOfConcernThatLeaveFacilitiesAsServices",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfVeryHighConcernThatAreGeneratedOrUsedDuringProductionOrThatAreProcured": {
       "concept": "esrs:AmountOfSubstancesOfVeryHighConcernThatAreGeneratedOrUsedDuringProductionOrThatAreProcured",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsEmissions": {
       "concept": "esrs:AmountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsEmissionsAsProductsOrAsPartOfProductsOrServices": {
       "concept": "esrs:AmountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsEmissionsAsProductsOrAsPartOfProductsOrServices",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsPartOfProducts": {
       "concept": "esrs:AmountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsPartOfProducts",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsProducts": {
       "concept": "esrs:AmountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsProducts",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsServices": {
       "concept": "esrs:AmountOfSubstancesOfVeryHighConcernThatLeaveFacilitiesAsServices",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.amountPaidForMembershipToLobbyingAssociations": {
       "concept": "esrs:AmountPaidForMembershipToLobbyingAssociations",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.annualRemunerationRatio": {
       "concept": "esrs:AnnualRemunerationRatio",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.anticipatedFinancialEffectsForAssetsAndOrBusinessActivitiesAtMaterialPhysicalRiskHaveBeenAssessed": {
       "concept": "esrs:AnticipatedFinancialEffectsForAssetsAndOrBusinessActivitiesAtMaterialPhysicalRiskHaveBeenAssessed",
@@ -370,15 +420,19 @@
     },
     "full.block0001.areaCoveredByInvasiveAlienSpecies": {
       "concept": "esrs:AreaCoveredByInvasiveAlienSpecies",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.areaOfSitesOwnedLeasedOrManagedInOrNearProtectedAreasOrKeyBiodiversityAreasThatUndertakingIsNegativelyAffecting": {
       "concept": "esrs:AreaOfSitesOwnedLeasedOrManagedInOrNearProtectedAreasOrKeyBiodiversityAreasThatUndertakingIsNegativelyAffecting",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.assessmentIncludesEcosystemServicesThatAreDisruptedOrLikelyToBeDisrupted": {
       "concept": "esrs:AssessmentIncludesEcosystemServicesThatAreDisruptedOrLikelyToBeDisrupted",
@@ -423,7 +477,9 @@
       "concept": "esrs:Assets",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.assetsAndBusinessActivitiesThatAreIncompatibleWithOrNeedSignificantEffortsToBeCompatibleWithTransitionToClimateneutralEconomyHaveBeenIdentified": {
       "concept": "esrs:AssetsAndBusinessActivitiesThatAreIncompatibleWithOrNeedSignificantEffortsToBeCompatibleWithTransitionToClimateneutralEconomyHaveBeenIdentified",
@@ -455,25 +511,33 @@
       "concept": "esrs:AssetsAtAcuteMaterialPhysicalRiskBeforeConsideringClimateChangeAdaptationActions",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.assetsAtChronicMaterialPhysicalRiskBeforeConsideringClimateChangeAdaptationActions": {
       "concept": "esrs:AssetsAtChronicMaterialPhysicalRiskBeforeConsideringClimateChangeAdaptationActions",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.assetsAtMaterialPhysicalRiskBeforeConsideringClimateChangeAdaptationActions": {
       "concept": "esrs:AssetsAtMaterialPhysicalRiskBeforeConsideringClimateChangeAdaptationActions",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.assetsAtMaterialTransitionRiskBeforeConsideringClimateMitigationActions": {
       "concept": "esrs:AssetsAtMaterialTransitionRiskBeforeConsideringClimateMitigationActions",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.atLeastOneOfUndertakingSitesIsLocatedInAreaOfHighwaterStressAndIsNotCoveredByPolicy": {
       "concept": "esrs:AtLeastOneOfUndertakingSitesIsLocatedInAreaOfHighwaterStressAndIsNotCoveredByPolicy",
@@ -505,25 +569,33 @@
       "concept": "esrs:AverageNumberOfDaysToPayInvoiceFromDateWhenContractualOrStatutoryTermOfPaymentStartsToBeCalculated",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.averageNumberOfTrainingHoursPerEmployeeAndOrNonemployee": {
       "concept": "esrs:AverageNumberOfTrainingHoursPerEmployeeAndOrNonemployee",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.baselineValueAgainstWhichProgressIsConsideredAbsoluteValue": {
       "concept": "esrs:BaselineValueAgainstWhichProgressIsConsideredAbsoluteValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.baselineValueAgainstWhichProgressIsConsideredPercentage": {
       "concept": "esrs:BaselineValueAgainstWhichProgressIsConsideredPercentage",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.baseYearFromWhichProgressIsMeasured": {
       "concept": "esrs:BaseYearFromWhichProgressIsMeasured",
@@ -668,33 +740,43 @@
     },
     "full.block0001.biogenicEmissionsOfCO2FromCombustionOrBiodegradationOfBiomassNotIncludedInScope1GHGEmissions": {
       "concept": "esrs:BiogenicEmissionsOfCO2FromCombustionOrBiodegradationOfBiomassNotIncludedInScope1GHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0001.biogenicEmissionsOfCO2FromCombustionOrBiodegradationOfBiomassNotIncludedInScope2GHGEmissions": {
       "concept": "esrs:BiogenicEmissionsOfCO2FromCombustionOrBiodegradationOfBiomassNotIncludedInScope2GHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0001.biogenicEmissionsOfCO2FromCombustionOrBiodegradationOfBiomassThatOccurInUpstreamAndDownstreamValueChainNotIncludedInScope3GHGEmissions": {
       "concept": "esrs:BiogenicEmissionsOfCO2FromCombustionOrBiodegradationOfBiomassThatOccurInUpstreamAndDownstreamValueChainNotIncludedInScope3GHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0001.boardsGenderDiversityRatio": {
       "concept": "esrs:BoardsGenderDiversityRatio",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0001.capitalExpendituresCapExInConjunctionWithMajorIncidentsAndDeposits": {
       "concept": "esrs:CapitalExpendituresCapExInConjunctionWithMajorIncidentsAndDeposits",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.carbonCreditsAreUsedSeparatelyFromGHGEmissionsAndOrGHGEmissionReductionTargets": {
       "concept": "esrs:CarbonCreditsAreUsedSeparatelyFromGHGEmissionsAndOrGHGEmissionReductionTargets",
@@ -726,7 +808,9 @@
       "concept": "esrs:CarbonPriceAppliedForEachMetricTonneOfGreenhouseGasEmission",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.carbonPriceUsedInInternalCarbonPricingSchemeIsConsistentWithCarbonPriceUsedInFinancialStatements": {
       "concept": "esrs:CarbonPriceUsedInInternalCarbonPricingSchemeIsConsistentWithCarbonPriceUsedInFinancialStatements",
@@ -745,31 +829,41 @@
       "concept": "esrs:CarryingAmountOfAssetsAtMaterialPhysicalRisk",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.carryingAmountOfAssetsAtMaterialTransitionRisk": {
       "concept": "esrs:CarryingAmountOfAssetsAtMaterialTransitionRisk",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.carryingAmountOfLiabilitiesAtMaterialTransitionRisk": {
       "concept": "esrs:CarryingAmountOfLiabilitiesAtMaterialTransitionRisk",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.carryingAmountOfRealEstateAssets": {
       "concept": "esrs:CarryingAmountOfRealEstateAssets",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.carryingAmountOfRealEstateAssetsForWhichEnergyConsumptionIsBasedOnInternalEstimates": {
       "concept": "esrs:CarryingAmountOfRealEstateAssetsForWhichEnergyConsumptionIsBasedOnInternalEstimates",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0001.channelsToRaiseConcernsOrNeedsAllowValueChainWorkersAffectedCommunitiesConsumersAndEndusersToUseThemAnonymously": {
       "concept": "esrs:ChannelsToRaiseConcernsOrNeedsAllowValueChainWorkersAffectedCommunitiesConsumersAndEndusersToUseThemAnonymously",
@@ -864,21 +958,27 @@
     },
     "full.block0001.consumptionOfPurchasedOrAcquiredElectricityHeatSteamAndCoolingFromRenewableSources": {
       "concept": "esrs:ConsumptionOfPurchasedOrAcquiredElectricityHeatSteamAndCoolingFromRenewableSources",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0001.consumptionOfPurchasedOrAcquiredElectricityHeatSteamOrCoolingFromFossilSources": {
       "concept": "esrs:ConsumptionOfPurchasedOrAcquiredElectricityHeatSteamOrCoolingFromFossilSources",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0001.consumptionOfSelfgeneratedNonfuelRenewableEnergy": {
       "concept": "esrs:ConsumptionOfSelfgeneratedNonfuelRenewableEnergy",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     }
   }
 }

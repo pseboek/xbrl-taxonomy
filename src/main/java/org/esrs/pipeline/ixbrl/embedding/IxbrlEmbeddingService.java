@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.esrs.pipeline.xbrl.context.ContextKey;
+import org.esrs.pipeline.xbrl.fact.FactBuilder;
 import org.esrs.pipeline.xbrl.fact.XbrlFact;
 import org.esrs.pipeline.xbrl.unit.UnitCatalog;
 import org.esrs.pipeline.xbrl.unit.UnitCatalog.UnitDefinition;
@@ -51,11 +52,20 @@ public class IxbrlEmbeddingService {
 
     private String asInlineFact(XbrlFact fact) {
         String name = fact.conceptQname();
+        boolean nilFact = FactBuilder.NIL_SENTINEL.equals(fact.value());
         if (fact.numeric()) {
             String decimals = fact.decimals() == null ? "INF" : fact.decimals();
+            if (nilFact) {
+                return "<ix:nonFraction name=\"" + name + "\" contextRef=\"" + fact.contextRef()
+                    + "\" xsi:nil=\"true\"></ix:nonFraction>";
+            }
             return "<ix:nonFraction name=\"" + name + "\" contextRef=\"" + fact.contextRef()
                 + "\" unitRef=\"" + fact.unitRef() + "\" decimals=\"" + decimals + "\">"
                 + fact.value() + "</ix:nonFraction>";
+        }
+        if (nilFact) {
+            return "<ix:nonNumeric name=\"" + name + "\" contextRef=\"" + fact.contextRef()
+                + "\" xsi:nil=\"true\"></ix:nonNumeric>";
         }
         return "<ix:nonNumeric name=\"" + name + "\" contextRef=\"" + fact.contextRef() + "\">"
             + fact.value() + "</ix:nonNumeric>";

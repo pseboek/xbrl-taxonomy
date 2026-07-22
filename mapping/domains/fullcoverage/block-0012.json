@@ -697,9 +697,11 @@
     },
     "full.block0012.useOfLandArea": {
       "concept": "esrs:UseOfLandArea",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0012.valueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrLegitimateRepresentativesOrTheirCredibleProxiesPlayRoleInDecisionsRegardingDesignAndImplementationOfProgrammesOrProcesses": {
       "concept": "esrs:ValueChainWorkersAffectedCommunitiesConsumersAndEndUsersAndOrLegitimateRepresentativesOrTheirCredibleProxiesPlayRoleInDecisionsRegardingDesignAndImplementationOfProgrammesOrProcesses",
@@ -755,63 +757,83 @@
     },
     "full.block0012.wasteGenerated": {
       "concept": "esrs:WasteGenerated",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0012.wasteGeneratedDirectedToDisposal": {
       "concept": "esrs:WasteGeneratedDirectedToDisposal",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0012.wasteGeneratedDivertedFromDisposal": {
       "concept": "esrs:WasteGeneratedDivertedFromDisposal",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0012.waterConsumptionInAreasAtWaterRisk": {
       "concept": "esrs:WaterConsumptionInAreasAtWaterRisk",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "m3",
+      "decimals": 2
     },
     "full.block0012.waterConsumptionInAreasOfHighwaterStress": {
       "concept": "esrs:WaterConsumptionInAreasOfHighwaterStress",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "m3",
+      "decimals": 2
     },
     "full.block0012.waterDischarges": {
       "concept": "esrs:WaterDischarges",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "m3",
+      "decimals": 2
     },
     "full.block0012.waterIntensityTotalWaterConsumptionPerNetRevenue": {
       "concept": "esrs:WaterIntensityTotalWaterConsumptionPerNetRevenue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0012.waterRecycledAndReused": {
       "concept": "esrs:WaterRecycledAndReused",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "m3",
+      "decimals": 2
     },
     "full.block0012.waterStored": {
       "concept": "esrs:WaterStored",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "m3",
+      "decimals": 2
     },
     "full.block0012.waterWithdrawals": {
       "concept": "esrs:WaterWithdrawals",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "m3",
+      "decimals": 2
     },
     "full.block0012.widerIndustryOrCollaborativeActionWithOtherRelevantPartiesWillBeRequired": {
       "concept": "esrs:WiderIndustryOrCollaborativeActionWithOtherRelevantPartiesWillBeRequired",

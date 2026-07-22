@@ -4,295 +4,393 @@
       "concept": "esrs:PercentageOfLocationBasedScope2GreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfMarketbasedScope2GHGEmissionsLinkedToPurchasedElectricityBundledWithInstruments": {
       "concept": "esrs:PercentageOfMarketbasedScope2GHGEmissionsLinkedToPurchasedElectricityBundledWithInstruments",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfMarketBasedScope2GreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfMarketBasedScope2GreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfMembersOfAdministrativeManagementAndSupervisoryBodies": {
       "concept": "esrs:PercentageOfMembersOfAdministrativeManagementAndSupervisoryBodies",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNetRevenueFromBusinessActivitiesAtMaterialPhysicalRisk": {
       "concept": "esrs:PercentageOfNetRevenueFromBusinessActivitiesAtMaterialPhysicalRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNetRevenueFromBusinessActivitiesAtMaterialTransitionRisk": {
       "concept": "esrs:PercentageOfNetRevenueFromBusinessActivitiesAtMaterialTransitionRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNetRevenueFromCustomersOperatingInCoalrelatedActivities": {
       "concept": "esrs:PercentageOfNetRevenueFromCustomersOperatingInCoalrelatedActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNetRevenueFromCustomersOperatingInGasrelatedActivities": {
       "concept": "esrs:PercentageOfNetRevenueFromCustomersOperatingInGasrelatedActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNetRevenueFromCustomersOperatingInOilrelatedActivities": {
       "concept": "esrs:PercentageOfNetRevenueFromCustomersOperatingInOilrelatedActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNetRevenueMadeWithProductsAndServicesThatAreOrThatContainSubstancesOfConcern": {
       "concept": "esrs:PercentageOfNetRevenueMadeWithProductsAndServicesThatAreOrThatContainSubstancesOfConcern",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNetRevenueMadeWithProductsAndServicesThatAreOrThatContainSubstancesOfVeryHighConcern": {
       "concept": "esrs:PercentageOfNetRevenueMadeWithProductsAndServicesThatAreOrThatContainSubstancesOfVeryHighConcern",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNonemployeesInOwnWorkforceWhoseWorkingConditionsAndTermsOfEmploymentAreDeterminedOrInfluencedByCollectiveBargainingAgreements": {
       "concept": "esrs:PercentageOfNonemployeesInOwnWorkforceWhoseWorkingConditionsAndTermsOfEmploymentAreDeterminedOrInfluencedByCollectiveBargainingAgreements",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfNonrecycledWaste": {
       "concept": "esrs:PercentageOfNonrecycledWaste",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfOwnWorkersCoveredByHealthAndSafetyManagementSystemBasedOnLegalRequirementsAndOrRecognisedStandardsOrGuidelinesAndWhichHasBeenInternallyAuditedAndOrAuditedOrCertifiedByExternalParty": {
       "concept": "esrs:PercentageOfOwnWorkersCoveredByHealthAndSafetyManagementSystemBasedOnLegalRequirementsAndOrRecognisedStandardsOrGuidelinesAndWhichHasBeenInternallyAuditedAndOrAuditedOrCertifiedByExternalParty",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfPaymentsAlignedWithStandardPaymentTerms": {
       "concept": "esrs:PercentageOfPaymentsAlignedWithStandardPaymentTerms",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfPeopleInOwnWorkforceWhoAreCoveredByHealthAndSafetyManagementSystemBasedOnLegalRequirementsAndOrRecognisedStandardsOrGuidelines": {
       "concept": "esrs:PercentageOfPeopleInOwnWorkforceWhoAreCoveredByHealthAndSafetyManagementSystemBasedOnLegalRequirementsAndOrRecognisedStandardsOrGuidelines",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfPersonsWithDisabilitiesAmongstEmployees": {
       "concept": "esrs:PercentageOfPersonsWithDisabilitiesAmongstEmployees",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfRemunerationRecognisedInCurrentPeriodThatIsLinkedToClimateRelatedConsiderations": {
       "concept": "esrs:PercentageOfRemunerationRecognisedInCurrentPeriodThatIsLinkedToClimateRelatedConsiderations",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfRenewableSourcesInTotalEnergyConsumption": {
       "concept": "esrs:PercentageOfRenewableSourcesInTotalEnergyConsumption",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfScope1GreenhouseGasEmissionsFromRegulatedEmissionTradingSchemes": {
       "concept": "esrs:PercentageOfScope1GreenhouseGasEmissionsFromRegulatedEmissionTradingSchemes",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfScope1GreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfScope1GreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfScope1GreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction": {
       "concept": "esrs:PercentageOfScope1GreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfScope2LocationbasedGreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction": {
       "concept": "esrs:PercentageOfScope2LocationbasedGreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfScope2MarketbasedGreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction": {
       "concept": "esrs:PercentageOfScope2MarketbasedGreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfScope3GreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfScope3GreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfScope3GreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction": {
       "concept": "esrs:PercentageOfScope3GreenhouseGasEmissionsReductionInTotalGreenhouseGasEmissionsReduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfSecondaryReusedOrRecycledComponentsSecondaryIntermediaryProductsAndSecondaryMaterialsUsedToManufactureProductsAndServices": {
       "concept": "esrs:PercentageOfSecondaryReusedOrRecycledComponentsSecondaryIntermediaryProductsAndSecondaryMaterialsUsedToManufactureProductsAndServices",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToLocationBasedScope2GreenhouseGasEmissions": {
       "concept": "esrs:PercentageOfTargetRelatedToLocationBasedScope2GreenhouseGasEmissions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToLocationBasedScope2GreenhouseGasEmissionsAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfTargetRelatedToLocationBasedScope2GreenhouseGasEmissionsAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToLocationBasedScope2GreenhouseGasEmissionsIntensityValue": {
       "concept": "esrs:PercentageOfTargetRelatedToLocationBasedScope2GreenhouseGasEmissionsIntensityValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToMarketBasedScope2GreenhouseGasEmissions": {
       "concept": "esrs:PercentageOfTargetRelatedToMarketBasedScope2GreenhouseGasEmissions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToMarketBasedScope2GreenhouseGasEmissionsAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfTargetRelatedToMarketBasedScope2GreenhouseGasEmissionsAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToMarketBasedScope2GreenhouseGasEmissionsIntensityValue": {
       "concept": "esrs:PercentageOfTargetRelatedToMarketBasedScope2GreenhouseGasEmissionsIntensityValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToScope1GreenhouseGasEmissions": {
       "concept": "esrs:PercentageOfTargetRelatedToScope1GreenhouseGasEmissions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToScope1GreenhouseGasEmissionsAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfTargetRelatedToScope1GreenhouseGasEmissionsAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToScope1GreenhouseGasEmissionsIntensityValue": {
       "concept": "esrs:PercentageOfTargetRelatedToScope1GreenhouseGasEmissionsIntensityValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToScope3GreenhouseGasEmissions": {
       "concept": "esrs:PercentageOfTargetRelatedToScope3GreenhouseGasEmissions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToScope3GreenhouseGasEmissionsAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfTargetRelatedToScope3GreenhouseGasEmissionsAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToScope3GreenhouseGasEmissionsIntensityValue": {
       "concept": "esrs:PercentageOfTargetRelatedToScope3GreenhouseGasEmissionsIntensityValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToTotalGreenhouseGasEmissions": {
       "concept": "esrs:PercentageOfTargetRelatedToTotalGreenhouseGasEmissions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToTotalGreenhouseGasEmissionsAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfTargetRelatedToTotalGreenhouseGasEmissionsAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTargetRelatedToTotalGreenhouseGasEmissionsIntensityValue": {
       "concept": "esrs:PercentageOfTargetRelatedToTotalGreenhouseGasEmissionsIntensityValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTotalEmissionsOfPollutantsToSoilOccurringInAreasAtWaterRisk": {
       "concept": "esrs:PercentageOfTotalEmissionsOfPollutantsToSoilOccurringInAreasAtWaterRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTotalEmissionsOfPollutantsToSoilOccurringInAreasOfHighwaterStress": {
       "concept": "esrs:PercentageOfTotalEmissionsOfPollutantsToSoilOccurringInAreasOfHighwaterStress",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTotalEmissionsOfPollutantsToWaterOccurringInAreasAtWaterRisk": {
       "concept": "esrs:PercentageOfTotalEmissionsOfPollutantsToWaterOccurringInAreasAtWaterRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTotalEmissionsOfPollutantsToWaterOccurringInAreasOfHighwaterStress": {
       "concept": "esrs:PercentageOfTotalEmissionsOfPollutantsToWaterOccurringInAreasOfHighwaterStress",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTotalEmployeesCoveredByCollectiveBargainingAgreements": {
       "concept": "esrs:PercentageOfTotalEmployeesCoveredByCollectiveBargainingAgreements",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfTotalGreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear": {
       "concept": "esrs:PercentageOfTotalGreenhouseGasEmissionsReductionAsOfEmissionsOfBaseYear",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.percentageOfVariableRemunerationDependentOnSustainabilityrelatedTargetsAndOrImpacts": {
       "concept": "esrs:PercentageOfVariableRemunerationDependentOnSustainabilityrelatedTargetsAndOrImpacts",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0010.performanceAgainstSpecificSustainabilityrelatedTargetsAndOrImpactsIsBeingAssessedInIncentiveSchemesForMembersOfAdministrativeManagementAndSupervisoryBodies": {
       "concept": "esrs:PerformanceAgainstSpecificSustainabilityrelatedTargetsAndOrImpactsIsBeingAssessedInIncentiveSchemesForMembersOfAdministrativeManagementAndSupervisoryBodies",
@@ -882,13 +980,17 @@
       "concept": "esrs:PotentialFutureLiabilitiesBasedOnExistingContractualAgreementsAssociatedWithCarbonCreditsPlannedToBeCancelledInNearFuture",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0010.potentialMarketSizeOfLowcarbonProductsAndServicesOrAdaptationSolutionsToWhichUndertakingHasOrMayHaveAccess": {
       "concept": "esrs:PotentialMarketSizeOfLowcarbonProductsAndServicesOrAdaptationSolutionsToWhichUndertakingHasOrMayHaveAccess",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0010.proceduresToInvestigateBusinessConductIncidentsPromptlyIndependentlyAndObjectivelyAreInPlace": {
       "concept": "esrs:ProceduresToInvestigateBusinessConductIncidentsPromptlyIndependentlyAndObjectivelyAreInPlace",

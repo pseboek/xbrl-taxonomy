@@ -12,6 +12,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.xbrl.context.ContextKey;
+import org.esrs.pipeline.xbrl.fact.FactBuilder;
 import org.esrs.pipeline.xbrl.fact.XbrlFact;
 import org.esrs.pipeline.xbrl.unit.UnitCatalog;
 import org.esrs.pipeline.xbrl.unit.UnitCatalog.UnitDefinition;
@@ -24,6 +25,7 @@ public class XbrlInstanceWriter {
     private static final String NS_ESRS = "https://xbrl.efrag.org/taxonomy/esrs/2023-12-22";
     private static final String NS_ISO4217 = UnitCatalog.NS_ISO4217;
     private static final String NS_UOM = UnitCatalog.NS_UOM;
+    private static final String NS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
 
     public void write(Path outputFile,
                       ReportEnvelope envelope,
@@ -47,6 +49,7 @@ public class XbrlInstanceWriter {
             writer.setPrefix("esrs", NS_ESRS);
             writer.setPrefix("iso4217", NS_ISO4217);
             writer.setPrefix("uom", NS_UOM);
+            writer.setPrefix("xsi", NS_XSI);
 
             writer.writeStartElement("xbrli", "xbrl", NS_XBRLI);
             writer.writeNamespace("xbrli", NS_XBRLI);
@@ -56,6 +59,7 @@ public class XbrlInstanceWriter {
             writer.writeNamespace("esrs", NS_ESRS);
             writer.writeNamespace("iso4217", NS_ISO4217);
             writer.writeNamespace("uom", NS_UOM);
+            writer.writeNamespace("xsi", NS_XSI);
 
             writeSchemaRef(writer, schemaRefHref);
             writeContexts(writer, contexts);
@@ -185,13 +189,19 @@ public class XbrlInstanceWriter {
             writer.writeCharacters("\n  ");
             writer.writeStartElement("esrs", localName, NS_ESRS);
             writer.writeAttribute("contextRef", fact.contextRef());
-            if (fact.unitRef() != null) {
+            boolean nilFact = FactBuilder.NIL_SENTINEL.equals(fact.value());
+            if (nilFact) {
+                writer.writeAttribute("xsi", NS_XSI, "nil", "true");
+            }
+            if (!nilFact && fact.unitRef() != null) {
                 writer.writeAttribute("unitRef", fact.unitRef());
             }
-            if (fact.decimals() != null) {
+            if (!nilFact && fact.decimals() != null) {
                 writer.writeAttribute("decimals", fact.decimals());
             }
-            writer.writeCharacters(fact.value());
+            if (!nilFact) {
+                writer.writeCharacters(fact.value());
+            }
             writer.writeEndElement();
         }
         writer.writeCharacters("\n");

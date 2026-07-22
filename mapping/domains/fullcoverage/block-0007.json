@@ -4,19 +4,25 @@
       "concept": "esrs:ExpectedCostSavingsFromClimateChangeAdaptationActions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.expectedCostSavingsFromClimateChangeMitigationActions": {
       "concept": "esrs:ExpectedCostSavingsFromClimateChangeMitigationActions",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.expectedGHGEmissionReductions": {
       "concept": "esrs:ExpectedGHGEmissionReductions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0007.explanationOfAnotherMethodologyUsedToCompileDataEmployeesExplanatory": {
       "concept": "esrs:ExplanationOfAnotherMethodologyUsedToCompileDataEmployeesExplanatory",
@@ -289,67 +295,89 @@
       "concept": "esrs:FinancialAndInKindPoliticalContributionsMade",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.financialPoliticalContributionsMade": {
       "concept": "esrs:FinancialPoliticalContributionsMade",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.financialResourcesAllocatedToActionPlanCapEx": {
       "concept": "esrs:FinancialResourcesAllocatedToActionPlanCapEx",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.financialResourcesAllocatedToActionPlanOpEx": {
       "concept": "esrs:FinancialResourcesAllocatedToActionPlanOpEx",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.financingEffectsDirectAndIndirectCostsOfBiodiversityOffsets": {
       "concept": "esrs:FinancingEffectsDirectAndIndirectCostsOfBiodiversityOffsets",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.fuelConsumptionFromCoalAndCoalProducts": {
       "concept": "esrs:FuelConsumptionFromCoalAndCoalProducts",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0007.fuelConsumptionFromCrudeOilAndPetroleumProducts": {
       "concept": "esrs:FuelConsumptionFromCrudeOilAndPetroleumProducts",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0007.fuelConsumptionFromNaturalGas": {
       "concept": "esrs:FuelConsumptionFromNaturalGas",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0007.fuelConsumptionFromOtherFossilSources": {
       "concept": "esrs:FuelConsumptionFromOtherFossilSources",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0007.fuelConsumptionFromRenewableSources": {
       "concept": "esrs:FuelConsumptionFromRenewableSources",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0007.genderPayGap": {
       "concept": "esrs:GenderPayGap",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0007.gHGEmissionReductionTargetIsScienceBasedAndCompatibleWithLimitingGlobalWarmingToOneAndHalfDegreesCelsius": {
       "concept": "esrs:GHGEmissionReductionTargetIsScienceBasedAndCompatibleWithLimitingGlobalWarmingToOneAndHalfDegreesCelsius",
@@ -366,21 +394,27 @@
     },
     "full.block0007.gHGEmissionsAssociatedWithRemovalActivity": {
       "concept": "esrs:GHGEmissionsAssociatedWithRemovalActivity",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0007.gHGEmissionsIntensityLocationbasedTotalGHGEmissionsPerNetRevenue": {
       "concept": "esrs:GHGEmissionsIntensityLocationbasedTotalGHGEmissionsPerNetRevenue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.gHGEmissionsIntensityMarketbasedTotalGHGEmissionsPerNetRevenue": {
       "concept": "esrs:GHGEmissionsIntensityMarketbasedTotalGHGEmissionsPerNetRevenue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.gHGEmissionsReductionTargetsAndOrAnyOtherTargetsHaveBeenSetToManageMaterialClimaterelatedImpactsRisksAndOpportunities": {
       "concept": "esrs:GHGEmissionsReductionTargetsAndOrAnyOtherTargetsHaveBeenSetToManageMaterialClimaterelatedImpactsRisksAndOpportunities",
@@ -397,9 +431,11 @@
     },
     "full.block0007.gHGRemovalsAndStorage": {
       "concept": "esrs:GHGRemovalsAndStorage",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0007.greenhouseGasesCoveredByEmissionReductionTarget": {
       "concept": "esrs:GreenhouseGasesCoveredByEmissionReductionTarget",
@@ -435,27 +471,35 @@
     },
     "full.block0007.grossGreenhouseGasEmissions": {
       "concept": "esrs:GrossGreenhouseGasEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0007.grossLocationBasedScope2GreenhouseGasEmissions": {
       "concept": "esrs:GrossLocationBasedScope2GreenhouseGasEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0007.grossMarketBasedScope2GreenhouseGasEmissions": {
       "concept": "esrs:GrossMarketBasedScope2GreenhouseGasEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0007.grossScope3GreenhouseGasEmissions": {
       "concept": "esrs:GrossScope3GreenhouseGasEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0007.groundsForDiscriminationSpecificallyCoveredByPolicy": {
       "concept": "esrs:GroundsForDiscriminationSpecificallyCoveredByPolicy",
@@ -489,9 +533,11 @@
     },
     "full.block0007.hazardousWaste": {
       "concept": "esrs:HazardousWaste",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0007.healthAndSafetyManagementSystemOrCertainPartsThereofHasBeenSubjectToInternalAuditOrExternalCertification": {
       "concept": "esrs:HealthAndSafetyManagementSystemOrCertainPartsThereofHasBeenSubjectToInternalAuditOrExternalCertification",
@@ -611,13 +657,17 @@
       "concept": "esrs:IncreaseDecreaseInNetRevenueFromLowcarbonProductsAndServicesOrAdaptationSolutionsToWhichUndertakingHasOrMayHaveAccess",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0007.increaseDecreaseInWaterStorage": {
       "concept": "esrs:IncreaseDecreaseInWaterStorage",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "m3",
+      "decimals": 2
     },
     "full.block0007.indigenousPeoplesHaveBeenConsultedOnModeAndOrParametersOfEngagement": {
       "concept": "esrs:IndigenousPeoplesHaveBeenConsultedOnModeAndOrParametersOfEngagement",

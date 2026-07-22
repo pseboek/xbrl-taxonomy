@@ -54,9 +54,11 @@
     },
     "full.block0011.productsAndTechnicalAndBiologicalMaterialsUsed": {
       "concept": "esrs:ProductsAndTechnicalAndBiologicalMaterialsUsed",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.programsToPromoteAccessToSkillsDevelopmentAreInPlace": {
       "concept": "esrs:ProgramsToPromoteAccessToSkillsDevelopmentAreInPlace",
@@ -88,7 +90,9 @@
       "concept": "esrs:ProvisionsForEnvironmentalProtectionAndRemediationCosts",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.publicClaimsOfGHGNeutralityThatInvolveUseOfCarbonCreditsAreAccompaniedByGHGEmissionReductionTargets": {
       "concept": "esrs:PublicClaimsOfGHGNeutralityThatInvolveUseOfCarbonCreditsAreAccompaniedByGHGEmissionReductionTargets",
@@ -120,25 +124,33 @@
       "concept": "esrs:QuantitativeMetricAbsoluteValue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.quantitativeMetricPercentage": {
       "concept": "esrs:QuantitativeMetricPercentage",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.radioactiveWaste": {
       "concept": "esrs:RadioactiveWaste",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.rateOfRecordableWorkrelatedAccidents": {
       "concept": "esrs:RateOfRecordableWorkrelatedAccidents",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.reasonablyExpectedTimeHorizonsOfAnticipatedFinancialEffectsOfMaterialRisksAndOpportunitiesOnFinancialPerformanceAndCashFlows": {
       "concept": "esrs:ReasonablyExpectedTimeHorizonsOfAnticipatedFinancialEffectsOfMaterialRisksAndOpportunitiesOnFinancialPerformanceAndCashFlows",
@@ -180,13 +192,17 @@
       "concept": "esrs:RemunerationRatioAdjustedForPurchasingPowerDifferencesBetweenCountries",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.renewableEnergyProduction": {
       "concept": "esrs:RenewableEnergyProduction",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0011.reportingPeriodEndDate": {
       "concept": "esrs:ReportingPeriodEndDate",
@@ -308,103 +324,137 @@
       "concept": "esrs:Revenue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromActivitiesInHighClimateImpactSectors": {
       "concept": "esrs:RevenueFromActivitiesInHighClimateImpactSectors",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromActivitiesOtherThanInHighClimateImpactSectors": {
       "concept": "esrs:RevenueFromActivitiesOtherThanInHighClimateImpactSectors",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromBusinessActivitiesAtMaterialPhysicalRisk": {
       "concept": "esrs:RevenueFromBusinessActivitiesAtMaterialPhysicalRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromBusinessActivitiesAtMaterialTransitionRisk": {
       "concept": "esrs:RevenueFromBusinessActivitiesAtMaterialTransitionRisk",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromChemicalsProduction": {
       "concept": "esrs:RevenueFromChemicalsProduction",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromCoal": {
       "concept": "esrs:RevenueFromCoal",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromControversialWeapons": {
       "concept": "esrs:RevenueFromControversialWeapons",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromCultivationAndOrProductionOfTobacco": {
       "concept": "esrs:RevenueFromCultivationAndOrProductionOfTobacco",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromCustomersOperatingInCoalRelatedActivities": {
       "concept": "esrs:RevenueFromCustomersOperatingInCoalRelatedActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromCustomersOperatingInGasRelatedActivities": {
       "concept": "esrs:RevenueFromCustomersOperatingInGasRelatedActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromCustomersOperatingInOilRelatedActivities": {
       "concept": "esrs:RevenueFromCustomersOperatingInOilRelatedActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromFossilFuelCoalOilAndGasSector": {
       "concept": "esrs:RevenueFromFossilFuelCoalOilAndGasSector",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromGas": {
       "concept": "esrs:RevenueFromGas",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromOil": {
       "concept": "esrs:RevenueFromOil",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.revenueFromTaxonomyalignedEconomicActivitiesRelatedToFossilGas": {
       "concept": "esrs:RevenueFromTaxonomyalignedEconomicActivitiesRelatedToFossilGas",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.reversals": {
       "concept": "esrs:Reversals",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "tCO2e",
+      "decimals": 2
     },
     "full.block0011.scenariosAreInformedByExpectationsPublishedByAuthoritativeIntergovernmentalBodiesAndOrByScientificConsensus": {
       "concept": "esrs:ScenariosAreInformedByExpectationsPublishedByAuthoritativeIntergovernmentalBodiesAndOrByScientificConsensus",
@@ -434,15 +484,19 @@
     },
     "full.block0011.sealedArea": {
       "concept": "esrs:SealedArea",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.secondaryReusedOrRecycledComponentsSecondaryIntermediaryProductsAndSecondaryMaterialsUsedToManufactureProductsAndServices": {
       "concept": "esrs:SecondaryReusedOrRecycledComponentsSecondaryIntermediaryProductsAndSecondaryMaterialsUsedToManufactureProductsAndServices",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0011.severeHumanRightsIssuesAndIncidentsConnectedToUpstreamAndDownstreamValueChainNOAffectedCommunitiesNOConsumersAndEndusersHaveBeenReported": {
       "concept": "esrs:SevereHumanRightsIssuesAndIncidentsConnectedToUpstreamAndDownstreamValueChainNOAffectedCommunitiesNOConsumersAndEndusersHaveBeenReported",
@@ -461,19 +515,25 @@
       "concept": "esrs:SignificantCapExForCoalrelatedEconomicActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.significantCapExForGasrelatedEconomicActivities": {
       "concept": "esrs:SignificantCapExForGasrelatedEconomicActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.significantCapExForOilrelatedEconomicActivities": {
       "concept": "esrs:SignificantCapExForOilrelatedEconomicActivities",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0011.siteLocationsAndBusinessActivitiesHaveBeenScreenedInOrderToIdentifyActualAndPotentialPollutionrelatedImpactsRisksAndOpportunitiesInOwnOperationsAndUpstreamAndDownstreamValueChain": {
       "concept": "esrs:SiteLocationsAndBusinessActivitiesHaveBeenScreenedInOrderToIdentifyActualAndPotentialPollutionrelatedImpactsRisksAndOpportunitiesInOwnOperationsAndUpstreamAndDownstreamValueChain",

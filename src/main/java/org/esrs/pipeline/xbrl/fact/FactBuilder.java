@@ -16,6 +16,7 @@ import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.xbrl.unit.UnitCatalog;
 
 public class FactBuilder {
+    public static final String NIL_SENTINEL = "__NIL__";
     private static final Set<String> YES_NO_ENUM = Set.of("esrs:YesMember", "esrs:NoMember");
 
     public FactBuildResult build(ReportEnvelope envelope,
@@ -27,7 +28,7 @@ public class FactBuilder {
         int seq = 1;
         for (DisclosureFact sourceFact : envelope.facts()) {
             MappingEntry entry = mappingRegistry.getRequired(sourceFact.field());
-            validatePeriod(entry, envelope.period().instant(), sourceFact.field());
+            validatePeriod(entry, sourceFact.field());
             validateDimensions(entry, sourceFact);
             String normalized = normalizeValue(entry, sourceFact.value());
             String occurrence = sourceFact.field() + "#" + seq;
@@ -36,11 +37,12 @@ public class FactBuilder {
             String decimals = resolveDecimals(entry, sourceFact);
             boolean numeric = "numeric".equalsIgnoreCase(entry.type());
             boolean enumeration = "enumeration".equalsIgnoreCase(entry.type());
+            boolean nilFact = NIL_SENTINEL.equals(normalized);
 
             if (contextRef == null || contextRef.isBlank()) {
                 throw new IllegalArgumentException("Missing context reference for field occurrence: " + occurrence);
             }
-            if (numeric && (unitRef == null || unitRef.isBlank())) {
+            if (numeric && !nilFact && (unitRef == null || unitRef.isBlank())) {
                 throw new IllegalArgumentException("Missing numeric unit for field: " + sourceFact.field());
             }
 
@@ -78,7 +80,7 @@ public class FactBuilder {
         return UnitCatalog.sanitizeUnitRef(unit);
     }
 
-    private void validatePeriod(MappingEntry entry, boolean reportInstant, String field) {
+    private void validatePeriod(MappingEntry entry, String field) {
         if (entry.period() == null || entry.period().isBlank()) {
             return;
         }
@@ -87,9 +89,6 @@ public class FactBuilder {
         boolean mappingDuration = "duration".equalsIgnoreCase(entry.period());
         if (!mappingInstant && !mappingDuration) {
             throw new IllegalArgumentException("Unsupported period type in mapping for field " + field + ": " + entry.period());
-        }
-        if (mappingInstant != reportInstant) {
-            throw new IllegalArgumentException("Period mismatch for field " + field + ": mapping=" + entry.period());
         }
     }
 
@@ -120,6 +119,10 @@ public class FactBuilder {
         String trimmed = value.trim();
         if (trimmed.isEmpty()) {
             throw new IllegalArgumentException("Fact value is empty for field: " + entry.field());
+        }
+
+        if (NIL_SENTINEL.equals(trimmed)) {
+            return NIL_SENTINEL;
         }
 
         if ("numeric".equalsIgnoreCase(entry.type())) {

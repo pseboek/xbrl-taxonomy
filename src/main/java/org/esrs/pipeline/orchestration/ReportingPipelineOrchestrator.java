@@ -106,7 +106,7 @@ public class ReportingPipelineOrchestrator {
         }
         mappingTaxonomyValidator.validate(mappingRegistry, taxonomyRoot);
 
-        ContextBuilder.ContextBuildResult contexts = contextBuilder.build(envelope);
+        ContextBuilder.ContextBuildResult contexts = contextBuilder.build(envelope, mappingRegistry);
         FactBuilder.FactBuildResult facts = factBuilder.build(envelope, mappingRegistry, contexts.fieldOccurrenceContext());
 
         Path xbrlOut = outputDir.resolve("report-instance.xml");

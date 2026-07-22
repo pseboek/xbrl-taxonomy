@@ -443,19 +443,25 @@
       "concept": "esrs:DurationOfClassroomTraining",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0006.durationOfComputerbasedTraining": {
       "concept": "esrs:DurationOfComputerbasedTraining",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0006.durationOfVoluntaryComputerbasedTraining": {
       "concept": "esrs:DurationOfVoluntaryComputerbasedTraining",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0006.ecologicalThresholdsAndOrEntityspecificAllocationsWereTakenIntoConsiderationWhenSettingTarget": {
       "concept": "esrs:EcologicalThresholdsAndOrEntityspecificAllocationsWereTakenIntoConsiderationWhenSettingTarget",
@@ -537,21 +543,27 @@
     },
     "full.block0006.emissionsToAir": {
       "concept": "esrs:EmissionsToAir",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0006.emissionsToSoil": {
       "concept": "esrs:EmissionsToSoil",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0006.emissionsToWater": {
       "concept": "esrs:EmissionsToWater",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 2
     },
     "full.block0006.employeesAndOrNonemployeesCoverageBySocialProtectionThroughPublicProgramsOrThroughBenefitsOfferedAgainstLossOfIncomeDueToMajorLifeEvents": {
       "concept": "esrs:EmployeesAndOrNonemployeesCoverageBySocialProtectionThroughPublicProgramsOrThroughBenefitsOfferedAgainstLossOfIncomeDueToMajorLifeEvents",
@@ -574,27 +586,35 @@
     },
     "full.block0006.energyConsumptionFromFossilSources": {
       "concept": "esrs:EnergyConsumptionFromFossilSources",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0006.energyConsumptionFromNuclearSources": {
       "concept": "esrs:EnergyConsumptionFromNuclearSources",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0006.energyConsumptionFromRenewableSources": {
       "concept": "esrs:EnergyConsumptionFromRenewableSources",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "kWh",
+      "decimals": 2
     },
     "full.block0006.energyIntensityFromActivitiesInHighClimateImpactSectorsTotalEnergyConsumptionPerNetRevenue": {
       "concept": "esrs:EnergyIntensityFromActivitiesInHighClimateImpactSectorsTotalEnergyConsumptionPerNetRevenue",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0006.engagementWithStakeholderOccurs": {
       "concept": "esrs:EngagementWithStakeholderOccurs",
@@ -649,7 +669,9 @@
       "concept": "esrs:EstimatedAmountOfPotentiallyStrandedAssets",
       "type": "numeric",
       "period": "instant",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "EUR",
+      "decimals": 2
     },
     "full.block0006.eUBiodiversityStrategyFor2030TargetsToWhichTransitionPlanIsConnected": {
       "concept": "esrs:EUBiodiversityStrategyFor2030TargetsToWhichTransitionPlanIsConnected",

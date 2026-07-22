@@ -18,9 +18,14 @@ public final class UnitCatalog {
         Map.entry("kg", UnitDefinition.simple("uom:kg")),
         Map.entry("m3", UnitDefinition.simple("uom:m3")),
         Map.entry("count", UnitDefinition.simple("xbrli:pure")),
+        Map.entry("shares", UnitDefinition.simple("xbrli:shares")),
         Map.entry("FTE", UnitDefinition.simple("uom:FTE")),
         Map.entry("percent", UnitDefinition.divide("xbrli:pure", "uom:percentItem")),
-        Map.entry("ratio", UnitDefinition.simple("xbrli:pure"))
+        Map.entry("ratio", UnitDefinition.simple("xbrli:pure")),
+        Map.entry("tCO2e_per_EUR", UnitDefinition.divide("uom:tCO2e", "iso4217:EUR")),
+        Map.entry("kWh_per_EUR", UnitDefinition.divide("uom:kWh", "iso4217:EUR")),
+        Map.entry("m3_per_EUR", UnitDefinition.divide("uom:m3", "iso4217:EUR")),
+        Map.entry("EUR_per_share", UnitDefinition.divide("iso4217:EUR", "xbrli:shares"))
     );
 
     private UnitCatalog() {

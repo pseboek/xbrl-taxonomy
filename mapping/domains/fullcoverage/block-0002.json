@@ -137,13 +137,17 @@
       "concept": "esrs:DefinitionOfNumberOfYearsFollowingReportingPeriodAfterWhichDeviatedLongtermTimeHorizonStarts",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 0
     },
     "full.block0002.definitionOfNumberOfYearsForDeviatedMediumtermTimeHorizonCountedFromReportingPeriod": {
       "concept": "esrs:DefinitionOfNumberOfYearsForDeviatedMediumtermTimeHorizonCountedFromReportingPeriod",
       "type": "numeric",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "unit": "ratio",
+      "decimals": 0
     },
     "full.block0002.dependenciesOnBiodiversityAndEcosystemsAndOrTheirServicesHaveBeenIdentifiedAndAssessedAtEitherOwnSiteLocationsOrInUpstreamAndDownstreamValueChain": {
       "concept": "esrs:DependenciesOnBiodiversityAndEcosystemsAndOrTheirServicesHaveBeenIdentifiedAndAssessedAtEitherOwnSiteLocationsOrInUpstreamAndDownstreamValueChain",
