@@ -2,6 +2,10 @@
   "placeholders": {
     "energyConsumption": "company.totalEnergyConsumption",
     "scope1Emissions": "climate.scope1GrossEmissions",
-    "corruptionPolicy": "governance.corruptionPolicyExists"
+    "corruptionPolicy": "governance.corruptionPolicyExists",
+    "climateTransitionPlan": "strategy.climateTransitionPlanExists",
+    "totalEmployees": "workforce.totalEmployees",
+    "waterConsumption": "water.totalWaterConsumption",
+    "whistleblowerChannel": "governance.whistleblowerChannelDescription"
   }
 }

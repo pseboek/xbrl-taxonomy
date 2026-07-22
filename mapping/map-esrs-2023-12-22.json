@@ -27,6 +27,35 @@
       "period": "duration",
       "enumerationDomain": "esrs:YesNoDomain",
       "dimensions": []
+    },
+    "strategy.climateTransitionPlanExists": {
+      "concept": "esrs:ClimateTransitionPlanAdopted",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "dimensions": []
+    },
+    "workforce.totalEmployees": {
+      "concept": "esrs:TotalNumberOfEmployees",
+      "type": "numeric",
+      "unit": "count",
+      "period": "duration",
+      "decimals": 0,
+      "dimensions": []
+    },
+    "water.totalWaterConsumption": {
+      "concept": "esrs:TotalWaterConsumption",
+      "type": "numeric",
+      "unit": "m3",
+      "period": "duration",
+      "decimals": 0,
+      "dimensions": []
+    },
+    "governance.whistleblowerChannelDescription": {
+      "concept": "esrs:DescriptionOfWhistleblowerChannel",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
     }
   }
 }

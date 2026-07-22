@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class MappingRegistryTest {
     @Test
@@ -13,5 +14,9 @@ class MappingRegistryTest {
         MappingEntry entry = registry.getRequired("company.totalEnergyConsumption");
         assertEquals("esrs:TotalEnergyConsumption", entry.concept());
         assertEquals("numeric", entry.type());
+
+        MappingEntry textEntry = registry.getRequired("governance.whistleblowerChannelDescription");
+        assertEquals("text", textEntry.type());
+        assertNotNull(textEntry.concept());
     }
 }

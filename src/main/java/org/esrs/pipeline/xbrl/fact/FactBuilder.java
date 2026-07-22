@@ -1,5 +1,6 @@
 package org.esrs.pipeline.xbrl.fact;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ public class FactBuilder {
         int seq = 1;
         for (DisclosureFact sourceFact : envelope.facts()) {
             MappingEntry entry = mappingRegistry.getRequired(sourceFact.field());
+            validatePeriod(entry, envelope.period().instant(), sourceFact.field());
             validateDimensions(entry, sourceFact);
             String normalized = normalizeValue(entry, sourceFact.value());
             String occurrence = sourceFact.field() + "#" + seq;
@@ -32,6 +34,13 @@ public class FactBuilder {
             String decimals = resolveDecimals(entry, sourceFact);
             boolean numeric = "numeric".equalsIgnoreCase(entry.type());
             boolean enumeration = "enumeration".equalsIgnoreCase(entry.type());
+
+            if (contextRef == null || contextRef.isBlank()) {
+                throw new IllegalArgumentException("Missing context reference for field occurrence: " + occurrence);
+            }
+            if (numeric && (unitRef == null || unitRef.isBlank())) {
+                throw new IllegalArgumentException("Missing numeric unit for field: " + sourceFact.field());
+            }
 
             facts.add(new XbrlFact(
                 sourceFact.field(),
@@ -67,6 +76,21 @@ public class FactBuilder {
         return "u_" + unit.replace(':', '_').replace('-', '_');
     }
 
+    private void validatePeriod(MappingEntry entry, boolean reportInstant, String field) {
+        if (entry.period() == null || entry.period().isBlank()) {
+            return;
+        }
+
+        boolean mappingInstant = "instant".equalsIgnoreCase(entry.period());
+        boolean mappingDuration = "duration".equalsIgnoreCase(entry.period());
+        if (!mappingInstant && !mappingDuration) {
+            throw new IllegalArgumentException("Unsupported period type in mapping for field " + field + ": " + entry.period());
+        }
+        if (mappingInstant != reportInstant) {
+            throw new IllegalArgumentException("Period mismatch for field " + field + ": mapping=" + entry.period());
+        }
+    }
+
     private void validateDimensions(MappingEntry entry, DisclosureFact sourceFact) {
         List<DimensionSelection> expected = entry.dimensions() == null ? List.of() : entry.dimensions();
         List<DimensionSelection> actual = sourceFact.dimensions() == null ? List.of() : sourceFact.dimensions();
@@ -91,13 +115,32 @@ public class FactBuilder {
         if (value == null) {
             throw new IllegalArgumentException("Fact value is null for field: " + entry.field());
         }
+        String trimmed = value.trim();
+        if (trimmed.isEmpty()) {
+            throw new IllegalArgumentException("Fact value is empty for field: " + entry.field());
+        }
+
+        if ("numeric".equalsIgnoreCase(entry.type())) {
+            try {
+                new BigDecimal(trimmed);
+            } catch (NumberFormatException ex) {
+                throw new IllegalArgumentException("Invalid numeric value for field " + entry.field() + ": " + value, ex);
+            }
+            return trimmed;
+        }
+
         if ("enumeration".equalsIgnoreCase(entry.type())) {
-            if ("esrs:YesNoDomain".equalsIgnoreCase(entry.enumerationDomain()) && !YES_NO_ENUM.contains(value)) {
+            if ("esrs:YesNoDomain".equalsIgnoreCase(entry.enumerationDomain()) && !YES_NO_ENUM.contains(trimmed)) {
                 throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
             }
-            return value;
+            return trimmed;
         }
-        return value.trim();
+
+        if ("text".equalsIgnoreCase(entry.type())) {
+            return trimmed;
+        }
+
+        throw new IllegalArgumentException("Unsupported mapping type for field " + entry.field() + ": " + entry.type());
     }
 
     public record FactBuildResult(List<XbrlFact> facts, Map<String, String> unitByField) {

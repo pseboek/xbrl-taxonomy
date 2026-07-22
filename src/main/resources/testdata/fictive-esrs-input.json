@@ -35,6 +35,34 @@
       "dimensions": [],
       "unitOverride": null,
       "decimalsOverride": null
+    },
+    {
+      "field": "strategy.climateTransitionPlanExists",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "workforce.totalEmployees",
+      "value": "5320",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 0
+    },
+    {
+      "field": "water.totalWaterConsumption",
+      "value": "412300",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 0
+    },
+    {
+      "field": "governance.whistleblowerChannelDescription",
+      "value": "Anonymer digitaler Meldekanal mit Ombudsstelle.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
     }
   ]
 }
