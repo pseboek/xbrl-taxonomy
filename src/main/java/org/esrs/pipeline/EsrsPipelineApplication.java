@@ -4,14 +4,23 @@ import java.nio.file.Path;
 
 import org.esrs.pipeline.config.PipelineConfig;
 import org.esrs.pipeline.orchestration.ReportingPipelineOrchestrator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class EsrsPipelineApplication {
+    private static final Logger LOG = LoggerFactory.getLogger(EsrsPipelineApplication.class);
+
     private EsrsPipelineApplication() {
     }
 
     public static void main(String[] args) throws Exception {
         Path root = Path.of(".").toAbsolutePath().normalize();
         PipelineConfig config = PipelineConfig.load(root);
+
+        LOG.info("Starting ESRS pipeline with input={}, mapping={}, output={}",
+            config.inputJson(),
+            config.mappingFile(),
+            config.outputDir());
 
         ReportingPipelineOrchestrator orchestrator = new ReportingPipelineOrchestrator(config);
         ReportingPipelineOrchestrator.PipelineResult result = orchestrator.run(
@@ -26,12 +35,12 @@ public final class EsrsPipelineApplication {
             config.requireViewerPlugin()
         );
 
-        System.out.println("XBRL: " + result.xbrlPath());
-        System.out.println("iXBRL: " + result.ixbrlPath());
-        System.out.println("Viewer: " + result.interactiveHtmlPath());
-        System.out.println("Viewer fallback used: " + result.viewerFallbackUsed());
+        LOG.info("XBRL: {}", result.xbrlPath());
+        LOG.info("iXBRL: {}", result.ixbrlPath());
+        LOG.info("Viewer: {}", result.interactiveHtmlPath());
+        LOG.info("Viewer fallback used: {}", result.viewerFallbackUsed());
         result.validationIssues().forEach(issue ->
-            System.out.println(issue.severity() + " " + issue.code() + " - " + issue.message())
+            LOG.info("{} {} - {}", issue.severity(), issue.code(), issue.message())
         );
     }
 }

@@ -20,8 +20,12 @@ import org.esrs.pipeline.validation.arelle.ArelleValidator;
 import org.esrs.pipeline.xbrl.context.ContextBuilder;
 import org.esrs.pipeline.xbrl.fact.FactBuilder;
 import org.esrs.pipeline.xbrl.serializer.XbrlInstanceWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReportingPipelineOrchestrator {
+    private static final Logger LOG = LoggerFactory.getLogger(ReportingPipelineOrchestrator.class);
+
     private final ApiIngestionService ingestionService;
     private final ContextBuilder contextBuilder;
     private final FactBuilder factBuilder;
@@ -84,6 +88,10 @@ public class ReportingPipelineOrchestrator {
                               boolean skipArelle,
                               boolean failOnValidationIssues,
                               boolean requireViewerPlugin) throws IOException, InterruptedException {
+        LOG.info("Pipeline run started. skipArelle={}, failOnValidationIssues={}, requireViewerPlugin={}",
+            skipArelle,
+            failOnValidationIssues,
+            requireViewerPlugin);
         Files.createDirectories(outputDir);
 
         ReportEnvelope envelope = ingestionService.loadFromJson(inputJson);
@@ -146,8 +154,13 @@ public class ReportingPipelineOrchestrator {
         }
 
         if (failOnValidationIssues && hasBlockingIssues(validationIssues)) {
+            LOG.error("Validation gate failed with blocking issues.");
             throw new IllegalStateException("Validation gate failed: " + summarize(validationIssues));
         }
+
+        LOG.info("Pipeline run completed. validationIssues={}, viewerFallbackUsed={}",
+            validationIssues.size(),
+            viewerExportResult.fallbackUsed());
 
         return new PipelineResult(xbrlOut, ixbrlOut, viewerOut, validationIssues, viewerExportResult.fallbackUsed());
     }
