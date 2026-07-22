@@ -208,7 +208,7 @@ Minimalbeispiel:
 ### 9.1 Placeholder-Regeln
 
 - Jeder {{fact:key}}-Platzhalter muss in mapping/report-layout-map.json vorhanden sein.
-- Jeder Feldname aus report-layout-map.json muss in mapping/map-esrs-2023-12-22.json definiert sein.
+- Jeder Feldname aus report-layout-map.json muss ueber MappingRegistry aufloesbar sein (direkt in mapping/map-esrs-2023-12-22.json oder ueber dessen imports, z. B. mapping/domains/*.json).
 - Jeder dieser Felder sollte fuer Testlaeufe in fictive-esrs-input.json vorkommen.
 
 ### 9.2 Fachliche Regeln
@@ -252,9 +252,10 @@ Minimalbeispiel:
 2. Template/Layout konsistent halten
 3. fiktive Testdaten aktualisieren
 4. mvn test ausfuehren
-5. mvn exec:java ausfuehren
-6. output Artefakte pruefen
-7. Branch -> Test -> Merge -> Tag
+5. mvn -Pcoverage verify ausfuehren
+6. mvn exec:java ausfuehren
+7. output Artefakte pruefen
+8. Branch -> Test -> Merge -> Tag
 
 ## 12. Relevante Dateien im Projekt
 
@@ -263,6 +264,9 @@ Minimalbeispiel:
 - src/main/java/org/esrs/pipeline/orchestration/ReportingPipelineOrchestrator.java
 - src/main/java/org/esrs/pipeline/xbrl/fact/FactBuilder.java
 - mapping/map-esrs-2023-12-22.json
+- mapping/domains/environment.json
+- mapping/domains/social.json
+- mapping/domains/governance.json
 - mapping/report-layout-map.json
 - templates/report-base.xhtml
 - src/main/resources/testdata/fictive-esrs-input.json

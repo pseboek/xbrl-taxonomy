@@ -52,7 +52,7 @@ Sie dient gleichzeitig als:
 | Deliverable | Ziel | Status | Bemerkung |
 | --- | --- | --- | --- |
 | Java-Projektgerüst (Maven, Java 25) | Buildbare Codebasis | Erfuellt | `pom.xml` + `src/main/java` + `mvn test` vorhanden |
-| Mapping-Registry (Feld -> Konzept) | Maschinenlesbares Mapping | Erfuellt | `mapping/map-esrs-2023-12-22.json` + `MappingRegistry` implementiert |
+| Mapping-Registry (Feld -> Konzept) | Maschinenlesbares Mapping | Erfuellt | `MappingRegistry` implementiert, Hauptmapping mit Domain-Imports (`mapping/domains/*.json`) |
 | XBRL-Instance Builder | `report-instance.xml` erzeugen | Erfuellt | `XbrlInstanceWriter` + Pipeline erzeugt Artefakt |
 | Template-Asset-Basis | Basis fuer XHTML/HTML-Generierung | Erfuellt | `templates/report-base.xhtml`, `templates/assets/report.css`, `templates/assets/report.js` angelegt |
 | iXBRL-Template-Engine | Musterbericht + Inline XBRL | Erfuellt | `IxbrlTemplateRenderer` + `IxbrlEmbeddingService` implementiert |
@@ -89,15 +89,16 @@ Sie dient gleichzeitig als:
 | Kriterium | Status | Nachweis |
 | --- | --- | --- |
 | XBRL technisch valide | Erfuellt | Arelle-Validation-Gate implementiert (Fehler/fehlende Evidenz blockieren strikt) |
-| iXBRL technisch valide | Erfuellt | Strict Production Gate erfolgreich; verbleibend nur nicht-blockierende Warnung `ix11.8.1.2:headerDisplayNone` |
+| iXBRL technisch valide | Erfuellt | iXBRL-Header wird verborgen gerendert (`display:none`), Strict Production Gate erfolgreich |
 | Viewer-Konvertierung erfolgreich | Erfuellt | Strict Production Gate erfolgreich; Viewer-Export ohne Fallback bestaetigt (`Viewer fallback used: false`) |
 | Enumerationen/Dimensionen korrekt gemappt | Erfuellt | Validierungsregeln im `FactBuilder` + Unit-Tests vorhanden |
 | Reproduzierbarer End-to-End-Lauf | Erfuellt | Integrationstest `ReportingPipelineOrchestratorTest` + reproduzierbare Artefakte vorhanden |
 
 ## F. Priorisierte nächste Schritte (Implementierungsreihenfolge)
 
-1. Optional: `ix:header` in ein verborgenes `<div style="display:none">` verschieben, um die verbleibende iXBRL-Warnung `headerDisplayNone` zu eliminieren.
-2. Mapping-Abdeckung iterativ in Richtung Vollabdeckung weiter ausbauen (aktuell erweitert um Strategie-, Workforce- und Wasser-Fakten).
+1. Mapping-Abdeckung iterativ in Richtung Vollabdeckung weiter ausbauen (domain-basiert, testgestützt).
+2. Bereitstellung des Arelle iXBRL-Viewer-Plugins in Zielumgebungen vereinheitlichen (Dev/CI/Prod).
+3. Optional: Strict-Arelle-Gate in CI von "optional bei gesetzter Variable" auf verpflichtenden Lauf umstellen, sobald Arelle in CI stabil provisioniert ist.
 
 ## G. KI-Input-Block (für direkte Nutzung)
 
@@ -118,6 +119,6 @@ Pflege diese Status-Checkliste pro Iteration und aktualisiere offene/erfuellte P
 
 - Die Spezifikation und Zielarchitektur sind dokumentationsseitig vollständig und als MVP technisch umgesetzt.
 - Die Validierung wurde als technisches Gate gehärtet (Arelle-Fehler und fehlende Validierungs-Evidenz führen zu Fehlerzustand).
-- Die Mapping-Abdeckung wurde gegenüber dem MVP erweitert (zusätzliche ESRS-Konzepte inkl. Text-, Enumerations- und numerischer Fakten).
+- Die Mapping-Abdeckung wurde gegenüber dem MVP erweitert und in domain-spezifische Pakete strukturiert.
+- Die Pipeline besitzt nun zentrale Konfiguration, strukturiertes Logging (SLF4J/Logback) und ein verpflichtendes Coverage-Gate in CI (`mvn -Pcoverage verify`).
 - Der strict Productive-Gate-Run ist als Skript und optionaler CI-Job implementiert und läuft aktuell erfolgreich (`Viewer fallback used: false`).
-- Offener Feinschliffpunkt: nicht-blockierende iXBRL-Warnung `ix11.8.1.2:headerDisplayNone`.

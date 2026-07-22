@@ -27,6 +27,8 @@ Aktueller Ist-Stand im Repository:
 - vorhanden: Maven-/Java-25-MVP-Pipeline fuer XBRL-Instanzierung und iXBRL-Erzeugung,
 - vorhanden: Template-Basis (`templates/report-base.xhtml`, `templates/assets/report.css`, `templates/assets/report.js`) sowie Layout-Mapping,
 - vorhanden: Arelle-CLI-Adapter fuer Validierung und Viewer-Export (inkl. Fallback-Ausgabe),
+- vorhanden: zentrale Konfigurationsschicht, strukturiertes Logging (SLF4J/Logback) und verpflichtendes Coverage-Gate (`mvn -Pcoverage verify`),
+- vorhanden: domain-spezifische Mapping-Komposition (imports aus `mapping/domains/*.json`),
 - offen: produktive Haertung fuer Zielumgebung, weitere schrittweise ESRS-Abdeckung und feste Bereitstellung des iXBRL-Viewer-Plugins in der Zielumgebung.
 
 Das heißt: Die fachliche/technische Spezifikation ist umgesetzt und als MVP lauffaehig; der naechste Schritt ist die produktive Haertung und schrittweise Vollabdeckung.
