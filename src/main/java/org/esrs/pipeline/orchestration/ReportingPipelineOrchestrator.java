@@ -1,0 +1,98 @@
+package org.esrs.pipeline.orchestration;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import org.esrs.pipeline.api.ApiIngestionService;
+import org.esrs.pipeline.ixbrl.embedding.IxbrlEmbeddingService;
+import org.esrs.pipeline.ixbrl.template.IxbrlTemplateRenderer;
+import org.esrs.pipeline.ixbrl.viewer.IxbrlViewerExporter;
+import org.esrs.pipeline.mapping.MappingRegistry;
+import org.esrs.pipeline.model.ReportEnvelope;
+import org.esrs.pipeline.model.ValidationIssue;
+import org.esrs.pipeline.validation.arelle.ArelleValidator;
+import org.esrs.pipeline.xbrl.context.ContextBuilder;
+import org.esrs.pipeline.xbrl.fact.FactBuilder;
+import org.esrs.pipeline.xbrl.serializer.XbrlInstanceWriter;
+
+public class ReportingPipelineOrchestrator {
+    private final ApiIngestionService ingestionService;
+    private final ContextBuilder contextBuilder;
+    private final FactBuilder factBuilder;
+    private final XbrlInstanceWriter xbrlInstanceWriter;
+    private final IxbrlTemplateRenderer templateRenderer;
+    private final IxbrlEmbeddingService embeddingService;
+    private final ArelleValidator arelleValidator;
+    private final IxbrlViewerExporter viewerExporter;
+
+    public ReportingPipelineOrchestrator(String arelleCommand) {
+        this.ingestionService = new ApiIngestionService();
+        this.contextBuilder = new ContextBuilder();
+        this.factBuilder = new FactBuilder();
+        this.xbrlInstanceWriter = new XbrlInstanceWriter();
+        this.templateRenderer = new IxbrlTemplateRenderer();
+        this.embeddingService = new IxbrlEmbeddingService();
+        this.arelleValidator = new ArelleValidator(arelleCommand);
+        this.viewerExporter = new IxbrlViewerExporter(arelleCommand);
+    }
+
+    public PipelineResult run(Path inputJson,
+                              Path mappingFile,
+                              Path templateFile,
+                              Path layoutMap,
+                              Path outputDir,
+                              Path taxonomyRoot,
+                              boolean skipArelle) throws IOException, InterruptedException {
+        Files.createDirectories(outputDir);
+
+        ReportEnvelope envelope = ingestionService.loadFromJson(inputJson);
+        MappingRegistry mappingRegistry = MappingRegistry.fromPath(mappingFile);
+
+        ContextBuilder.ContextBuildResult contexts = contextBuilder.build(envelope);
+        FactBuilder.FactBuildResult facts = factBuilder.build(envelope, mappingRegistry, contexts.fieldOccurrenceContext());
+
+        Path xbrlOut = outputDir.resolve("report-instance.xml");
+        xbrlInstanceWriter.write(
+            xbrlOut,
+            envelope,
+            contexts.contexts(),
+            facts.facts(),
+            "xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs_all.xsd"
+        );
+
+        String renderedTemplate = templateRenderer.render(templateFile, envelope);
+        String ixbrl = embeddingService.embed(renderedTemplate, facts.facts(), layoutMap);
+        Path ixbrlOut = outputDir.resolve("report-ixbrl.xhtml");
+        embeddingService.writeOutput(ixbrlOut, ixbrl);
+
+        List<ValidationIssue> validationIssues = new ArrayList<>();
+        if (!skipArelle) {
+            validationIssues.addAll(arelleValidator.validate(xbrlOut, taxonomyRoot, outputDir.resolve("arelle-xbrl.log")));
+            validationIssues.addAll(arelleValidator.validate(ixbrlOut, taxonomyRoot, outputDir.resolve("arelle-ixbrl.log")));
+        } else {
+            validationIssues.add(new ValidationIssue("INFO", "ARELLE_SKIPPED", "Arelle validation skipped by configuration."));
+            Files.writeString(outputDir.resolve("arelle-xbrl.log"), "Arelle skipped.\n", StandardCharsets.UTF_8);
+            Files.writeString(outputDir.resolve("arelle-ixbrl.log"), "Arelle skipped.\n", StandardCharsets.UTF_8);
+        }
+
+        Path viewerOut = outputDir.resolve("report-interaktiv.html");
+        if (!skipArelle) {
+            viewerExporter.export(ixbrlOut, viewerOut);
+        } else {
+            Files.writeString(
+                viewerOut,
+                "<!doctype html><html><head><meta charset=\"utf-8\"><title>Interaktive Berichtssicht</title></head>"
+                    + "<body><h1>Interaktive Berichtssicht (Stub)</h1><p>Viewer-Export wurde im Testlauf uebersprungen.</p></body></html>",
+                StandardCharsets.UTF_8
+            );
+        }
+
+        return new PipelineResult(xbrlOut, ixbrlOut, viewerOut, validationIssues);
+    }
+
+    public record PipelineResult(Path xbrlPath, Path ixbrlPath, Path interactiveHtmlPath, List<ValidationIssue> validationIssues) {
+    }
+}
