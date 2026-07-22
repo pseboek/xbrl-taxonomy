@@ -12,9 +12,19 @@ import org.esrs.pipeline.model.ValidationIssue;
 
 public class ArelleValidator {
     private final String command;
+    private final String disclosureSystem;
+    private final String logFormat;
 
     public ArelleValidator(String command) {
         this.command = command;
+        this.disclosureSystem = null;
+        this.logFormat = null;
+    }
+
+    public ArelleValidator(String command, String disclosureSystem, String logFormat) {
+        this.command = command;
+        this.disclosureSystem = disclosureSystem;
+        this.logFormat = logFormat;
     }
 
     public List<ValidationIssue> validate(Path reportFile, Path taxonomyPackageRoot, Path logFile) throws IOException, InterruptedException {
@@ -25,7 +35,6 @@ public class ArelleValidator {
         cmd.add(reportFile.toString());
         cmd.add("--validate");
 
-        String disclosureSystem = System.getenv("ARELLE_DISCLOSURE_SYSTEM");
         if (disclosureSystem != null && !disclosureSystem.isBlank()) {
             cmd.add("--disclosureSystem");
             cmd.add(disclosureSystem);
@@ -38,7 +47,6 @@ public class ArelleValidator {
         cmd.add("--logFileMode");
         cmd.add("w");
 
-        String logFormat = System.getenv("ARELLE_LOG_FORMAT");
         if (logFormat != null && !logFormat.isBlank()) {
             cmd.add("--logFormat");
             cmd.add(logFormat);

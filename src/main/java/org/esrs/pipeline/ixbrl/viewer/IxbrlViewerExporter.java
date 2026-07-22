@@ -9,14 +9,20 @@ import java.util.List;
 
 public class IxbrlViewerExporter {
     private final String arelleCommand;
+    private final String viewerPlugin;
 
     public IxbrlViewerExporter(String arelleCommand) {
         this.arelleCommand = arelleCommand;
+        this.viewerPlugin = "iXBRLViewerPlugin";
+    }
+
+    public IxbrlViewerExporter(String arelleCommand, String viewerPlugin) {
+        this.arelleCommand = arelleCommand;
+        this.viewerPlugin = (viewerPlugin == null || viewerPlugin.isBlank()) ? "iXBRLViewerPlugin" : viewerPlugin;
     }
 
     public ViewerExportResult export(Path ixbrlXhtml, Path htmlOutput) throws IOException, InterruptedException {
         Files.createDirectories(htmlOutput.getParent());
-        String viewerPlugin = System.getenv().getOrDefault("IXBRL_VIEWER_PLUGIN", "iXBRLViewerPlugin");
         String sourceContent = Files.readString(ixbrlXhtml, StandardCharsets.UTF_8);
         boolean sourceHasInlineFacts = sourceContent.contains("<ix:nonFraction") || sourceContent.contains("<ix:nonNumeric");
 
