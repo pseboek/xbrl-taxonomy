@@ -267,6 +267,8 @@ Minimalbeispiel:
 - mapping/domains/environment.json
 - mapping/domains/social.json
 - mapping/domains/governance.json
+- mapping/domains/strategy.json
+- mapping/scopes/esrs-full-scope.json
 - mapping/report-layout-map.json
 - templates/report-base.xhtml
 - src/main/resources/testdata/fictive-esrs-input.json

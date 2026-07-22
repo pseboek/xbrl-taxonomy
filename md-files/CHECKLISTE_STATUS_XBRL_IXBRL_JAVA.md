@@ -52,10 +52,10 @@ Sie dient gleichzeitig als:
 | Deliverable | Ziel | Status | Bemerkung |
 | --- | --- | --- | --- |
 | Java-Projektgerüst (Maven, Java 25) | Buildbare Codebasis | Erfuellt | `pom.xml` + `src/main/java` + `mvn test` vorhanden |
-| Mapping-Registry (Feld -> Konzept) | Maschinenlesbares Mapping | Erfuellt | `MappingRegistry` implementiert, Hauptmapping mit Domain-Imports (`mapping/domains/*.json`) |
+| Mapping-Registry (Feld -> Konzept) | Maschinenlesbares Mapping | Erfuellt | `MappingRegistry` implementiert, Hauptmapping mit Domain-Imports (`mapping/domains/*.json`), Scope-Validierung aktiv |
 | XBRL-Instance Builder | `report-instance.xml` erzeugen | Erfuellt | `XbrlInstanceWriter` + Pipeline erzeugt Artefakt |
 | Template-Asset-Basis | Basis fuer XHTML/HTML-Generierung | Erfuellt | `templates/report-base.xhtml`, `templates/assets/report.css`, `templates/assets/report.js` angelegt |
-| iXBRL-Template-Engine | Musterbericht + Inline XBRL | Erfuellt | `IxbrlTemplateRenderer` + `IxbrlEmbeddingService` implementiert |
+| iXBRL-Template-Engine | Musterbericht + Inline XBRL | Erfuellt | `IxbrlTemplateRenderer` + `IxbrlEmbeddingService` implementiert (inkl. dynamischer Vollfaktentabelle `{{facts:all}}`) |
 | Arelle-Validator-Adapter | automatische Validierung | Erfuellt | `ArelleValidator` + `ValidationReportParser` implementiert |
 | iXBRL-Viewer-Export | `report-interaktiv.html` | Erfuellt | `IxbrlViewerExporter` implementiert (inkl. Fallback) |
 | CI-Gates (XBRL/iXBRL/Viewer) | automatisierte Qualitätssicherung | Erfuellt | GitHub-Workflow `.github/workflows/ci-xbrl-ixbrl-java.yml` angelegt |
@@ -91,12 +91,12 @@ Sie dient gleichzeitig als:
 | XBRL technisch valide | Erfuellt | Arelle-Validation-Gate implementiert (Fehler/fehlende Evidenz blockieren strikt) |
 | iXBRL technisch valide | Erfuellt | iXBRL-Header wird verborgen gerendert (`display:none`), Strict Production Gate erfolgreich |
 | Viewer-Konvertierung erfolgreich | Erfuellt | Strict Production Gate erfolgreich; Viewer-Export ohne Fallback bestaetigt (`Viewer fallback used: false`) |
-| Enumerationen/Dimensionen korrekt gemappt | Erfuellt | Validierungsregeln im `FactBuilder` + Unit-Tests vorhanden |
+| Enumerationen/Dimensionen korrekt gemappt | Erfuellt | `YesNoDomain`-Normalisierung + generische `allowedValues`-Validierung im `FactBuilder` + Unit-Tests |
 | Reproduzierbarer End-to-End-Lauf | Erfuellt | Integrationstest `ReportingPipelineOrchestratorTest` + reproduzierbare Artefakte vorhanden |
 
 ## F. Priorisierte nächste Schritte (Implementierungsreihenfolge)
 
-1. Mapping-Abdeckung iterativ in Richtung Vollabdeckung weiter ausbauen (domain-basiert, testgestützt).
+1. Scope-Liste in `mapping/scopes/esrs-full-scope.json` iterativ auf fachlich vollständigen Zielumfang je Disclosure Requirement ausbauen.
 2. Bereitstellung des Arelle iXBRL-Viewer-Plugins in Zielumgebungen vereinheitlichen (Dev/CI/Prod).
 3. Optional: Strict-Arelle-Gate in CI von "optional bei gesetzter Variable" auf verpflichtenden Lauf umstellen, sobald Arelle in CI stabil provisioniert ist.
 
@@ -119,6 +119,6 @@ Pflege diese Status-Checkliste pro Iteration und aktualisiere offene/erfuellte P
 
 - Die Spezifikation und Zielarchitektur sind dokumentationsseitig vollständig und als MVP technisch umgesetzt.
 - Die Validierung wurde als technisches Gate gehärtet (Arelle-Fehler und fehlende Validierungs-Evidenz führen zu Fehlerzustand).
-- Die Mapping-Abdeckung wurde gegenüber dem MVP erweitert und in domain-spezifische Pakete strukturiert.
+- Die Mapping-Abdeckung wurde gegenüber dem MVP deutlich erweitert, domain-spezifisch strukturiert und durch Scope-Checks abgesichert.
 - Die Pipeline besitzt nun zentrale Konfiguration, strukturiertes Logging (SLF4J/Logback) und ein verpflichtendes Coverage-Gate in CI (`mvn -Pcoverage verify`).
 - Der strict Productive-Gate-Run ist als Skript und optionaler CI-Job implementiert und läuft aktuell erfolgreich (`Viewer fallback used: false`).
