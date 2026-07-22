@@ -96,7 +96,7 @@ Sie dient gleichzeitig als:
 
 ## F. Priorisierte nächste Schritte (Implementierungsreihenfolge)
 
-1. Fallback-Betrieb für Viewer-Export in Zielumgebung deaktivieren, sobald Plugin-Version fixiert ist.
+1. Zielumgebung mit Arelle + iXBRL-Viewer-Plugin bereitstellen und `scripts/run-strict-production-gate.ps1` erfolgreich ausfuehren (Code/Gates sind vorbereitet).
 2. Mapping-Abdeckung iterativ in Richtung Vollabdeckung weiter ausbauen (aktuell erweitert um Strategie-, Workforce- und Wasser-Fakten).
 
 ## G. KI-Input-Block (für direkte Nutzung)
@@ -119,4 +119,4 @@ Pflege diese Status-Checkliste pro Iteration und aktualisiere offene/erfuellte P
 - Die Spezifikation und Zielarchitektur sind dokumentationsseitig vollständig und als MVP technisch umgesetzt.
 - Die Validierung wurde als technisches Gate gehärtet (Arelle-Fehler und fehlende Validierungs-Evidenz führen zu Fehlerzustand).
 - Die Mapping-Abdeckung wurde gegenüber dem MVP erweitert (zusätzliche ESRS-Konzepte inkl. Text-, Enumerations- und numerischer Fakten).
-- Offener Produktivpunkt bleibt die feste Bereitstellung des iXBRL-Viewer-Plugins in der Zielumgebung.
+- Der strict Productive-Gate-Run ist als Skript und optionaler CI-Job implementiert; offener Infrastrukturpunkt bleibt die feste Bereitstellung von Arelle inkl. iXBRL-Viewer-Plugin in der Zielumgebung.
