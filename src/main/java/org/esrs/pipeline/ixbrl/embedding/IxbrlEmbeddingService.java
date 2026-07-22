@@ -12,6 +12,8 @@ import java.util.Map;
 
 import org.esrs.pipeline.xbrl.context.ContextKey;
 import org.esrs.pipeline.xbrl.fact.XbrlFact;
+import org.esrs.pipeline.xbrl.unit.UnitCatalog;
+import org.esrs.pipeline.xbrl.unit.UnitCatalog.UnitDefinition;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +40,7 @@ public class IxbrlEmbeddingService {
             }
             result = result.replace(placeholder, asInlineFact(fact));
         }
+        result = result.replace("{{facts:all}}", asInlineFactsTable(facts));
         return injectInlineHeader(result, contexts, collectUnits(facts), schemaRefHref);
     }
 
@@ -60,7 +63,7 @@ public class IxbrlEmbeddingService {
 
     private String injectInlineHeader(String xhtml,
                                       Map<ContextKey, String> contexts,
-                                      Map<String, String> units,
+                                      Map<String, UnitDefinition> units,
                                       String schemaRefHref) {
         String bodyStart = "<body>";
         int bodyIndex = xhtml.indexOf(bodyStart);
@@ -73,7 +76,7 @@ public class IxbrlEmbeddingService {
         return xhtml.substring(0, insertPos) + "\n" + header + xhtml.substring(insertPos);
     }
 
-    private String buildHeader(Map<ContextKey, String> contexts, Map<String, String> units, String schemaRefHref) {
+    private String buildHeader(Map<ContextKey, String> contexts, Map<String, UnitDefinition> units, String schemaRefHref) {
         StringWriter out = new StringWriter();
         out.append("<div style=\"display:none\">\n");
         out.append("<ix:header>\n");
@@ -97,12 +100,18 @@ public class IxbrlEmbeddingService {
                 .append("</xbrli:identifier>\n");
             out.append("            </xbrli:entity>\n");
             out.append("            <xbrli:period>\n");
-            out.append("                <xbrli:startDate>")
-                .append(key.startDate().toString())
-                .append("</xbrli:startDate>\n");
-            out.append("                <xbrli:endDate>")
-                .append(key.endDate().toString())
-                .append("</xbrli:endDate>\n");
+            if (key.instant()) {
+                out.append("                <xbrli:instant>")
+                    .append(key.endDate().toString())
+                    .append("</xbrli:instant>\n");
+            } else {
+                out.append("                <xbrli:startDate>")
+                    .append(key.startDate().toString())
+                    .append("</xbrli:startDate>\n");
+                out.append("                <xbrli:endDate>")
+                    .append(key.endDate().toString())
+                    .append("</xbrli:endDate>\n");
+            }
             out.append("            </xbrli:period>\n");
 
             if (!key.dimensions().isEmpty()) {
@@ -120,13 +129,35 @@ public class IxbrlEmbeddingService {
             out.append("        </xbrli:context>\n");
         }
 
-        for (Map.Entry<String, String> unit : units.entrySet()) {
+        for (Map.Entry<String, UnitDefinition> unit : units.entrySet()) {
+            UnitDefinition definition = unit.getValue();
             out.append("        <xbrli:unit id=\"")
                 .append(escapeXml(unit.getKey()))
                 .append("\">\n");
-            out.append("            <xbrli:measure>")
-                .append(escapeXml(unit.getValue()))
-                .append("</xbrli:measure>\n");
+            if (definition.isDivide()) {
+                out.append("            <xbrli:divide>\n");
+                out.append("                <xbrli:unitNumerator>\n");
+                for (String measure : definition.numeratorMeasures()) {
+                    out.append("                    <xbrli:measure>")
+                        .append(escapeXml(measure))
+                        .append("</xbrli:measure>\n");
+                }
+                out.append("                </xbrli:unitNumerator>\n");
+                out.append("                <xbrli:unitDenominator>\n");
+                for (String measure : definition.denominatorMeasures()) {
+                    out.append("                    <xbrli:measure>")
+                        .append(escapeXml(measure))
+                        .append("</xbrli:measure>\n");
+                }
+                out.append("                </xbrli:unitDenominator>\n");
+                out.append("            </xbrli:divide>\n");
+            } else {
+                for (String measure : definition.numeratorMeasures()) {
+                    out.append("            <xbrli:measure>")
+                        .append(escapeXml(measure))
+                        .append("</xbrli:measure>\n");
+                }
+            }
             out.append("        </xbrli:unit>\n");
         }
 
@@ -136,19 +167,35 @@ public class IxbrlEmbeddingService {
         return out.toString();
     }
 
-    private Map<String, String> collectUnits(List<XbrlFact> facts) {
-        Map<String, String> unitMap = new LinkedHashMap<>();
+    private Map<String, UnitDefinition> collectUnits(List<XbrlFact> facts) {
+        Map<String, UnitDefinition> unitMap = new LinkedHashMap<>();
         for (XbrlFact fact : facts) {
             if (fact.unitRef() == null) {
                 continue;
             }
-            if (fact.unitRef().contains("EUR")) {
-                unitMap.putIfAbsent(fact.unitRef(), "iso4217:EUR");
-            } else {
-                unitMap.putIfAbsent(fact.unitRef(), "xbrli:pure");
-            }
+            String unitKey = fact.unitRef().startsWith("u_") ? fact.unitRef().substring(2) : fact.unitRef();
+            unitMap.putIfAbsent(fact.unitRef(), UnitCatalog.resolve(unitKey));
         }
         return unitMap;
+    }
+
+    private String asInlineFactsTable(List<XbrlFact> facts) {
+        StringWriter out = new StringWriter();
+        out.append("<table class=\"facts-table\">\n");
+        out.append("  <thead><tr><th>Feld</th><th>Konzept</th><th>Wert</th></tr></thead>\n");
+        out.append("  <tbody>\n");
+        for (XbrlFact fact : facts) {
+            out.append("    <tr><td>")
+                .append(escapeXml(fact.field()))
+                .append("</td><td>")
+                .append(escapeXml(fact.conceptQname()))
+                .append("</td><td>")
+                .append(asInlineFact(fact))
+                .append("</td></tr>\n");
+        }
+        out.append("  </tbody>\n");
+        out.append("</table>");
+        return out.toString();
     }
 
     private String escapeXml(String input) {

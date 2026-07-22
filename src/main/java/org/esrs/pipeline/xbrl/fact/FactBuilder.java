@@ -13,6 +13,7 @@ import org.esrs.pipeline.mapping.MappingRegistry;
 import org.esrs.pipeline.model.DimensionSelection;
 import org.esrs.pipeline.model.DisclosureFact;
 import org.esrs.pipeline.model.ReportEnvelope;
+import org.esrs.pipeline.xbrl.unit.UnitCatalog;
 
 public class FactBuilder {
     private static final Set<String> YES_NO_ENUM = Set.of("esrs:YesMember", "esrs:NoMember");
@@ -74,7 +75,7 @@ public class FactBuilder {
         if (unit == null || unit.isBlank()) {
             return null;
         }
-        return "u_" + unit.replace(':', '_').replace('-', '_');
+        return UnitCatalog.sanitizeUnitRef(unit);
     }
 
     private void validatePeriod(MappingEntry entry, boolean reportInstant, String field) {
@@ -139,6 +140,13 @@ public class FactBuilder {
                     throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
                 }
                 return "esrs:YesMember".equals(trimmed) ? "true" : "false";
+            }
+
+            if (entry.allowedValues() != null && !entry.allowedValues().isEmpty()) {
+                if (!entry.allowedValues().contains(trimmed)) {
+                    throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
+                }
+                return trimmed;
             }
             return trimmed;
         }

@@ -29,6 +29,87 @@
       "type": "enumeration",
       "period": "duration",
       "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "climate.absoluteScope1Reduction": {
+      "concept": "esrs:AbsoluteValueOfScope1GreenhouseGasEmissionsReduction",
+      "type": "numeric",
+      "unit": "tCO2e",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": []
+    },
+    "climate.absoluteScope2LocationReduction": {
+      "concept": "esrs:AbsoluteValueOfLocationBasedScope2GreenhouseGasEmissionsReduction",
+      "type": "numeric",
+      "unit": "tCO2e",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": []
+    },
+    "climate.absoluteScope2MarketReduction": {
+      "concept": "esrs:AbsoluteValueOfMarketBasedScope2GreenhouseGasEmissionsReduction",
+      "type": "numeric",
+      "unit": "tCO2e",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": []
+    },
+    "climate.absoluteScope3Reduction": {
+      "concept": "esrs:AbsoluteValueOfScope3GreenhouseGasEmissionsReduction",
+      "type": "numeric",
+      "unit": "tCO2e",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": []
+    },
+    "climate.absoluteTotalReduction": {
+      "concept": "esrs:AbsoluteValueOfTotalGreenhouseGasEmissionsReduction",
+      "type": "numeric",
+      "unit": "tCO2e",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": []
+    },
+    "climate.achievedGhgEmissionReductions": {
+      "concept": "esrs:AchievedGHGEmissionReductions",
+      "type": "numeric",
+      "unit": "tCO2e",
+      "period": "duration",
+      "decimals": 2,
+      "dimensions": []
+    },
+    "water.actionRelatesToWaterRiskAreas": {
+      "concept": "esrs:ActionRelatesToAreasAtWaterRisk",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "water.actionRelatesToHighWaterStress": {
+      "concept": "esrs:ActionRelatesToAreasOfHighwaterStress",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "biodiversity.impactsAssessedAcrossValueChain": {
+      "concept": "esrs:ActualAndPotentialImpactsOnBiodiversityAndEcosystemsAtOwnSiteLocationsAndOrInUpstreamAndDownstreamValueChainHaveBeenIdentifiedAndAssessed",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "pollution.activitiesSubjectToIed": {
+      "concept": "esrs:ActivitiesAreSubjectToIndustrialEmissionDirectiveIedAndRelevantBestAvailableTechniquesReferenceDocumentsBrefs",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
       "dimensions": []
     }
   }

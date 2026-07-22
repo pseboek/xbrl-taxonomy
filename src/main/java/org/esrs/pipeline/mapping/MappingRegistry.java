@@ -101,6 +101,14 @@ public class MappingRegistry {
             }
         }
 
+        List<String> allowedValues = new ArrayList<>();
+        JsonNode allowed = cfg.path("allowedValues");
+        if (allowed.isArray()) {
+            for (JsonNode value : allowed) {
+                allowedValues.add(value.asText());
+            }
+        }
+
         Integer decimals = cfg.has("decimals") ? cfg.path("decimals").asInt() : null;
         return new MappingEntry(
             field,
@@ -109,6 +117,7 @@ public class MappingRegistry {
             cfg.path("unit").asText(null),
             cfg.path("period").asText(null),
             cfg.path("enumerationDomain").asText(null),
+            allowedValues,
             decimals,
             dims
         );

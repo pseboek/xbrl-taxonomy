@@ -1,0 +1,48 @@
+{
+  "fieldMappings": {
+    "strategy.administrativeBodiesApprovedTransitionPlan": {
+      "concept": "esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "strategy.actualPotentialImpactsInformBusinessModel": {
+      "concept": "esrs:ActualAndPotentialImpactsOnOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersInformAndContributeToAdaptingStrategyAndBusinessModel",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "strategy.actualPotentialImpactsConnectedToBusinessModel": {
+      "concept": "esrs:ActualAndPotentialImpactsOnOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersOriginateFromOrAreConnectedToStrategyAndBusinessModels",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "strategy.actionPlansDependOnPreconditions": {
+      "concept": "esrs:AbilityToImplementActionOrActionPlanDependsOnSpecificPreconditions",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "strategy.targetTypeAbsoluteOrRelative": {
+      "concept": "esrs:AbsoluteOrRelativeTarget",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "strategy.adjustmentComparativeInfoImpracticable": {
+      "concept": "esrs:AdjustmentOfComparativeInformationForOneOrMorePriorPeriodsIsImpracticable",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    }
+  }
+}

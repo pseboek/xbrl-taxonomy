@@ -36,6 +36,7 @@ public class ContextBuilder {
             envelope.entity().identifier(),
             envelope.period().startDate(),
             envelope.period().endDate(),
+            envelope.period().instant(),
             dims
         );
     }

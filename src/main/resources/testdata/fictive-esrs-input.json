@@ -72,6 +72,223 @@
       "dimensions": [],
       "unitOverride": null,
       "decimalsOverride": null
+    },
+    {
+      "field": "climate.absoluteScope1Reduction",
+      "value": "210.50",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "climate.absoluteScope2LocationReduction",
+      "value": "150.25",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "climate.absoluteScope2MarketReduction",
+      "value": "175.40",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "climate.absoluteScope3Reduction",
+      "value": "390.10",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "climate.absoluteTotalReduction",
+      "value": "926.25",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "climate.achievedGhgEmissionReductions",
+      "value": "845.00",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": 2
+    },
+    {
+      "field": "water.actionRelatesToWaterRiskAreas",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "water.actionRelatesToHighWaterStress",
+      "value": "esrs:NoMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "biodiversity.impactsAssessedAcrossValueChain",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "pollution.activitiesSubjectToIed",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "workforce.adjustmentsForDisabilitiesMade",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "workforce.addressPrecariousWork",
+      "value": "Programm zur Reduktion prekärer Beschäftigungsformen implementiert.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "workforce.addressWorkerSafety",
+      "value": "Ausbau des Arbeitsschutzmanagements an allen Standorten.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "workforce.addressForcedOrChildLabour",
+      "value": "Zero-Tolerance Richtlinie mit Lieferanten-Audits umgesetzt.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "communities.affectedCommunitiesLikelyImpacted",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "communities.areIndigenousPeoplesAffected",
+      "value": "esrs:NoMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "social.accessToAdequateFood",
+      "value": "Massnahmen zur Sicherung angemessener Ernaehrung in betroffenen Regionen laufen.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "social.accessToAdequateHousingOwnWorkforce",
+      "value": "Wohnungsunterstuetzungsprogramme fuer Mitarbeitende wurden erweitert.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "social.accessToAdequateHousingValueChainWorkers",
+      "value": "Lieferkettenpartner werden bei Housing-Standards begleitet.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "social.accessToAdequateHousingCommunities",
+      "value": "Community-Investitionen fuer bezahlbaren Wohnraum initiiert.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "governance.administrativeBodiesInformedAboutImpacts",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "governance.administrativeBodiesInformedAboutStakeholderViews",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "governance.actionsToProvideRemedyTaken",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "governance.actionsAvoidNegativeImpactsInValueChain",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "governance.affectedChannelsAccessible",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "strategy.administrativeBodiesApprovedTransitionPlan",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "strategy.actualPotentialImpactsInformBusinessModel",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "strategy.actualPotentialImpactsConnectedToBusinessModel",
+      "value": "esrs:YesMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "strategy.actionPlansDependOnPreconditions",
+      "value": "Umsetzung ist an regulatorische Freigaben in Drittlaendern gebunden.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "strategy.targetTypeAbsoluteOrRelative",
+      "value": "Absolute",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "strategy.adjustmentComparativeInfoImpracticable",
+      "value": "esrs:NoMember",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
     }
   ]
 }

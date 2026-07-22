@@ -29,6 +29,8 @@ Aktueller Ist-Stand im Repository:
 - vorhanden: Arelle-CLI-Adapter fuer Validierung und Viewer-Export (inkl. Fallback-Ausgabe),
 - vorhanden: zentrale Konfigurationsschicht, strukturiertes Logging (SLF4J/Logback) und verpflichtendes Coverage-Gate (`mvn -Pcoverage verify`),
 - vorhanden: domain-spezifische Mapping-Komposition (imports aus `mapping/domains/*.json`),
+- vorhanden: automatische Scope-Validierung fuer Mapping/Layout (`mapping/scopes/esrs-full-scope.json`) zur Abdeckungssicherung,
+- vorhanden: skalierter XHTML-Output mit dynamischer Vollfaktentabelle (`{{facts:all}}`) fuer grosse Faktmengen,
 - offen: produktive Haertung fuer Zielumgebung, weitere schrittweise ESRS-Abdeckung und feste Bereitstellung des iXBRL-Viewer-Plugins in der Zielumgebung.
 
 Das heißt: Die fachliche/technische Spezifikation ist umgesetzt und als MVP lauffaehig; der naechste Schritt ist die produktive Haertung und schrittweise Vollabdeckung.

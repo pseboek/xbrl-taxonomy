@@ -14,10 +14,12 @@ public record PipelineConfig(
     Path layoutMap,
     Path outputDir,
     Path taxonomyRoot,
+    Path mappingScopeFile,
     String arelleCommand,
     boolean skipArelle,
     boolean failOnValidationIssues,
     boolean requireViewerPlugin,
+    boolean enforceMappingScope,
     String arelleDisclosureSystem,
     String arelleLogFormat,
     String ixbrlViewerPlugin
@@ -36,11 +38,13 @@ public record PipelineConfig(
         Path layoutMap = resolvedRoot.resolve(get(defaults, env, "pipeline.layoutMap", "PIPELINE_LAYOUT_MAP"));
         Path outputDir = resolvedRoot.resolve(get(defaults, env, "pipeline.outputDir", "PIPELINE_OUTPUT_DIR"));
         Path taxonomyRoot = resolvedRoot.resolve(get(defaults, env, "pipeline.taxonomyRoot", "PIPELINE_TAXONOMY_ROOT"));
+        Path mappingScopeFile = resolvedRoot.resolve(get(defaults, env, "pipeline.mappingScopeFile", "PIPELINE_MAPPING_SCOPE_FILE"));
 
         String arelleCommand = get(defaults, env, "pipeline.arelle.command", "ARELLE_CMD");
         boolean skipArelle = getBoolean(defaults, env, "pipeline.arelle.skip", "SKIP_ARELLE");
         boolean failOnValidationIssues = getBoolean(defaults, env, "pipeline.validation.failOnIssues", "FAIL_ON_VALIDATION_ISSUES");
         boolean requireViewerPlugin = getBoolean(defaults, env, "pipeline.viewer.requirePlugin", "REQUIRE_VIEWER_PLUGIN");
+        boolean enforceMappingScope = getBoolean(defaults, env, "pipeline.mappingScope.enforce", "ENFORCE_MAPPING_SCOPE");
 
         String disclosureSystem = get(defaults, env, "pipeline.arelle.disclosureSystem", "ARELLE_DISCLOSURE_SYSTEM");
         String logFormat = get(defaults, env, "pipeline.arelle.logFormat", "ARELLE_LOG_FORMAT");
@@ -54,10 +58,12 @@ public record PipelineConfig(
             layoutMap,
             outputDir,
             taxonomyRoot,
+            mappingScopeFile,
             arelleCommand,
             skipArelle,
             failOnValidationIssues,
             requireViewerPlugin,
+            enforceMappingScope,
             toNullable(disclosureSystem),
             toNullable(logFormat),
             toNullable(viewerPlugin)
