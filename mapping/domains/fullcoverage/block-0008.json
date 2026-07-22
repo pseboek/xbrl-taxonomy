@@ -122,63 +122,91 @@
     },
     "full.block0008.informationAndTrainingOfOwnWorkersAndOrInformationAboutDesignationAndTrainingOfStaffReceivingReportsAreProvided": {
       "concept": "esrs:InformationAndTrainingOfOwnWorkersAndOrInformationAboutDesignationAndTrainingOfStaffReceivingReportsAreProvided",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.inkindPoliticalContributionsMade": {
       "concept": "esrs:InkindPoliticalContributionsMade",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.intensityValueOfLocationBasedScope2GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfLocationBasedScope2GreenhouseGasEmissionsReduction",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.intensityValueOfMarketBasedScope2GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfMarketBasedScope2GreenhouseGasEmissionsReduction",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.intensityValueOfScope1GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfScope1GreenhouseGasEmissionsReduction",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.intensityValueOfScope3GreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfScope3GreenhouseGasEmissionsReduction",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.intensityValueOfTotalGreenhouseGasEmissionsReduction": {
       "concept": "esrs:IntensityValueOfTotalGreenhouseGasEmissionsReduction",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.internalCarbonPricingSchemesAreApplied": {
       "concept": "esrs:InternalCarbonPricingSchemesAreApplied",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.investigatorsOrInvestigatingCommitteeAreSeparateFromChainOfManagementInvolvedInPreventionAndDetectionOfCorruptionAndBribery": {
       "concept": "esrs:InvestigatorsOrInvestigatingCommitteeAreSeparateFromChainOfManagementInvolvedInPreventionAndDetectionOfCorruptionAndBribery",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.itHasBeenConcludedThatItIsNecessaryToImplementBiodiversityMitigationMeasures": {
       "concept": "esrs:ItHasBeenConcludedThatItIsNecessaryToImplementBiodiversityMitigationMeasures",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.keyActionCoverage": {
       "concept": "esrs:KeyActionCoverage",
@@ -188,9 +216,16 @@
     },
     "full.block0008.keyActionIsTakenToEitherProvideForCooperateInOrInSupportProvisionOfRemedyForThoseHarmedByActualMaterialImpacts": {
       "concept": "esrs:KeyActionIsTakenToEitherProvideForCooperateInOrInSupportProvisionOfRemedyForThoseHarmedByActualMaterialImpacts",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.keyActionOccurrenceBiodiversityAndEcosystems": {
       "concept": "esrs:KeyActionOccurrenceBiodiversityAndEcosystems",
@@ -200,15 +235,29 @@
     },
     "full.block0008.keyActionPlanIsCarriedOutOnlyByUndertakingUsingItsResources": {
       "concept": "esrs:KeyActionPlanIsCarriedOutOnlyByUndertakingUsingItsResources",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.keyActionPlanIsPartOfWiderInitiativeToWhichUndertakingSignificantlyContributes": {
       "concept": "esrs:KeyActionPlanIsPartOfWiderInitiativeToWhichUndertakingSignificantlyContributes",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.layersInMitigationHierarchyToWhichActionCanBeAllocatedBiodiversityAndEcosystems": {
       "concept": "esrs:LayersInMitigationHierarchyToWhichActionCanBeAllocatedBiodiversityAndEcosystems",
@@ -266,13 +315,13 @@
     },
     "full.block0008.liabilities": {
       "concept": "esrs:Liabilities",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0008.liabilitiesFromMaterialTransitionRisksThatMayHaveToBeRecognisedInFinancialStatements": {
       "concept": "esrs:LiabilitiesFromMaterialTransitionRisksThatMayHaveToBeRecognisedInFinancialStatements",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
@@ -332,9 +381,16 @@
     },
     "full.block0008.localAndIndigenousKnowledgeAndOrNaturebasedSolutionsHaveBeenIncorporatedIntoBiodiversityAndEcosystemsrelatedAction": {
       "concept": "esrs:LocalAndIndigenousKnowledgeAndOrNaturebasedSolutionsHaveBeenIncorporatedIntoBiodiversityAndEcosystemsrelatedAction",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.locationBasedGreenhouseGasEmissions": {
       "concept": "esrs:LocationBasedGreenhouseGasEmissions",
@@ -344,15 +400,29 @@
     },
     "full.block0008.lockedinGHGEmissionsMayJeopardiseAchievementOfGHGEmissionReductionTargetsAndOrDriveTransitionRisk": {
       "concept": "esrs:LockedinGHGEmissionsMayJeopardiseAchievementOfGHGEmissionReductionTargetsAndOrDriveTransitionRisk",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.managementsRoleInGovernanceProcessesControlsAndProceduresUsedToMonitorManageAndOverseeImpactsRisksAndOpportunitiesIsDelegatedToSpecificManagementlevelPositionOrCommittee": {
       "concept": "esrs:ManagementsRoleInGovernanceProcessesControlsAndProceduresUsedToMonitorManageAndOverseeImpactsRisksAndOpportunitiesIsDelegatedToSpecificManagementlevelPositionOrCommittee",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.marketBasedGreenhouseGasEmissions": {
       "concept": "esrs:MarketBasedGreenhouseGasEmissions",
@@ -380,51 +450,93 @@
     },
     "full.block0008.materialNegativeImpactsWithRegardsToLandDegradationDesertificationOrSoilSealingHaveBeenIdentified": {
       "concept": "esrs:MaterialNegativeImpactsWithRegardsToLandDegradationDesertificationOrSoilSealingHaveBeenIdentified",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.materialRisksAndOpportunitiesArisingFromImpactsAndOrDependenciesEitherOnPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersRelateToSpecificGroups": {
       "concept": "esrs:MaterialRisksAndOpportunitiesArisingFromImpactsAndOrDependenciesEitherOnPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersRelateToSpecificGroups",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.measurableOutcomeorientedTargetsHaveNotBeenSet": {
       "concept": "esrs:MeasurableOutcomeorientedTargetsHaveNotBeenSet",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.measurableOutcomeorientedTargetsWillBeSet": {
       "concept": "esrs:MeasurableOutcomeorientedTargetsWillBeSet",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.measurableTargetAbsoluteValue": {
       "concept": "esrs:MeasurableTargetAbsoluteValue",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.measurableTargetPercentage": {
       "concept": "esrs:MeasurableTargetPercentage",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.measurementOfQuantitativeMetricsIsValidatedByExternalBodyOtherThanAssuranceProvider": {
       "concept": "esrs:MeasurementOfQuantitativeMetricsIsValidatedByExternalBodyOtherThanAssuranceProvider",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.mechanismsForIdentifyingReportingAndInvestigatingConcernsAboutUnlawfulBehaviourOrBehaviourInContradictionOfCodeOfConductOrSimilarInternalRulesAccommodateReportingFromInternalAndOrExternalStakeholders": {
       "concept": "esrs:MechanismsForIdentifyingReportingAndInvestigatingConcernsAboutUnlawfulBehaviourOrBehaviourInContradictionOfCodeOfConductOrSimilarInternalRulesAccommodateReportingFromInternalAndOrExternalStakeholders",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.methodologyOfEmployeesMeasurement": {
       "concept": "esrs:MethodologyOfEmployeesMeasurement",
@@ -440,21 +552,42 @@
     },
     "full.block0008.metricsAreInformedByOrCorrespondToExpectationsOrRecommendationsOfRelevantAndAuthoritativeNationalEulevelOrIntergovernmentalGuidelinesPoliciesLegislationOrAgreements": {
       "concept": "esrs:MetricsAreInformedByOrCorrespondToExpectationsOrRecommendationsOfRelevantAndAuthoritativeNationalEulevelOrIntergovernmentalGuidelinesPoliciesLegislationOrAgreements",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.metricsAreMandatoryRequiredByLegislation": {
       "concept": "esrs:MetricsAreMandatoryRequiredByLegislation",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.metricsAreVoluntary": {
       "concept": "esrs:MetricsAreVoluntary",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.microplasticsGenerated": {
       "concept": "esrs:MicroplasticsGenerated",
@@ -476,19 +609,26 @@
     },
     "full.block0008.mitigationHierarchyWasConsidered": {
       "concept": "esrs:MitigationHierarchyWasConsidered",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.monetisedGrossScope1And2GHGEmissions": {
       "concept": "esrs:MonetisedGrossScope1And2GHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.monetisedTotalGHGEmissions": {
       "concept": "esrs:MonetisedTotalGHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
@@ -578,25 +718,32 @@
     },
     "full.block0008.negativeImpactsOnEcosystemServicesOfRelevanceToAffectedCommunitiesAreUnavoidable": {
       "concept": "esrs:NegativeImpactsOnEcosystemServicesOfRelevanceToAffectedCommunitiesAreUnavoidable",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0008.netRevenueAtMaterialPhysicalRisk": {
       "concept": "esrs:NetRevenueAtMaterialPhysicalRisk",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.netRevenueAtMaterialTransitionRisk": {
       "concept": "esrs:NetRevenueAtMaterialTransitionRisk",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0008.netRevenueOtherThanUsedToCalculateGHGIntensity": {
       "concept": "esrs:NetRevenueOtherThanUsedToCalculateGHGIntensity",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     }

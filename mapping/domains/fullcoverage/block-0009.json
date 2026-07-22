@@ -2,45 +2,87 @@
   "fieldMappings": {
     "full.block0009.netRevenueUsedToCalculateGHGIntensity": {
       "concept": "esrs:NetRevenueUsedToCalculateGHGIntensity",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.netZeroTargetIsDisclosedInAdditionToGrossGHGEmissionReductionTargets": {
       "concept": "esrs:NetZeroTargetIsDisclosedInAdditionToGrossGHGEmissionReductionTargets",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.newTechnologiesArePlannedToBeAdoptedToAchieveGHGEmissionReductionTarget": {
       "concept": "esrs:NewTechnologiesArePlannedToBeAdoptedToAchieveGHGEmissionReductionTarget",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.noChannelForRaisingConcernsEitherForPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersHasBeenAdopted": {
       "concept": "esrs:NoChannelForRaisingConcernsEitherForPeopleInOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersHasBeenAdopted",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.noGeneralProcessToEngageWithOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersHasBeenAdopted": {
       "concept": "esrs:NoGeneralProcessToEngageWithOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndusersHasBeenAdopted",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.nonemployeesDataIsEstimatedBecauseDataIsNotAvailable": {
       "concept": "esrs:NonemployeesDataIsEstimatedBecauseDataIsNotAvailable",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.nonemployeesNumbersAreReportedUsingAnotherMethodology": {
       "concept": "esrs:NonemployeesNumbersAreReportedUsingAnotherMethodology",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.nonrecycledWaste": {
       "concept": "esrs:NonrecycledWaste",
@@ -56,295 +98,302 @@
     },
     "full.block0009.noSevereHumanRightsIncidentsConnectedToOwnWorkforceHaveOccurred": {
       "concept": "esrs:NoSevereHumanRightsIncidentsConnectedToOwnWorkforceHaveOccurred",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.numberOfCasesOfRecordableWorkrelatedIllHealth": {
       "concept": "esrs:NumberOfCasesOfRecordableWorkrelatedIllHealth",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfComplaintsFiledThroughChannelsForPeopleInOwnWorkforceToRaiseConcerns": {
       "concept": "esrs:NumberOfComplaintsFiledThroughChannelsForPeopleInOwnWorkforceToRaiseConcerns",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfComplaintsFiledToNationalContactPointsForOECDMultinationalEnterprises": {
       "concept": "esrs:NumberOfComplaintsFiledToNationalContactPointsForOECDMultinationalEnterprises",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfComplaintsReceivedFromConsumersAndEndusers": {
       "concept": "esrs:NumberOfComplaintsReceivedFromConsumersAndEndusers",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfConfirmedIncidentsInWhichOwnWorkersWereDismissedOrDisciplinedForCorruptionOrBriberyrelatedIncidents": {
       "concept": "esrs:NumberOfConfirmedIncidentsInWhichOwnWorkersWereDismissedOrDisciplinedForCorruptionOrBriberyrelatedIncidents",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfConfirmedIncidentsOfCorruptionOrBribery": {
       "concept": "esrs:NumberOfConfirmedIncidentsOfCorruptionOrBribery",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfConfirmedIncidentsRelatingToContractsWithBusinessPartnersThatWereTerminatedOrNotRenewedDueToViolationsRelatedToCorruptionOrBribery": {
       "concept": "esrs:NumberOfConfirmedIncidentsRelatingToContractsWithBusinessPartnersThatWereTerminatedOrNotRenewedDueToViolationsRelatedToCorruptionOrBribery",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfConvictionsForViolationOfAnticorruptionAndAntibriberyLaws": {
       "concept": "esrs:NumberOfConvictionsForViolationOfAnticorruptionAndAntibriberyLaws",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfDaysLostToWorkrelatedInjuriesAndFatalitiesFromWorkrelatedAccidentsWorkrelatedIllHealthAndFatalitiesFromIllHealth": {
       "concept": "esrs:NumberOfDaysLostToWorkrelatedInjuriesAndFatalitiesFromWorkrelatedAccidentsWorkrelatedIllHealthAndFatalitiesFromIllHealth",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmissionAllowancesStoredFromPreviousAllowancesAtBeginningOfReportingPeriod": {
       "concept": "esrs:NumberOfEmissionAllowancesStoredFromPreviousAllowancesAtBeginningOfReportingPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadcountAtEndOfPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadcountAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountAtTopManagementLevelAtEndOfPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountAtTopManagementLevelAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountAtTopManagementLevelDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountAtTopManagementLevelDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountBetween30And50YearsOldAtEndOfPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountBetween30And50YearsOldAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountBetween30And50YearsOldDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountBetween30And50YearsOldDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountOrFulltimeEquivalentAtEndOfPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountOrFulltimeEquivalentAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountOrFulltimeEquivalentDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountOrFulltimeEquivalentDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountOver50YearsOldAtEndOfPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountOver50YearsOldAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountOver50YearsOldDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountOver50YearsOldDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountUnder30YearsOldAtEndOfPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountUnder30YearsOldAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesHeadCountUnder30YearsOldDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesHeadCountUnder30YearsOldDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesInCountriesWith50OrMoreEmployeesRepresentingAtLeast10PercentOfTotalNumberOfEmployeesAtEndOfPeriod": {
       "concept": "esrs:NumberOfEmployeesInCountriesWith50OrMoreEmployeesRepresentingAtLeast10PercentOfTotalNumberOfEmployeesAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesInCountriesWith50OrMoreEmployeesRepresentingAtLeast10PercentOfTotalNumberOfEmployeesDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesInCountriesWith50OrMoreEmployeesRepresentingAtLeast10PercentOfTotalNumberOfEmployeesDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesReceivingAnticorruptionAndAntibriberyTrainingDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesReceivingAnticorruptionAndAntibriberyTrainingDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfEmployeesWhoHaveLeftUndertakingDuringPeriod": {
       "concept": "esrs:NumberOfEmployeesWhoHaveLeftUndertakingDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfExecutiveMembers": {
       "concept": "esrs:NumberOfExecutiveMembers",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfFatalitiesAsResultOfWorkrelatedIllHealthOfOtherWorkersWorkingOnUndertakingsSites": {
       "concept": "esrs:NumberOfFatalitiesAsResultOfWorkrelatedIllHealthOfOtherWorkersWorkingOnUndertakingsSites",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfFatalitiesAsResultOfWorkrelatedInjuriesAndWorkrelatedIllHealthOfOtherWorkersWorkingOnUndertakingsSites": {
       "concept": "esrs:NumberOfFatalitiesAsResultOfWorkrelatedInjuriesAndWorkrelatedIllHealthOfOtherWorkersWorkingOnUndertakingsSites",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfFatalitiesAsResultOfWorkrelatedInjuriesOfOtherWorkersWorkingOnUndertakingsSites": {
       "concept": "esrs:NumberOfFatalitiesAsResultOfWorkrelatedInjuriesOfOtherWorkersWorkingOnUndertakingsSites",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfFatalitiesInOwnWorkforceAsResultOfWorkrelatedIllHealth": {
       "concept": "esrs:NumberOfFatalitiesInOwnWorkforceAsResultOfWorkrelatedIllHealth",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfFatalitiesInOwnWorkforceAsResultOfWorkrelatedInjuries": {
       "concept": "esrs:NumberOfFatalitiesInOwnWorkforceAsResultOfWorkrelatedInjuries",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfFatalitiesInOwnWorkforceAsResultOfWorkrelatedInjuriesAndWorkrelatedIllHealth": {
       "concept": "esrs:NumberOfFatalitiesInOwnWorkforceAsResultOfWorkrelatedInjuriesAndWorkrelatedIllHealth",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfIncidentsOfDiscrimination": {
       "concept": "esrs:NumberOfIncidentsOfDiscrimination",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfInvasiveAlienSpecies": {
       "concept": "esrs:NumberOfInvasiveAlienSpecies",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfLegalProceedingsOutstandingForLatePayments": {
       "concept": "esrs:NumberOfLegalProceedingsOutstandingForLatePayments",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfNonemployeesInOwnWorkforceAtEndOfPeriod": {
       "concept": "esrs:NumberOfNonemployeesInOwnWorkforceAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfNonemployeesInOwnWorkforceDuringPeriod": {
       "concept": "esrs:NumberOfNonemployeesInOwnWorkforceDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfNonemployeesInOwnWorkforcePeopleProvidedByUndertakingsPrimarilyEngagedInEmploymentActivitiesAtEndOfPeriod": {
       "concept": "esrs:NumberOfNonemployeesInOwnWorkforcePeopleProvidedByUndertakingsPrimarilyEngagedInEmploymentActivitiesAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfNonemployeesInOwnWorkforcePeopleProvidedByUndertakingsPrimarilyEngagedInEmploymentActivitiesDuringPeriod": {
       "concept": "esrs:NumberOfNonemployeesInOwnWorkforcePeopleProvidedByUndertakingsPrimarilyEngagedInEmploymentActivitiesDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfNonemployeesInOwnWorkforceSelfemployedPeopleAtEndOfPeriod": {
       "concept": "esrs:NumberOfNonemployeesInOwnWorkforceSelfemployedPeopleAtEndOfPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.numberOfNonemployeesInOwnWorkforceSelfemployedPeopleDuringPeriod": {
       "concept": "esrs:NumberOfNonemployeesInOwnWorkforceSelfemployedPeopleDuringPeriod",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfNonexecutiveMembers": {
       "concept": "esrs:NumberOfNonexecutiveMembers",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfRecordableWorkrelatedAccidents": {
       "concept": "esrs:NumberOfRecordableWorkrelatedAccidents",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfScope1GHGEmissionAllowancesWithinRegulatedEmissionTradingSchemes": {
       "concept": "esrs:NumberOfScope1GHGEmissionAllowancesWithinRegulatedEmissionTradingSchemes",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfSevereHumanRightsIncidentsConnectedToOwnWorkforce": {
       "concept": "esrs:NumberOfSevereHumanRightsIncidentsConnectedToOwnWorkforce",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfSevereHumanRightsIncidentsConnectedToOwnWorkforceThatAreNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprises": {
       "concept": "esrs:NumberOfSevereHumanRightsIncidentsConnectedToOwnWorkforceThatAreNonrespectOfUnGuidingPrinciplesOnBusinessAndHumanRightsIloDeclarationOnFundamentalPrinciplesAndRightsAtWorkOrOecdGuidelinesForMultinationalEnterprises",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfSevereHumanRightsIncidentsWhereUndertakingPlayedRoleSecuringRemedyForThoseAffected": {
       "concept": "esrs:NumberOfSevereHumanRightsIncidentsWhereUndertakingPlayedRoleSecuringRemedyForThoseAffected",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.numberOfSitesOwnedLeasedOrManagedInOrNearProtectedAreasOrKeyBiodiversityAreasThatUndertakingIsNegativelyAffecting": {
       "concept": "esrs:NumberOfSitesOwnedLeasedOrManagedInOrNearProtectedAreasOrKeyBiodiversityAreasThatUndertakingIsNegativelyAffecting",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
@@ -356,247 +405,289 @@
     },
     "full.block0009.operatingExpendituresOpExInConjunctionWithMajorIncidentsAndDeposits": {
       "concept": "esrs:OperatingExpendituresOpExInConjunctionWithMajorIncidentsAndDeposits",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.optionAllowedByMemberStateToOmitDisclosureOfImpendingDevelopmentsOrMattersInCourseOfNegotiationHasBeenUsed": {
       "concept": "esrs:OptionAllowedByMemberStateToOmitDisclosureOfImpendingDevelopmentsOrMattersInCourseOfNegotiationHasBeenUsed",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.ownOperationsAffectThreatenedSpecies": {
       "concept": "esrs:OwnOperationsAffectThreatenedSpecies",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.ownWorkforceOrWorkersRepresentativesWereEngagedDirectlyInIdentifyingLessonsOrImprovementsAsResultOfUndertakingsPerformance": {
       "concept": "esrs:OwnWorkforceOrWorkersRepresentativesWereEngagedDirectlyInIdentifyingLessonsOrImprovementsAsResultOfUndertakingsPerformance",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.ownWorkforceOrWorkersRepresentativesWereEngagedDirectlyInTrackingPerformanceAgainstTargets": {
       "concept": "esrs:OwnWorkforceOrWorkersRepresentativesWereEngagedDirectlyInTrackingPerformanceAgainstTargets",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.peopleInOwnWorkforceAndOrWorkersRepresentativesPlayRoleInDecisionsRegardingEitherDesignOrImplementationOfProgrammesOrProcessesWhosePrimaryAimIsToDeliverPositiveImpacts": {
       "concept": "esrs:PeopleInOwnWorkforceAndOrWorkersRepresentativesPlayRoleInDecisionsRegardingEitherDesignOrImplementationOfProgrammesOrProcessesWhosePrimaryAimIsToDeliverPositiveImpacts",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.peopleInOwnWorkforceValueChainWorkersThatMayBeAffectedAreAbleToAccessChannelsAtLevelOfUndertakingTheyAreEmployedByOrContractedToWorkForInRelationToEachMaterialImpact": {
       "concept": "esrs:PeopleInOwnWorkforceValueChainWorkersThatMayBeAffectedAreAbleToAccessChannelsAtLevelOfUndertakingTheyAreEmployedByOrContractedToWorkForInRelationToEachMaterialImpact",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0009.percentageOfApproximateGrossScope1GreenhouseGasEmissionsCoveredByInternalCarbonPricingScheme": {
       "concept": "esrs:PercentageOfApproximateGrossScope1GreenhouseGasEmissionsCoveredByInternalCarbonPricingScheme",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfApproximateGrossScope2GreenhouseGasEmissionsCoveredByInternalCarbonPricingScheme": {
       "concept": "esrs:PercentageOfApproximateGrossScope2GreenhouseGasEmissionsCoveredByInternalCarbonPricingScheme",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfApproximateGrossScope3GreenhouseGasEmissionsCoveredByInternalCarbonPricingScheme": {
       "concept": "esrs:PercentageOfApproximateGrossScope3GreenhouseGasEmissionsCoveredByInternalCarbonPricingScheme",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfAssetsAtMaterialPhysicalRiskAddressedByClimateChangeAdaptationActions": {
       "concept": "esrs:PercentageOfAssetsAtMaterialPhysicalRiskAddressedByClimateChangeAdaptationActions",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.percentageOfAssetsAtMaterialPhysicalRiskBeforeConsideringClimateChangeAdaptationActions": {
       "concept": "esrs:PercentageOfAssetsAtMaterialPhysicalRiskBeforeConsideringClimateChangeAdaptationActions",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.percentageOfAssetsAtMaterialTransitionRiskAddressedByClimateChangeMitigationActions": {
       "concept": "esrs:PercentageOfAssetsAtMaterialTransitionRiskAddressedByClimateChangeMitigationActions",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.percentageOfAssetsAtMaterialTransitionRiskBeforeConsideringClimateMitigationActions": {
       "concept": "esrs:PercentageOfAssetsAtMaterialTransitionRiskBeforeConsideringClimateMitigationActions",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.percentageOfBiologicalMaterialsUsedToManufactureProductsAndServicesThatAreSustainablySourced": {
       "concept": "esrs:PercentageOfBiologicalMaterialsUsedToManufactureProductsAndServicesThatAreSustainablySourced",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfCarbonCreditsCancelledForRecognisedQualityStandard": {
       "concept": "esrs:PercentageOfCarbonCreditsCancelledForRecognisedQualityStandard",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfCarbonCreditsCancelledFromProjectsInEuropeanUnion": {
       "concept": "esrs:PercentageOfCarbonCreditsCancelledFromProjectsInEuropeanUnion",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfCarbonCreditsCancelledFromReductionProjects": {
       "concept": "esrs:PercentageOfCarbonCreditsCancelledFromReductionProjects",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfCarbonCreditsCancelledFromRemovalProjects": {
       "concept": "esrs:PercentageOfCarbonCreditsCancelledFromRemovalProjects",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfCarbonCreditsCancelledThatQualifiesAsCorrespondingAdjustment": {
       "concept": "esrs:PercentageOfCarbonCreditsCancelledThatQualifiesAsCorrespondingAdjustment",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfContractualInstrumentsScope2GHGEmissions": {
       "concept": "esrs:PercentageOfContractualInstrumentsScope2GHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfContractualInstrumentsUsedForSaleAndPurchaseOfEnergyBundledWithAttributesAboutEnergyGenerationInRelationToScope2GHGEmissions": {
       "concept": "esrs:PercentageOfContractualInstrumentsUsedForSaleAndPurchaseOfEnergyBundledWithAttributesAboutEnergyGenerationInRelationToScope2GHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfContractualInstrumentsUsedForSaleAndPurchaseOfUnbundledEnergyAttributeClaimsInRelationToScope2GHGEmissions": {
       "concept": "esrs:PercentageOfContractualInstrumentsUsedForSaleAndPurchaseOfUnbundledEnergyAttributeClaimsInRelationToScope2GHGEmissions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfDataObtainedFromBestEstimatesWaterConsumption": {
       "concept": "esrs:PercentageOfDataObtainedFromBestEstimatesWaterConsumption",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfDataObtainedFromDirectMeasurementWaterConsumption": {
       "concept": "esrs:PercentageOfDataObtainedFromDirectMeasurementWaterConsumption",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfDataObtainedFromSamplingAndExtrapolationWaterConsumption": {
       "concept": "esrs:PercentageOfDataObtainedFromSamplingAndExtrapolationWaterConsumption",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeesAndOrNonemployeesPaidBelowApplicableAdequateWageBenchmark": {
       "concept": "esrs:PercentageOfEmployeesAndOrNonemployeesPaidBelowApplicableAdequateWageBenchmark",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeesAndOrNonemployeesThatParticipatedInRegularPerformanceAndCareerDevelopmentReviews": {
       "concept": "esrs:PercentageOfEmployeesAndOrNonemployeesThatParticipatedInRegularPerformanceAndCareerDevelopmentReviews",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeesAtTopManagementLevel": {
       "concept": "esrs:PercentageOfEmployeesAtTopManagementLevel",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeesBetween30And50YearsOld": {
       "concept": "esrs:PercentageOfEmployeesBetween30And50YearsOld",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeesEntitledToTakeFamilyrelatedLeaves": {
       "concept": "esrs:PercentageOfEmployeesEntitledToTakeFamilyrelatedLeaves",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeesOver50YearsOld": {
       "concept": "esrs:PercentageOfEmployeesOver50YearsOld",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeesUnder30YearsOld": {
       "concept": "esrs:PercentageOfEmployeesUnder30YearsOld",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEmployeeTurnover": {
       "concept": "esrs:PercentageOfEmployeeTurnover",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEnergyConsumptionFromNuclearSourcesInTotalEnergyConsumption": {
       "concept": "esrs:PercentageOfEnergyConsumptionFromNuclearSourcesInTotalEnergyConsumption",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEntitledEmployeesThatTookFamilyrelatedLeave": {
       "concept": "esrs:PercentageOfEntitledEmployeesThatTookFamilyrelatedLeave",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfEstimatedShareOfPotentiallyStrandedAssetsOfTotalAssetsAtMaterialTransitionRisk": {
       "concept": "esrs:PercentageOfEstimatedShareOfPotentiallyStrandedAssetsOfTotalAssetsAtMaterialTransitionRisk",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
     "full.block0009.percentageOfFossilSourcesInTotalEnergyConsumption": {
       "concept": "esrs:PercentageOfFossilSourcesInTotalEnergyConsumption",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfFunctionsatriskCoveredByAnticorruptionAndAntibriberyTrainingProgrammes": {
       "concept": "esrs:PercentageOfFunctionsatriskCoveredByAnticorruptionAndAntibriberyTrainingProgrammes",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfGrossScope3GreenhouseGasEmissionsCalculatedUsingPrimaryDataObtainedFromSuppliersOrOtherValueChainPartners": {
       "concept": "esrs:PercentageOfGrossScope3GreenhouseGasEmissionsCalculatedUsingPrimaryDataObtainedFromSuppliersOrOtherValueChainPartners",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0009.percentageOfIndependentBoardMembers": {
       "concept": "esrs:PercentageOfIndependentBoardMembers",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     }

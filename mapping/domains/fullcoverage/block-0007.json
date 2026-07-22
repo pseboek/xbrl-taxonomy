@@ -2,13 +2,13 @@
   "fieldMappings": {
     "full.block0007.expectedCostSavingsFromClimateChangeAdaptationActions": {
       "concept": "esrs:ExpectedCostSavingsFromClimateChangeAdaptationActions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.expectedCostSavingsFromClimateChangeMitigationActions": {
       "concept": "esrs:ExpectedCostSavingsFromClimateChangeMitigationActions",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
@@ -248,49 +248,70 @@
     },
     "full.block0007.explanationsOfSignificantChangesToPoliciesAdoptedDuringReportingYearProvideContextualInformationForUsers": {
       "concept": "esrs:ExplanationsOfSignificantChangesToPoliciesAdoptedDuringReportingYearProvideContextualInformationForUsers",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.extentToWhichAssetsAndBusinessActivitiesMayBeExposedAndAreSensitiveToIdentifiedTransitionEventsHasBeenAssessed": {
       "concept": "esrs:ExtentToWhichAssetsAndBusinessActivitiesMayBeExposedAndAreSensitiveToIdentifiedTransitionEventsHasBeenAssessed",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.extentToWhichEitherAssetsOrBusinessActivitiesMayBeExposedAndOrAreSensitiveToIdentifiedClimaterelatedHazardsHasBeenAssessed": {
       "concept": "esrs:ExtentToWhichEitherAssetsOrBusinessActivitiesMayBeExposedAndOrAreSensitiveToIdentifiedClimaterelatedHazardsHasBeenAssessed",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.financialAndInKindPoliticalContributionsMade": {
       "concept": "esrs:FinancialAndInKindPoliticalContributionsMade",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.financialPoliticalContributionsMade": {
       "concept": "esrs:FinancialPoliticalContributionsMade",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.financialResourcesAllocatedToActionPlanCapEx": {
       "concept": "esrs:FinancialResourcesAllocatedToActionPlanCapEx",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.financialResourcesAllocatedToActionPlanOpEx": {
       "concept": "esrs:FinancialResourcesAllocatedToActionPlanOpEx",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.financingEffectsDirectAndIndirectCostsOfBiodiversityOffsets": {
       "concept": "esrs:FinancingEffectsDirectAndIndirectCostsOfBiodiversityOffsets",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
@@ -326,15 +347,22 @@
     },
     "full.block0007.genderPayGap": {
       "concept": "esrs:GenderPayGap",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.gHGEmissionReductionTargetIsScienceBasedAndCompatibleWithLimitingGlobalWarmingToOneAndHalfDegreesCelsius": {
       "concept": "esrs:GHGEmissionReductionTargetIsScienceBasedAndCompatibleWithLimitingGlobalWarmingToOneAndHalfDegreesCelsius",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.gHGEmissionsAssociatedWithRemovalActivity": {
       "concept": "esrs:GHGEmissionsAssociatedWithRemovalActivity",
@@ -344,21 +372,28 @@
     },
     "full.block0007.gHGEmissionsIntensityLocationbasedTotalGHGEmissionsPerNetRevenue": {
       "concept": "esrs:GHGEmissionsIntensityLocationbasedTotalGHGEmissionsPerNetRevenue",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.gHGEmissionsIntensityMarketbasedTotalGHGEmissionsPerNetRevenue": {
       "concept": "esrs:GHGEmissionsIntensityMarketbasedTotalGHGEmissionsPerNetRevenue",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0007.gHGEmissionsReductionTargetsAndOrAnyOtherTargetsHaveBeenSetToManageMaterialClimaterelatedImpactsRisksAndOpportunities": {
       "concept": "esrs:GHGEmissionsReductionTargetsAndOrAnyOtherTargetsHaveBeenSetToManageMaterialClimaterelatedImpactsRisksAndOpportunities",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.gHGRemovalsAndStorage": {
       "concept": "esrs:GHGRemovalsAndStorage",
@@ -374,15 +409,29 @@
     },
     "full.block0007.grievanceOrComplaintsHandlingMechanismRelatedToEmployeeMattersIsInPlace": {
       "concept": "esrs:GrievanceOrComplaintsHandlingMechanismRelatedToEmployeeMattersIsInPlace",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.grievancesAreTreatedConfidentiallyAndOrWithRespectToRightsOfPrivacyAndDataProtection": {
       "concept": "esrs:GrievancesAreTreatedConfidentiallyAndOrWithRespectToRightsOfPrivacyAndDataProtection",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.grossGreenhouseGasEmissions": {
       "concept": "esrs:GrossGreenhouseGasEmissions",
@@ -446,9 +495,16 @@
     },
     "full.block0007.healthAndSafetyManagementSystemOrCertainPartsThereofHasBeenSubjectToInternalAuditOrExternalCertification": {
       "concept": "esrs:HealthAndSafetyManagementSystemOrCertainPartsThereofHasBeenSubjectToInternalAuditOrExternalCertification",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.highClimateImpactSectorsUsedToDetermineEnergyIntensity": {
       "concept": "esrs:HighClimateImpactSectorsUsedToDetermineEnergyIntensity",
@@ -464,15 +520,29 @@
     },
     "full.block0007.identificationOfClimaterelatedHazardsAndAssessmentOfExposureAndSensitivityAreInformedByHighEmissionsClimateScenarios": {
       "concept": "esrs:IdentificationOfClimaterelatedHazardsAndAssessmentOfExposureAndSensitivityAreInformedByHighEmissionsClimateScenarios",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.identificationOfTransitionEventsAndOrAssessmentOfExposureHasBeenInformedByClimaterelatedScenarioAnalysis": {
       "concept": "esrs:IdentificationOfTransitionEventsAndOrAssessmentOfExposureHasBeenInformedByClimaterelatedScenarioAnalysis",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.identifiersOfRelatedActionPlans": {
       "concept": "esrs:IdentifiersOfRelatedActionPlans",
@@ -500,25 +570,46 @@
     },
     "full.block0007.impactsOriginateFromOrAreConnectedToStrategyAndBusinessModel": {
       "concept": "esrs:ImpactsOriginateFromOrAreConnectedToStrategyAndBusinessModel",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.impactsRisksAndOpportunitiesAreCoveredByEntityspecificDisclosures": {
       "concept": "esrs:ImpactsRisksAndOpportunitiesAreCoveredByEntityspecificDisclosures",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.incentiveSchemesAndRemunerationPoliciesLinkedToSustainabilityMattersForMembersOfAdministrativeManagementAndSupervisoryBodiesExist": {
       "concept": "esrs:IncentiveSchemesAndRemunerationPoliciesLinkedToSustainabilityMattersForMembersOfAdministrativeManagementAndSupervisoryBodiesExist",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.increaseDecreaseInNetRevenueFromLowcarbonProductsAndServicesOrAdaptationSolutionsToWhichUndertakingHasOrMayHaveAccess": {
       "concept": "esrs:IncreaseDecreaseInNetRevenueFromLowcarbonProductsAndServicesOrAdaptationSolutionsToWhichUndertakingHasOrMayHaveAccess",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
@@ -530,9 +621,16 @@
     },
     "full.block0007.indigenousPeoplesHaveBeenConsultedOnModeAndOrParametersOfEngagement": {
       "concept": "esrs:IndigenousPeoplesHaveBeenConsultedOnModeAndOrParametersOfEngagement",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0007.informationAboutAppointmentOfAnyMembersOfAdministrativeManagementAndSupervisoryBodiesWhoHeldComparablePositionInPublicAdministrationInTwoYearsPrecedingSuchAppointmentExplanatory": {
       "concept": "esrs:InformationAboutAppointmentOfAnyMembersOfAdministrativeManagementAndSupervisoryBodiesWhoHeldComparablePositionInPublicAdministrationInTwoYearsPrecedingSuchAppointmentExplanatory",

@@ -428,63 +428,112 @@
     },
     "full.block0006.diverseRangeOfClimateScenariosHaveBeenConsideredToDetectRelevantEnvironmentalSocietalTechnologyMarketAndPolicyrelatedDevelopmentsAndDetermineDecarbonisationLevers": {
       "concept": "esrs:DiverseRangeOfClimateScenariosHaveBeenConsideredToDetectRelevantEnvironmentalSocietalTechnologyMarketAndPolicyrelatedDevelopmentsAndDetermineDecarbonisationLevers",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.durationOfClassroomTraining": {
       "concept": "esrs:DurationOfClassroomTraining",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0006.durationOfComputerbasedTraining": {
       "concept": "esrs:DurationOfComputerbasedTraining",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0006.durationOfVoluntaryComputerbasedTraining": {
       "concept": "esrs:DurationOfVoluntaryComputerbasedTraining",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0006.ecologicalThresholdsAndOrEntityspecificAllocationsWereTakenIntoConsiderationWhenSettingTarget": {
       "concept": "esrs:EcologicalThresholdsAndOrEntityspecificAllocationsWereTakenIntoConsiderationWhenSettingTarget",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.ecologicalThresholdsAreEntityspecific": {
       "concept": "esrs:EcologicalThresholdsAreEntityspecific",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.effectivenessOfPoliciesAndOrActionsIsTrackedInRelationToMaterialSustainabilityrelatedImpactRiskAndOpportunity": {
       "concept": "esrs:EffectivenessOfPoliciesAndOrActionsIsTrackedInRelationToMaterialSustainabilityrelatedImpactRiskAndOpportunity",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.eitherOptionToOmitSpecificPieceOfInformationCorrespondingToIntellectualPropertyKnowhowOrResultsOfInnovationHasBeenUsed": {
       "concept": "esrs:EitherOptionToOmitSpecificPieceOfInformationCorrespondingToIntellectualPropertyKnowhowOrResultsOfInnovationHasBeenUsed",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.eitherShortMediumOrLongtermTimeHorizonsHaveBeenDefinedInProcessesToIdentifyAndAssessPhysicalRisks": {
       "concept": "esrs:EitherShortMediumOrLongtermTimeHorizonsHaveBeenDefinedInProcessesToIdentifyAndAssessPhysicalRisks",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.eitherSiteRawMaterialProductionOrSourcingIsLikelyToNegativelyImpactBiodiversityOrEcosystems": {
       "concept": "esrs:EitherSiteRawMaterialProductionOrSourcingIsLikelyToNegativelyImpactBiodiversityOrEcosystems",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.emissionsToAir": {
       "concept": "esrs:EmissionsToAir",
@@ -512,9 +561,16 @@
     },
     "full.block0006.employeesNumbersAreReportedUsingAnotherMethodology": {
       "concept": "esrs:EmployeesNumbersAreReportedUsingAnotherMethodology",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.energyConsumptionFromFossilSources": {
       "concept": "esrs:EnergyConsumptionFromFossilSources",
@@ -536,15 +592,22 @@
     },
     "full.block0006.energyIntensityFromActivitiesInHighClimateImpactSectorsTotalEnergyConsumptionPerNetRevenue": {
       "concept": "esrs:EnergyIntensityFromActivitiesInHighClimateImpactSectorsTotalEnergyConsumptionPerNetRevenue",
-      "type": "text",
+      "type": "numeric",
       "period": "duration",
       "dimensions": []
     },
     "full.block0006.engagementWithStakeholderOccurs": {
       "concept": "esrs:EngagementWithStakeholderOccurs",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     },
     "full.block0006.eSRSDisclosureRequirementsCoveringImpactsRisksAndOpportunities": {
       "concept": "esrs:ESRSDisclosureRequirementsCoveringImpactsRisksAndOpportunities",
@@ -584,7 +647,7 @@
     },
     "full.block0006.estimatedAmountOfPotentiallyStrandedAssets": {
       "concept": "esrs:EstimatedAmountOfPotentiallyStrandedAssets",
-      "type": "text",
+      "type": "numeric",
       "period": "instant",
       "dimensions": []
     },
@@ -596,9 +659,16 @@
     },
     "full.block0006.europeanStandardsApprovedByEuropeanStandardisationSystemIsoNOIecOrCenNOCenelecStandardsHaveBeenReliedOn": {
       "concept": "esrs:EuropeanStandardsApprovedByEuropeanStandardisationSystemIsoNOIecOrCenNOCenelecStandardsHaveBeenReliedOn",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
-      "dimensions": []
+      "dimensions": [],
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": [
+        "esrs:YesMember",
+        "esrs:NoMember",
+        "true",
+        "false"
+      ]
     }
   }
 }
