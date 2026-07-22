@@ -17,6 +17,8 @@ public final class EsrsPipelineApplication {
 
         String arelleCommand = System.getenv().getOrDefault("ARELLE_CMD", "arelleCmdLine");
         boolean skipArelle = Boolean.parseBoolean(System.getenv().getOrDefault("SKIP_ARELLE", "true"));
+        boolean failOnValidationIssues = Boolean.parseBoolean(System.getenv().getOrDefault("FAIL_ON_VALIDATION_ISSUES", "true"));
+        boolean requireViewerPlugin = Boolean.parseBoolean(System.getenv().getOrDefault("REQUIRE_VIEWER_PLUGIN", "false"));
 
         ReportingPipelineOrchestrator orchestrator = new ReportingPipelineOrchestrator(arelleCommand);
         ReportingPipelineOrchestrator.PipelineResult result = orchestrator.run(
@@ -26,12 +28,15 @@ public final class EsrsPipelineApplication {
             layoutMap,
             outputDir,
             root,
-            skipArelle
+            skipArelle,
+            failOnValidationIssues,
+            requireViewerPlugin
         );
 
         System.out.println("XBRL: " + result.xbrlPath());
         System.out.println("iXBRL: " + result.ixbrlPath());
         System.out.println("Viewer: " + result.interactiveHtmlPath());
+        System.out.println("Viewer fallback used: " + result.viewerFallbackUsed());
         result.validationIssues().forEach(issue ->
             System.out.println(issue.severity() + " " + issue.code() + " - " + issue.message())
         );
