@@ -89,14 +89,14 @@ Sie dient gleichzeitig als:
 | Kriterium | Status | Nachweis |
 | --- | --- | --- |
 | XBRL technisch valide | Erfuellt | Arelle-Validation-Gate implementiert (Fehler/fehlende Evidenz blockieren strikt) |
-| iXBRL technisch valide | Erfuellt | Arelle-Validation-Gate implementiert (Fehler/fehlende Evidenz blockieren strikt) |
-| Viewer-Konvertierung erfolgreich | Teilweise | Viewer-Plugin in dieser Umgebung nicht verfuegbar, Fallback-HTML erzeugt |
+| iXBRL technisch valide | Erfuellt | Strict Production Gate erfolgreich; verbleibend nur nicht-blockierende Warnung `ix11.8.1.2:headerDisplayNone` |
+| Viewer-Konvertierung erfolgreich | Erfuellt | Strict Production Gate erfolgreich; Viewer-Export ohne Fallback bestaetigt (`Viewer fallback used: false`) |
 | Enumerationen/Dimensionen korrekt gemappt | Erfuellt | Validierungsregeln im `FactBuilder` + Unit-Tests vorhanden |
 | Reproduzierbarer End-to-End-Lauf | Erfuellt | Integrationstest `ReportingPipelineOrchestratorTest` + reproduzierbare Artefakte vorhanden |
 
 ## F. Priorisierte nächste Schritte (Implementierungsreihenfolge)
 
-1. Zielumgebung mit Arelle + iXBRL-Viewer-Plugin bereitstellen und `scripts/run-strict-production-gate.ps1` erfolgreich ausfuehren (Code/Gates sind vorbereitet).
+1. Optional: `ix:header` in ein verborgenes `<div style="display:none">` verschieben, um die verbleibende iXBRL-Warnung `headerDisplayNone` zu eliminieren.
 2. Mapping-Abdeckung iterativ in Richtung Vollabdeckung weiter ausbauen (aktuell erweitert um Strategie-, Workforce- und Wasser-Fakten).
 
 ## G. KI-Input-Block (für direkte Nutzung)
@@ -119,4 +119,5 @@ Pflege diese Status-Checkliste pro Iteration und aktualisiere offene/erfuellte P
 - Die Spezifikation und Zielarchitektur sind dokumentationsseitig vollständig und als MVP technisch umgesetzt.
 - Die Validierung wurde als technisches Gate gehärtet (Arelle-Fehler und fehlende Validierungs-Evidenz führen zu Fehlerzustand).
 - Die Mapping-Abdeckung wurde gegenüber dem MVP erweitert (zusätzliche ESRS-Konzepte inkl. Text-, Enumerations- und numerischer Fakten).
-- Der strict Productive-Gate-Run ist als Skript und optionaler CI-Job implementiert; offener Infrastrukturpunkt bleibt die feste Bereitstellung von Arelle inkl. iXBRL-Viewer-Plugin in der Zielumgebung.
+- Der strict Productive-Gate-Run ist als Skript und optionaler CI-Job implementiert und läuft aktuell erfolgreich (`Viewer fallback used: false`).
+- Offener Feinschliffpunkt: nicht-blockierende iXBRL-Warnung `ix11.8.1.2:headerDisplayNone`.

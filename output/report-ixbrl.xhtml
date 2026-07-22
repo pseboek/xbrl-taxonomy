@@ -1,14 +1,48 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ix="http://www.xbrl.org/2013/inlineXBRL"
+    xmlns:ix="http://www.xbrl.org/2013/inlineXBRL"
+    xmlns:xbrli="http://www.xbrl.org/2003/instance"
+    xmlns:xbrldi="http://xbrl.org/2006/xbrldi"
+    xmlns:link="http://www.xbrl.org/2003/linkbase"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:iso4217="http://www.xbrl.org/2003/iso4217"
     xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22"
-      xml:lang="de">
+    xml:lang="de">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ESRS Bericht - Muster AG</title>
     <link rel="stylesheet" href="assets/report.css" />
 </head>
 <body>
+<ix:header>
+    <ix:references>
+        <link:schemaRef xlink:type="simple" xlink:href="../xbrl.efrag.org/taxonomy/esrs/2023-12-22/common/esrs_cor.xsd"/>
+    </ix:references>
+    <ix:resources>
+        <xbrli:context id="c01">
+            <xbrli:entity>
+                <xbrli:identifier scheme="https://www.lei-identifier.com">529900T8BM49AURSDO55</xbrli:identifier>
+            </xbrli:entity>
+            <xbrli:period>
+                <xbrli:startDate>2025-01-01</xbrli:startDate>
+                <xbrli:endDate>2025-12-31</xbrli:endDate>
+            </xbrli:period>
+        </xbrli:context>
+        <xbrli:unit id="u_kWh">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+        <xbrli:unit id="u_tCO2e">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+        <xbrli:unit id="u_count">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+        <xbrli:unit id="u_m3">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+    </ix:resources>
+</ix:header>
+
 <div class="hero">
     <h1>ESRS Nachhaltigkeitsbericht</h1>
     <p class="meta">Unternehmen: Muster AG (529900T8BM49AURSDO55)</p>
@@ -28,11 +62,11 @@
             <tbody>
             <tr>
                 <td>Gesamtenergieverbrauch</td>
-                <td><ix:nonFraction name="esrs:TotalEnergyConsumption" contextRef="c01" unitRef="u_kWh" decimals="2">1250000.50</ix:nonFraction></td>
+                <td><ix:nonFraction name="esrs:EnergyConsumptionRelatedToOwnOperations" contextRef="c01" unitRef="u_kWh" decimals="2">1250000.50</ix:nonFraction></td>
             </tr>
             <tr>
                 <td>Scope-1-Emissionen</td>
-                <td><ix:nonFraction name="esrs:GrossScope1GHGEmissions" contextRef="c01" unitRef="u_tCO2e" decimals="2">6321.75</ix:nonFraction></td>
+                <td><ix:nonFraction name="esrs:GrossScope1GreenhouseGasEmissions" contextRef="c01" unitRef="u_tCO2e" decimals="2">6321.75</ix:nonFraction></td>
             </tr>
             </tbody>
         </table>
@@ -40,13 +74,13 @@
 
     <div>
         <h2>Governance</h2>
-        <p>Korruptionsrichtlinie vorhanden: <ix:nonNumeric name="esrs:PoliciesRelatedToCorruptionAndBribery" contextRef="c01">esrs:YesMember</ix:nonNumeric></p>
-        <p>Whistleblower-Kanal: <ix:nonNumeric name="esrs:DescriptionOfWhistleblowerChannel" contextRef="c01">Anonymer digitaler Meldekanal mit Ombudsstelle.</ix:nonNumeric></p>
+        <p>Korruptionsrichtlinie vorhanden: <ix:nonNumeric name="esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace" contextRef="c01">true</ix:nonNumeric></p>
+        <p>Whistleblower-Kanal: <ix:nonNumeric name="esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory" contextRef="c01">Anonymer digitaler Meldekanal mit Ombudsstelle.</ix:nonNumeric></p>
     </div>
 
     <div>
         <h2>Strategie</h2>
-        <p>Klimatransitionsplan vorhanden: <ix:nonNumeric name="esrs:ClimateTransitionPlanAdopted" contextRef="c01">esrs:YesMember</ix:nonNumeric></p>
+        <p>Klimatransitionsplan vorhanden: <ix:nonNumeric name="esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan" contextRef="c01">true</ix:nonNumeric></p>
     </div>
 
     <div>
@@ -61,11 +95,11 @@
             <tbody>
             <tr>
                 <td>Gesamtzahl Mitarbeitende</td>
-                <td><ix:nonFraction name="esrs:TotalNumberOfEmployees" contextRef="c01" unitRef="u_count" decimals="0">5320</ix:nonFraction></td>
+                <td><ix:nonFraction name="esrs:NumberOfEmployeesHeadCountDuringPeriod" contextRef="c01" unitRef="u_count" decimals="0">5320</ix:nonFraction></td>
             </tr>
             <tr>
                 <td>Wasserverbrauch gesamt</td>
-                <td><ix:nonFraction name="esrs:TotalWaterConsumption" contextRef="c01" unitRef="u_m3" decimals="0">412300</ix:nonFraction></td>
+                <td><ix:nonFraction name="esrs:WaterConsumption" contextRef="c01" unitRef="u_m3" decimals="0">412300</ix:nonFraction></td>
             </tr>
             </tbody>
         </table>

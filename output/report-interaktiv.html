@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22" xmlns:ix="http://www.xbrl.org/2013/inlineXBRL" xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
+<html xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22" xmlns:iso4217="http://www.xbrl.org/2003/iso4217" xmlns:ix="http://www.xbrl.org/2013/inlineXBRL" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xbrldi="http://xbrl.org/2006/xbrldi" xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
     <title>ESRS Bericht - Muster AG</title>
     <link href="assets/report.css" rel="stylesheet"/>
 </head>
 <body>
+<ix:header>
+    <ix:references>
+        <link:schemaRef xlink:href="../xbrl.efrag.org/taxonomy/esrs/2023-12-22/common/esrs_cor.xsd" xlink:type="simple"></link:schemaRef>
+    </ix:references>
+    <ix:resources>
+        <xbrli:context id="c01">
+            <xbrli:entity>
+                <xbrli:identifier scheme="https://www.lei-identifier.com">529900T8BM49AURSDO55</xbrli:identifier>
+            </xbrli:entity>
+            <xbrli:period>
+                <xbrli:startDate>2025-01-01</xbrli:startDate>
+                <xbrli:endDate>2025-12-31</xbrli:endDate>
+            </xbrli:period>
+        </xbrli:context>
+        <xbrli:unit id="u_kWh">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+        <xbrli:unit id="u_tCO2e">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+        <xbrli:unit id="u_count">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+        <xbrli:unit id="u_m3">
+            <xbrli:measure>xbrli:pure</xbrli:measure>
+        </xbrli:unit>
+    </ix:resources>
+</ix:header>
+
 <div class="hero">
     <h1>ESRS Nachhaltigkeitsbericht</h1>
     <p class="meta">Unternehmen: Muster AG (529900T8BM49AURSDO55)</p>
@@ -25,11 +54,11 @@
             <tbody>
             <tr>
                 <td>Gesamtenergieverbrauch</td>
-                <td><ix:nonFraction contextRef="c01" decimals="2" name="esrs:TotalEnergyConsumption" unitRef="u_kWh">1250000.50</ix:nonFraction></td>
+                <td><ix:nonFraction contextRef="c01" decimals="2" id="ixv-0" name="esrs:EnergyConsumptionRelatedToOwnOperations" unitRef="u_kWh">1250000.50</ix:nonFraction></td>
             </tr>
             <tr>
                 <td>Scope-1-Emissionen</td>
-                <td><ix:nonFraction contextRef="c01" decimals="2" name="esrs:GrossScope1GHGEmissions" unitRef="u_tCO2e">6321.75</ix:nonFraction></td>
+                <td><ix:nonFraction contextRef="c01" decimals="2" id="ixv-1" name="esrs:GrossScope1GreenhouseGasEmissions" unitRef="u_tCO2e">6321.75</ix:nonFraction></td>
             </tr>
             </tbody>
         </table>
@@ -37,13 +66,13 @@
 
     <div>
         <h2>Governance</h2>
-        <p>Korruptionsrichtlinie vorhanden: <ix:nonNumeric contextRef="c01" name="esrs:PoliciesRelatedToCorruptionAndBribery">esrs:YesMember</ix:nonNumeric></p>
-        <p>Whistleblower-Kanal: <ix:nonNumeric contextRef="c01" name="esrs:DescriptionOfWhistleblowerChannel">Anonymer digitaler Meldekanal mit Ombudsstelle.</ix:nonNumeric></p>
+        <p>Korruptionsrichtlinie vorhanden: <ix:nonNumeric contextRef="c01" id="ixv-2" name="esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace">true</ix:nonNumeric></p>
+        <p>Whistleblower-Kanal: <ix:nonNumeric contextRef="c01" id="ixv-3" name="esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory">Anonymer digitaler Meldekanal mit Ombudsstelle.</ix:nonNumeric></p>
     </div>
 
     <div>
         <h2>Strategie</h2>
-        <p>Klimatransitionsplan vorhanden: <ix:nonNumeric contextRef="c01" name="esrs:ClimateTransitionPlanAdopted">esrs:YesMember</ix:nonNumeric></p>
+        <p>Klimatransitionsplan vorhanden: <ix:nonNumeric contextRef="c01" id="ixv-4" name="esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan">true</ix:nonNumeric></p>
     </div>
 
     <div>
@@ -58,11 +87,11 @@
             <tbody>
             <tr>
                 <td>Gesamtzahl Mitarbeitende</td>
-                <td><ix:nonFraction contextRef="c01" decimals="0" name="esrs:TotalNumberOfEmployees" unitRef="u_count">5320</ix:nonFraction></td>
+                <td><ix:nonFraction contextRef="c01" decimals="0" id="ixv-5" name="esrs:NumberOfEmployeesHeadCountDuringPeriod" unitRef="u_count">5320</ix:nonFraction></td>
             </tr>
             <tr>
                 <td>Wasserverbrauch gesamt</td>
-                <td><ix:nonFraction contextRef="c01" decimals="0" name="esrs:TotalWaterConsumption" unitRef="u_m3">412300</ix:nonFraction></td>
+                <td><ix:nonFraction contextRef="c01" decimals="0" id="ixv-6" name="esrs:WaterConsumption" unitRef="u_m3">412300</ix:nonFraction></td>
             </tr>
             </tbody>
         </table>
@@ -75,13 +104,6212 @@
   {
    "targetReports": [
     {
-     "concepts": {},
-     "facts": {},
+     "concepts": {
+      "esrs:EnergyConsumptionRelatedToOwnOperations": {
+       "labels": {
+        "std": {
+         "en": "Energy consumption related to own operations"
+        },
+        "ns0": {
+         "en": "Total energy consumption related to own operations"
+        },
+        "doc": {
+         "en": "The value should be presented in MWh."
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Commission Delegated Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2022/1288"
+         ],
+         [
+          "Section",
+          "Annex 1"
+         ],
+         [
+          "Subsection",
+          "Table 1"
+         ],
+         [
+          "Clause",
+          "Indicator 5 Share of non-renewable energy consumption and production"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_del/2022/1288/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Section",
+          "E1-5"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#936"
+         ],
+         [
+          "RelatedAR",
+          "AR 35"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ],
+         [
+          "DatapointId",
+          "E1-5_01"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:energyItemType"
+      },
+      "esrs:GrossScope1GreenhouseGasEmissions": {
+       "labels": {
+        "std": {
+         "en": "Gross Scope 1 greenhouse gas emissions"
+        },
+        "doc": {
+         "en": "The value should be presented in tCO2e."
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "34"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-4"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#4869"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ],
+         [
+          "ConditionalDatapoint",
+          "Conditional"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#4991"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "44"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#954"
+         ],
+         [
+          "RelatedAR",
+          "AR 39"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ],
+         [
+          "DatapointId",
+          "E1-6_01"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Commission Delegated Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2022/1288"
+         ],
+         [
+          "Section",
+          "Annex 1"
+         ],
+         [
+          "Subsection",
+          "Table 1"
+         ],
+         [
+          "Clause",
+          "Indicator 1 GHG emissions"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_del/2022/1288/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Commission Implementing Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2022/2453"
+         ],
+         [
+          "Subsection",
+          "Template 1: Climate change transition risk"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_impl/2022/2453/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Commission Delegated Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2020/1818"
+         ],
+         [
+          "Paragraph",
+          "Article 6"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_del/2020/1818/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Commission Delegated Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2022/1288"
+         ],
+         [
+          "Section",
+          "Annex 1"
+         ],
+         [
+          "Subsection",
+          "Table 1"
+         ],
+         [
+          "Clause",
+          "Indicator 2 Carbon footprint"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_del/2022/1288/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Commission Delegated Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2020/1818"
+         ],
+         [
+          "Paragraph",
+          "Article 5"
+         ],
+         [
+          "Clause",
+          "1"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_del/2020/1818/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Commission Delegated Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2020/1818"
+         ],
+         [
+          "Paragraph",
+          "Article 8"
+         ],
+         [
+          "Clause",
+          "1"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_del/2020/1818/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:ghgEmissionsItemType"
+      },
+      "esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace": {
+       "labels": {
+        "std": {
+         "en": "Policies on anti-corruption consistent with United Nations Convention against Corruption are in place"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "G1"
+         ],
+         [
+          "Paragraph",
+          "10"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "G1-1"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#8540"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ],
+         [
+          "ConditionalDatapoint",
+          "Conditional"
+         ],
+         [
+          "DatapointId",
+          "G1-1_04"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Commission Delegated Regulation (EU)"
+         ],
+         [
+          "Number",
+          "2022/1288"
+         ],
+         [
+          "Section",
+          "Annex 1"
+         ],
+         [
+          "Subsection",
+          "Table 3"
+         ],
+         [
+          "Clause",
+          "Indicator 15 Lack of anti-corruption and anti-bribery policies"
+         ],
+         [
+          "URI",
+          "https://eur-lex.europa.eu/eli/reg_del/2022/1288/oj"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ]
+        ]
+       ],
+       "dt": "xbrli:booleanItemType"
+      },
+      "esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory": {
+       "labels": {
+        "std": {
+         "en": "Information about establishment of internal whistleblower reporting channels [text block]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "G1"
+         ],
+         [
+          "Paragraph",
+          "10"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "G1-1"
+         ],
+         [
+          "Clause",
+          "i"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#8544"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ]
+        ]
+       ],
+       "t": true,
+       "dt": "dtr-types:textBlockItemType"
+      },
+      "esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan": {
+       "labels": {
+        "std": {
+         "en": "Administrative, management and (or) supervisory bodies have approved transition plan"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "AR 1"
+         ],
+         [
+          "Subparagraph",
+          "j"
+         ],
+         [
+          "Section",
+          "E4-1"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#6526"
+         ],
+         [
+          "ReferenceType",
+          "Related"
+         ],
+         [
+          "DatapointId",
+          "E4-1_17"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "16"
+         ],
+         [
+          "Subparagraph",
+          "i"
+         ],
+         [
+          "Section",
+          "E1-1"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#4803"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ],
+         [
+          "DatapointId",
+          "E1-1_14"
+         ]
+        ]
+       ],
+       "dt": "xbrli:booleanItemType"
+      },
+      "esrs:NumberOfEmployeesHeadCountDuringPeriod": {
+       "labels": {
+        "std": {
+         "en": "Number of employees (head count), during period"
+        },
+        "ns0": {
+         "en": "Total number of employees (head count), during period"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "Clause",
+          "ii"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#7281"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "G1"
+         ],
+         [
+          "Paragraph",
+          "AR 8"
+         ],
+         [
+          "Section",
+          "G1-3"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#3240"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "40"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "SBM-1"
+         ],
+         [
+          "Clause",
+          "iii"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#4271"
+         ],
+         [
+          "RelatedAR",
+          "AR 12-13"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory irrespective of MA"
+         ],
+         [
+          "DatapointId",
+          "SBM-1_04"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#7265"
+         ],
+         [
+          "RelatedAR",
+          "AR 57"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ],
+         [
+          "ConditionalDatapoint",
+          "Alternative"
+         ],
+         [
+          "Alternative",
+          "NumberOfEmployeesHeadcountAtEndOfPeriod"
+         ],
+         [
+          "DatapointId",
+          "S1-6_03"
+         ]
+        ]
+       ],
+       "dt": "xbrli:integerItemType"
+      },
+      "esrs:WaterConsumption": {
+       "labels": {
+        "ns0": {
+         "en": "Total water consumption"
+        },
+        "std": {
+         "en": "Water consumption"
+        },
+        "doc": {
+         "en": "The value should be presented in m3."
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E3"
+         ],
+         [
+          "Paragraph",
+          "28"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E3-4"
+         ],
+         [
+          "URI",
+          "https://xbrl.efrag.org/e-esrs/esrs-set1-2023.html#6143"
+         ],
+         [
+          "ReferenceType",
+          "Main"
+         ],
+         [
+          "MandatoryDatapoint",
+          "Mandatory subject to MA"
+         ],
+         [
+          "DatapointId",
+          "E3-4_01"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:volumeItemType"
+      },
+      "country:CountryDomain": {
+       "labels": {
+        "std": {
+         "en": "Country [Domain]"
+        }
+       },
+       "dt": "dtr-types0:domainItemType"
+      },
+      "esrs:CountryAxis": {
+       "labels": {
+        "std": {
+         "en": "Country [axis]"
+        },
+        "ns2": {
+         "en": "A complete list of all explicit dimension members for each country can be found in role [9010000] in the presentation linkbase"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "60"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "G1"
+         ],
+         [
+          "Paragraph",
+          "29"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "G1-5"
+         ],
+         [
+          "Clause",
+          "i"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "AR 70"
+         ],
+         [
+          "Section",
+          "S1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "54"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "G1"
+         ],
+         [
+          "Paragraph",
+          "AR 16"
+         ],
+         [
+          "Section",
+          "G1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 41"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "98"
+         ],
+         [
+          "Section",
+          "S1-16"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "75"
+         ],
+         [
+          "Section",
+          "S1-11"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "70"
+         ],
+         [
+          "Section",
+          "S1-10"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:NotApplicableMember": {
+       "labels": {
+        "std": {
+         "en": "Not applicable [member]"
+        }
+       },
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:ReasonsForNotDisclosingAxis": {
+       "labels": {
+        "std": {
+         "en": "Reasons for not disclosing [axis]"
+        }
+       },
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:SEC1AllESRSSec1SectorsNA": {
+       "labels": {
+        "std": {
+         "en": "All ESRS SEC 1 Sectors / NA"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "40"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "SBM-1"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 76"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 71"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 20 December 2006 establishing the statistical classification of economic activities NACE Revision 2 and amending Council Regulation (EEC) No 3037/90 as well as certain EC Regulations on specific statistical domains"
+         ],
+         [
+          "Number",
+          "1893/2006"
+         ],
+         [
+          "Section",
+          "Annex 1"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "SEC 1 Sector Classification"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "AR 22"
+         ],
+         [
+          "Section",
+          "E2-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 41"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E3"
+         ],
+         [
+          "Paragraph",
+          "AR 30"
+         ],
+         [
+          "Section",
+          "E3-4"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:ESRSSEC1SectorsAxis": {
+       "labels": {
+        "std": {
+         "en": "ESRS SEC 1 Sectors [axis]"
+        },
+        "ns2": {
+         "en": "A complete list of all explicit dimension members for sector can be found in role [9020000] in the presentation linkbase"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "40"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "SBM-1"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 20 December 2006 establishing the statistical classification of economic activities NACE Revision 2 and amending Council Regulation (EEC) No 3037/90 as well as certain EC Regulations on specific statistical domains"
+         ],
+         [
+          "Number",
+          "1893/2006"
+         ],
+         [
+          "Section",
+          "Annex 1"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "SEC 1 Sector Classification"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "AR 22"
+         ],
+         [
+          "Section",
+          "E2-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E3"
+         ],
+         [
+          "Paragraph",
+          "AR 30"
+         ],
+         [
+          "Section",
+          "E3-4"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:AdministrativeManagementAndSupervisoryBodiesMember": {
+       "labels": {
+        "std": {
+         "en": "Administrative, management and supervisory bodies [member]"
+        },
+        "ns0": {
+         "en": "Total administrative, management and supervisory bodies / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "22"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "GOV-1"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:AdministrativeManagementAndSupervisoryBodiesAxis": {
+       "labels": {
+        "std": {
+         "en": "Administrative, management and supervisory bodies [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "22"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "GOV-1"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:CurrentlyStatedBaselineMilestonesOrTargetYearsMember": {
+       "labels": {
+        "std": {
+         "en": "Currently stated, baseline, milestones or target years [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "80"
+         ],
+         [
+          "Subparagraph",
+          "e"
+         ],
+         [
+          "Section",
+          "MDR-T"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "80"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "MDR-T"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "76"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "AR 25"
+         ],
+         [
+          "Section",
+          "MDR-T"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 48"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:CurrentlyStatedBaselineMilestonesOrTargetYearsAxis": {
+       "labels": {
+        "std": {
+         "en": "Currently stated, baseline, milestones or target years [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "80"
+         ],
+         [
+          "Subparagraph",
+          "e"
+         ],
+         [
+          "Section",
+          "MDR-T"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "80"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "MDR-T"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "76"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "AR 25"
+         ],
+         [
+          "Section",
+          "MDR-T"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 48"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:DecarbonisationLeverMember": {
+       "labels": {
+        "std": {
+         "en": "Decarbonisation lever [member]"
+        },
+        "ns0": {
+         "en": "Total decarbonisation levers / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "29"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 31"
+         ],
+         [
+          "Section",
+          "E1-4"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:DecarbonisationLeverAxis": {
+       "labels": {
+        "std": {
+         "en": "Decarbonisation lever [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "29"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 31"
+         ],
+         [
+          "Section",
+          "E1-4"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:EmployeesAndNonemployeesNAMember": {
+       "labels": {
+        "std": {
+         "en": "Employees and non-employees / NA [member]"
+        },
+        "ns0": {
+         "en": "Total employees and non-employees / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "88"
+         ],
+         [
+          "Section",
+          "S1-14"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "76"
+         ],
+         [
+          "Section",
+          "S1-11"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "71"
+         ],
+         [
+          "Section",
+          "S1-10"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "85"
+         ],
+         [
+          "Section",
+          "S1-13"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "89"
+         ],
+         [
+          "Section",
+          "S1-14"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:EmployeesAndNonemployeesAxis": {
+       "labels": {
+        "std": {
+         "en": "Employees and non-employees [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "88"
+         ],
+         [
+          "Section",
+          "S1-14"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "76"
+         ],
+         [
+          "Section",
+          "S1-11"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "71"
+         ],
+         [
+          "Section",
+          "S1-10"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "85"
+         ],
+         [
+          "Section",
+          "S1-13"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "89"
+         ],
+         [
+          "Section",
+          "S1-14"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:EmployeesMember": {
+       "labels": {
+        "std": {
+         "en": "Employees [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "G1"
+         ],
+         [
+          "Paragraph",
+          "AR 8"
+         ],
+         [
+          "Section",
+          "G1-3"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:EmployeesAxis": {
+       "labels": {
+        "std": {
+         "en": "Employees [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "G1"
+         ],
+         [
+          "Paragraph",
+          "AR 8"
+         ],
+         [
+          "Section",
+          "G1-3"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:FinancialAndOperationalControlMember": {
+       "labels": {
+        "std": {
+         "en": "Financial and operational control [member]"
+        },
+        "ns0": {
+         "en": "Total financial and operational control / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:FinancialAndOperationalControlAxis": {
+       "labels": {
+        "std": {
+         "en": "Financial and operational control [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:GHGCategoryMember": {
+       "labels": {
+        "std": {
+         "en": "GHG category [member]"
+        },
+        "ns0": {
+         "en": "Total GHG categories / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 39"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 57"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "34"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 24"
+         ],
+         [
+          "Section",
+          "E1-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 41"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:GHGCategoryAxis": {
+       "labels": {
+        "std": {
+         "en": "GHG category [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 39"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 57"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "34"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 24"
+         ],
+         [
+          "Section",
+          "E1-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 41"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:GHGEmissionsCoveredByInternalCarbonPricingSchemeMember": {
+       "labels": {
+        "std": {
+         "en": "GHG emissions covered by internal carbon pricing scheme [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:GHGEmissionsCoveredByInternalCarbonPricingSchemeAxis": {
+       "labels": {
+        "std": {
+         "en": "GHG emissions covered by internal carbon pricing scheme [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:GenderMember": {
+       "labels": {
+        "std": {
+         "en": "Gender [member]"
+        },
+        "ns0": {
+         "en": "Total / all genders / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "66"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "83"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-13"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "80"
+         ],
+         [
+          "Section",
+          "S1-12"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "93"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-15"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "83"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-13"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "21"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "GOV-1"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:GenderAxis": {
+       "labels": {
+        "std": {
+         "en": "Gender [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "66"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "83"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-13"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "80"
+         ],
+         [
+          "Section",
+          "S1-12"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "93"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-15"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "83"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-13"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "21"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "GOV-1"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:HazardCategoriesMember": {
+       "labels": {
+        "std": {
+         "en": "Hazard categories [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006"
+         ],
+         [
+          "Number",
+          "No 1272/2008"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "34"
+         ],
+         [
+          "Section",
+          "E2-5"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:HazardCategoriesAxis": {
+       "labels": {
+        "std": {
+         "en": "Hazard categories [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006"
+         ],
+         [
+          "Number",
+          "No 1272/2008"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "34"
+         ],
+         [
+          "Section",
+          "E2-5"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:HazardClassesMember": {
+       "labels": {
+        "std": {
+         "en": "Hazard classes [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006"
+         ],
+         [
+          "Number",
+          "No 1272/2008"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Section",
+          "Annex 2"
+         ],
+         [
+          "Subsection",
+          "Table 2 Terms defined in the ESRS"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "34"
+         ],
+         [
+          "Section",
+          "E2-5"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:HazardClassesAxis": {
+       "labels": {
+        "std": {
+         "en": "Hazard classes [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006"
+         ],
+         [
+          "Number",
+          "No 1272/2008"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Section",
+          "Annex 2"
+         ],
+         [
+          "Subsection",
+          "Table 2 Terms defined in the ESRS"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "34"
+         ],
+         [
+          "Section",
+          "E2-5"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:PollutantMember": {
+       "labels": {
+        "std": {
+         "en": "Pollutant [member]"
+        },
+        "ns0": {
+         "en": "Total pollutants / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 18 January 2006 concerning the establishment of a European Pollutant Release and Transfer Register and amending Council Directives 91/689/EEC and 96/61/EC"
+         ],
+         [
+          "Number",
+          "No 166/2006"
+         ],
+         [
+          "Section",
+          "Annex 2"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "28"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E2-4"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:PollutantAxis": {
+       "labels": {
+        "std": {
+         "en": "Pollutant [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Regulation (EC) of the European Parliament and of the Council of 18 January 2006 concerning the establishment of a European Pollutant Release and Transfer Register and amending Council Directives 91/689/EEC and 96/61/EC"
+         ],
+         [
+          "Number",
+          "No 166/2006"
+         ],
+         [
+          "Section",
+          "Annex 2"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "28"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E2-4"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:EstimatedValueMember": {
+       "labels": {
+        "std": {
+         "en": "Estimated value [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 70"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 74"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 74"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "AR 34"
+         ],
+         [
+          "Section",
+          "E2-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E3"
+         ],
+         [
+          "Paragraph",
+          "AR 34"
+         ],
+         [
+          "Section",
+          "E3-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "AR 36"
+         ],
+         [
+          "Section",
+          "E5-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "AR 40"
+         ],
+         [
+          "Section",
+          "E4-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 73"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "31"
+         ],
+         [
+          "Section",
+          "E2-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "45"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E4-6"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:RangeAxis": {
+       "labels": {
+        "std": {
+         "en": "Range [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 70"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 74"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 74"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "AR 34"
+         ],
+         [
+          "Section",
+          "E2-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E3"
+         ],
+         [
+          "Paragraph",
+          "AR 34"
+         ],
+         [
+          "Section",
+          "E3-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "AR 36"
+         ],
+         [
+          "Section",
+          "E5-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "AR 40"
+         ],
+         [
+          "Section",
+          "E4-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 73"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "31"
+         ],
+         [
+          "Section",
+          "E2-4"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "45"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E4-6"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:CurrentlyStatedCorrectedOrRevisedRetrospectiveMember": {
+       "labels": {
+        "std": {
+         "en": "Currently stated, corrected or revised (retrospective) [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "95"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "96"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:ReportingScopeAxis": {
+       "labels": {
+        "std": {
+         "en": "Reporting scope [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "95"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "96"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:Scope3GHGEmissionsCategoryGHGProtocolMember": {
+       "labels": {
+        "std": {
+         "en": "Scope 3 GHG emissions category (GHG Protocol) [member]"
+        },
+        "ns0": {
+         "en": "Total Scope 3 GHG emissions categories (GHG Protocol) / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Greenhouse Gas Protocol, Corporate Value Chain\n(Scope 3) Accounting and Reporting Standard"
+         ],
+         [
+          "Section",
+          "5.4 Overview of scope 3 categories"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:Scope3GHGEmissionsCategoryGHGProtocolAxis": {
+       "labels": {
+        "std": {
+         "en": "Scope 3 GHG emissions category (GHG Protocol) [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "Greenhouse Gas Protocol, Corporate Value Chain\n(Scope 3) Accounting and Reporting Standard"
+         ],
+         [
+          "Section",
+          "5.4 Overview of scope 3 categories"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:Scope3GHGEmissionsCategoryISO140641Member": {
+       "labels": {
+        "std": {
+         "en": "Scope 3 GHG emissions category (ISO 14064-1) [member]"
+        },
+        "ns0": {
+         "en": "Total Scope 3 GHG emissions categories (ISO 14064-1) / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ISO"
+         ],
+         [
+          "Number",
+          "ISO 14064-1:2018(E)"
+         ],
+         [
+          "Section",
+          "Annex B"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:Scope3GHGEmissionsCategoryISO140641Axis": {
+       "labels": {
+        "std": {
+         "en": "Scope 3 GHG emissions category (ISO 14064-1) [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ISO"
+         ],
+         [
+          "Number",
+          "ISO 14064-1:2018(E)"
+         ],
+         [
+          "Section",
+          "Annex B"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:SourceTypeMember": {
+       "labels": {
+        "std": {
+         "en": "Source type [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 41"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:SourceTypeAxis": {
+       "labels": {
+        "std": {
+         "en": "Source type [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 41"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:SubstancesProductionUseDistributionOrCommercialisationImportAndExportMember": {
+       "labels": {
+        "std": {
+         "en": "Substances production, use, distribution or commercialisation, import and export [member]"
+        },
+        "ns0": {
+         "en": "Total substances production, use, distribution or commercialisation, import and export / NA [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "32"
+         ],
+         [
+          "Section",
+          "E2-5"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:SubstancesProductionUseDistributionOrCommercialisationImportAndExportAxis": {
+       "labels": {
+        "std": {
+         "en": "Substances production, use, distribution or commercialisation, import and export [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "32"
+         ],
+         [
+          "Section",
+          "E2-5"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:TimeHorizonMember": {
+       "labels": {
+        "std": {
+         "en": "Time horizon [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "68"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "MDR-A"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "69"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "MDR-A"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "66"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "67"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "77"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "42"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E5-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "65"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E3"
+         ],
+         [
+          "Paragraph",
+          "32"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E3-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "44"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E4-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "48"
+         ],
+         [
+          "Subparagraph",
+          "e"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "48"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ],
+         [
+          "Clause",
+          "iii"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "48"
+         ],
+         [
+          "Subparagraph",
+          "f"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 7"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "67"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "67"
+         ],
+         [
+          "Subparagraph",
+          "e"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "66"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 76"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 71"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "38"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E2-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 8"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "13"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E4-1"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "AR 23"
+         ],
+         [
+          "Section",
+          "MDR-A"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:TimeHorizonAxis": {
+       "labels": {
+        "std": {
+         "en": "Time horizon [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "68"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "MDR-A"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "69"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "MDR-A"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "66"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "67"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "77"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "42"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E5-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "65"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E3"
+         ],
+         [
+          "Paragraph",
+          "32"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E3-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "44"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E4-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "48"
+         ],
+         [
+          "Subparagraph",
+          "e"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "48"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ],
+         [
+          "Clause",
+          "iii"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "48"
+         ],
+         [
+          "Subparagraph",
+          "f"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 7"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "67"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "67"
+         ],
+         [
+          "Subparagraph",
+          "e"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "66"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 76"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 71"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E1-9"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E2"
+         ],
+         [
+          "Paragraph",
+          "38"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E2-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 8"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "SBM-3"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E4"
+         ],
+         [
+          "Paragraph",
+          "13"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E4-1"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 2"
+         ],
+         [
+          "Paragraph",
+          "AR 23"
+         ],
+         [
+          "Section",
+          "MDR-A"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:TopicTopicUnspecifiedMember": {
+       "labels": {
+        "ns0": {
+         "en": "All topics / topic unspecified / NA [member]"
+        },
+        "std": {
+         "en": "Topic / topic unspecified [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "AR 16"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:TopicalESRSAxis": {
+       "labels": {
+        "std": {
+         "en": "Topical ESRS [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "ESRS 1"
+         ],
+         [
+          "Paragraph",
+          "AR 16"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:TypeOfEmployeeContractMember": {
+       "labels": {
+        "ns0": {
+         "en": "Total types of employee contract / NA [member]"
+        },
+        "std": {
+         "en": "Type of employee contract [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "AR 55"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "Clause",
+          "i"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "Clause",
+          "ii"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "Clause",
+          "iii"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:TypeOfEmployeeContractAxis": {
+       "labels": {
+        "std": {
+         "en": "Type of employee contract [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "AR 55"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "Clause",
+          "i"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "Clause",
+          "ii"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "50"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ],
+         [
+          "Clause",
+          "iii"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "S1"
+         ],
+         [
+          "Paragraph",
+          "52"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "S1-6"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:TypeOfInternalCarbonPricingSchemeMember": {
+       "labels": {
+        "ns0": {
+         "en": "Total / unspecified types of internal carbon pricing schemes / NA [member]"
+        },
+        "std": {
+         "en": "Type of internal carbon pricing scheme [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 66"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:TypeOfInternalCarbonPricingSchemeAxis": {
+       "labels": {
+        "std": {
+         "en": "Type of internal carbon pricing scheme [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 66"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "d"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "63"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E1-8"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:TypeOfRecoveryOperationsMember": {
+       "labels": {
+        "ns0": {
+         "en": "Total types of recovery operations / NA [member]"
+        },
+        "std": {
+         "en": "Type of recovery operations [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:TypeOfRecoveryOperationsAxis": {
+       "labels": {
+        "std": {
+         "en": "Type of recovery operations [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:TypeOfWasteMember": {
+       "labels": {
+        "ns0": {
+         "en": "Total types of waste / NA [member]"
+        },
+        "std": {
+         "en": "Type of waste [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "AR 29"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:TypeOfWasteAxis": {
+       "labels": {
+        "std": {
+         "en": "Type of waste [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "AR 29"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "b"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:TypeOfWasteTreatmentMember": {
+       "labels": {
+        "ns0": {
+         "en": "Total types of waste treatment / NA [member]"
+        },
+        "std": {
+         "en": "Type of waste treatment [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:TypeOfWasteTreatmentAxis": {
+       "labels": {
+        "std": {
+         "en": "Type of waste treatment [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E5"
+         ],
+         [
+          "Paragraph",
+          "37"
+         ],
+         [
+          "Subparagraph",
+          "c"
+         ],
+         [
+          "Section",
+          "E5-5"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:UndertakingScopeMember": {
+       "labels": {
+        "std": {
+         "en": "Undertaking scope [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "56"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 57"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 59"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "58"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:UndertakingScopeAxis": {
+       "labels": {
+        "std": {
+         "en": "Undertaking scope [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "56"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 57"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 59"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ],
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "58"
+         ],
+         [
+          "Subparagraph",
+          "a"
+         ],
+         [
+          "Section",
+          "E1-7"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      },
+      "esrs:ValueChainMember": {
+       "labels": {
+        "ns0": {
+         "en": "Total value chain / NA [member]"
+        },
+        "std": {
+         "en": "Value chain [member]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 52"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "dtr-types:domainItemType"
+      },
+      "esrs:ValueChainAxis": {
+       "labels": {
+        "std": {
+         "en": "Value chain [axis]"
+        }
+       },
+       "r": [
+        [
+         [
+          "Name",
+          "ESRS"
+         ],
+         [
+          "Number",
+          "E1"
+         ],
+         [
+          "Paragraph",
+          "AR 52"
+         ],
+         [
+          "Section",
+          "E1-6"
+         ]
+        ]
+       ],
+       "dt": "xbrli:stringItemType"
+      }
+     },
+     "facts": {
+      "ixv-0": {
+       "a": {
+        "c": "esrs:EnergyConsumptionRelatedToOwnOperations",
+        "e": "e:529900T8BM49AURSDO55",
+        "m": false,
+        "u": "xbrli:pure",
+        "p": "2025-01-01/2026-01-01"
+       },
+       "v": "1250000.50",
+       "d": 2
+      },
+      "ixv-1": {
+       "a": {
+        "c": "esrs:GrossScope1GreenhouseGasEmissions",
+        "e": "e:529900T8BM49AURSDO55",
+        "m": false,
+        "u": "xbrli:pure",
+        "p": "2025-01-01/2026-01-01"
+       },
+       "v": "6321.75",
+       "d": 2
+      },
+      "ixv-2": {
+       "a": {
+        "c": "esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace",
+        "e": "e:529900T8BM49AURSDO55",
+        "m": false,
+        "p": "2025-01-01/2026-01-01"
+       },
+       "v": "true"
+      },
+      "ixv-3": {
+       "a": {
+        "c": "esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory",
+        "e": "e:529900T8BM49AURSDO55",
+        "m": false,
+        "p": "2025-01-01/2026-01-01"
+       },
+       "v": "Anonymer digitaler Meldekanal mit Ombudsstelle."
+      },
+      "ixv-4": {
+       "a": {
+        "c": "esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan",
+        "e": "e:529900T8BM49AURSDO55",
+        "m": false,
+        "p": "2025-01-01/2026-01-01"
+       },
+       "v": "true"
+      },
+      "ixv-5": {
+       "a": {
+        "c": "esrs:NumberOfEmployeesHeadCountDuringPeriod",
+        "e": "e:529900T8BM49AURSDO55",
+        "m": false,
+        "u": "xbrli:pure",
+        "p": "2025-01-01/2026-01-01"
+       },
+       "v": "5320",
+       "d": 0
+      },
+      "ixv-6": {
+       "a": {
+        "c": "esrs:WaterConsumption",
+        "e": "e:529900T8BM49AURSDO55",
+        "m": false,
+        "u": "xbrli:pure",
+        "p": "2025-01-01/2026-01-01"
+       },
+       "v": "412300",
+       "d": 0
+      }
+     },
      "target": null,
-     "rels": {},
+     "roleDefs": {
+      "ns1": {
+       "en": "Dimension defaults"
+      }
+     },
+     "rels": {
+      "d-d": {
+       "ns1": {
+        "esrs:CountryAxis": [
+         {
+          "t": "country:CountryDomain"
+         }
+        ],
+        "esrs:ReasonsForNotDisclosingAxis": [
+         {
+          "t": "esrs:NotApplicableMember"
+         }
+        ],
+        "esrs:ESRSSEC1SectorsAxis": [
+         {
+          "t": "esrs:SEC1AllESRSSec1SectorsNA"
+         }
+        ],
+        "esrs:AdministrativeManagementAndSupervisoryBodiesAxis": [
+         {
+          "t": "esrs:AdministrativeManagementAndSupervisoryBodiesMember"
+         }
+        ],
+        "esrs:CurrentlyStatedBaselineMilestonesOrTargetYearsAxis": [
+         {
+          "t": "esrs:CurrentlyStatedBaselineMilestonesOrTargetYearsMember"
+         }
+        ],
+        "esrs:DecarbonisationLeverAxis": [
+         {
+          "t": "esrs:DecarbonisationLeverMember"
+         }
+        ],
+        "esrs:EmployeesAndNonemployeesAxis": [
+         {
+          "t": "esrs:EmployeesAndNonemployeesNAMember"
+         }
+        ],
+        "esrs:EmployeesAxis": [
+         {
+          "t": "esrs:EmployeesMember"
+         }
+        ],
+        "esrs:FinancialAndOperationalControlAxis": [
+         {
+          "t": "esrs:FinancialAndOperationalControlMember"
+         }
+        ],
+        "esrs:GHGCategoryAxis": [
+         {
+          "t": "esrs:GHGCategoryMember"
+         }
+        ],
+        "esrs:GHGEmissionsCoveredByInternalCarbonPricingSchemeAxis": [
+         {
+          "t": "esrs:GHGEmissionsCoveredByInternalCarbonPricingSchemeMember"
+         }
+        ],
+        "esrs:GenderAxis": [
+         {
+          "t": "esrs:GenderMember"
+         }
+        ],
+        "esrs:HazardCategoriesAxis": [
+         {
+          "t": "esrs:HazardCategoriesMember"
+         }
+        ],
+        "esrs:HazardClassesAxis": [
+         {
+          "t": "esrs:HazardClassesMember"
+         }
+        ],
+        "esrs:PollutantAxis": [
+         {
+          "t": "esrs:PollutantMember"
+         }
+        ],
+        "esrs:RangeAxis": [
+         {
+          "t": "esrs:EstimatedValueMember"
+         }
+        ],
+        "esrs:ReportingScopeAxis": [
+         {
+          "t": "esrs:CurrentlyStatedCorrectedOrRevisedRetrospectiveMember"
+         }
+        ],
+        "esrs:Scope3GHGEmissionsCategoryGHGProtocolAxis": [
+         {
+          "t": "esrs:Scope3GHGEmissionsCategoryGHGProtocolMember"
+         }
+        ],
+        "esrs:Scope3GHGEmissionsCategoryISO140641Axis": [
+         {
+          "t": "esrs:Scope3GHGEmissionsCategoryISO140641Member"
+         }
+        ],
+        "esrs:SourceTypeAxis": [
+         {
+          "t": "esrs:SourceTypeMember"
+         }
+        ],
+        "esrs:SubstancesProductionUseDistributionOrCommercialisationImportAndExportAxis": [
+         {
+          "t": "esrs:SubstancesProductionUseDistributionOrCommercialisationImportAndExportMember"
+         }
+        ],
+        "esrs:TimeHorizonAxis": [
+         {
+          "t": "esrs:TimeHorizonMember"
+         }
+        ],
+        "esrs:TopicalESRSAxis": [
+         {
+          "t": "esrs:TopicTopicUnspecifiedMember"
+         }
+        ],
+        "esrs:TypeOfEmployeeContractAxis": [
+         {
+          "t": "esrs:TypeOfEmployeeContractMember"
+         }
+        ],
+        "esrs:TypeOfInternalCarbonPricingSchemeAxis": [
+         {
+          "t": "esrs:TypeOfInternalCarbonPricingSchemeMember"
+         }
+        ],
+        "esrs:TypeOfRecoveryOperationsAxis": [
+         {
+          "t": "esrs:TypeOfRecoveryOperationsMember"
+         }
+        ],
+        "esrs:TypeOfWasteAxis": [
+         {
+          "t": "esrs:TypeOfWasteMember"
+         }
+        ],
+        "esrs:TypeOfWasteTreatmentAxis": [
+         {
+          "t": "esrs:TypeOfWasteTreatmentMember"
+         }
+        ],
+        "esrs:UndertakingScopeAxis": [
+         {
+          "t": "esrs:UndertakingScopeMember"
+         }
+        ],
+        "esrs:ValueChainAxis": [
+         {
+          "t": "esrs:ValueChainMember"
+         }
+        ]
+       }
+      }
+     },
      "localDocs": {
       "report-ixbrl.xhtml": [
        "inline"
+      ],
+      "esrs_cor.xsd": [
+       "schema"
+      ],
+      "gla_esrs-en.xml": [
+       "unrecognizedLinkbase"
+      ],
+      "dim_esrs_902000.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999000.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999100.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999101.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999102.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999103.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999104.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999105.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999106.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999107.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999108.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999109.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999110.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999111.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999112.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999113.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999114.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999115.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999116.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999117.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999118.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999119.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999120.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999121.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999122.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999123.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999124.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999125.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999127.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999128.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999129.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999130.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999131.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999132.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999133.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999134.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999135.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999136.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999137.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999138.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999139.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999140.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999141.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999142.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999143.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999144.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999145.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999146.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999147.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999148.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999149.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999150.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999151.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999152.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999153.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999154.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999155.xml": [
+       "defLinkbase"
+      ],
+      "def_esrs_999156.xml": [
+       "defLinkbase"
+      ],
+      "dim_esrs_990000.xml": [
+       "defLinkbase"
+      ],
+      "lab_esrs-en.xml": [
+       "labelLinkbase"
+      ],
+      "doc_esrs-en.xml": [
+       "labelLinkbase"
+      ],
+      "ref_esrs.xml": [
+       "refLinkbase"
       ]
      }
     }
@@ -94,7 +6322,14 @@
  "features": {
   "review": false
  },
- "prefixes": {},
+ "prefixes": {
+  "esrs": "https://xbrl.efrag.org/taxonomy/esrs/2023-12-22",
+  "e": "https://www.lei-identifier.com",
+  "xbrli": "http://www.xbrl.org/2003/instance",
+  "dtr-types": "http://www.xbrl.org/dtr/type/2024-01-31",
+  "country": "https://xbrl.org/2024/iso3166",
+  "dtr-types0": "http://www.xbrl.org/dtr/type/2022-03-31"
+ },
  "roles": {
   "std": "http://www.xbrl.org/2003/role/label",
   "doc": "http://www.xbrl.org/2003/role/documentation",
@@ -102,7 +6337,10 @@
   "calc11": "https://xbrl.org/2023/arcrole/summation-item",
   "pres": "http://www.xbrl.org/2003/arcrole/parent-child",
   "d-d": "http://xbrl.org/int/dim/arcrole/dimension-default",
-  "w-n": "http://www.esma.europa.eu/xbrl/esef/arcrole/wider-narrower"
+  "w-n": "http://www.esma.europa.eu/xbrl/esef/arcrole/wider-narrower",
+  "ns0": "http://www.xbrl.org/2003/role/totalLabel",
+  "ns1": "https://xbrl.efrag.org/taxonomy/role-dim",
+  "ns2": "http://www.xbrl.org/2003/role/commentaryGuidance"
  }
 }</script><!--END IXBRL VIEWER EXTENSIONS--></body>
 </html>

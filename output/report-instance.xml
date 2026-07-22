@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xbrli:xbrl xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xbrldi="http://xbrl.org/2006/xbrldi" xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22" xmlns:iso4217="http://www.xbrl.org/2003/iso4217">
-  <link:schemaRef xlink:type="simple" xlink:href="../xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs_all.xsd"/>
+  <link:schemaRef xlink:type="simple" xlink:href="../xbrl.efrag.org/taxonomy/esrs/2023-12-22/common/esrs_cor.xsd"/>
   <xbrli:context id="c01">
     <xbrli:entity>
       <xbrli:identifier scheme="https://www.lei-identifier.com">529900T8BM49AURSDO55</xbrli:identifier>
@@ -22,13 +22,13 @@
   <xbrli:unit id="u_m3">
     <xbrli:measure>xbrli:pure</xbrli:measure>
   </xbrli:unit>
-  <esrs:TotalEnergyConsumption contextRef="c01" unitRef="u_kWh" decimals="2">1250000.50</esrs:TotalEnergyConsumption>
-  <esrs:GrossScope1GHGEmissions contextRef="c01" unitRef="u_tCO2e" decimals="2">6321.75</esrs:GrossScope1GHGEmissions>
-  <esrs:PoliciesRelatedToCorruptionAndBribery contextRef="c01">esrs:YesMember</esrs:PoliciesRelatedToCorruptionAndBribery>
-  <esrs:ClimateTransitionPlanAdopted contextRef="c01">esrs:YesMember</esrs:ClimateTransitionPlanAdopted>
-  <esrs:TotalNumberOfEmployees contextRef="c01" unitRef="u_count" decimals="0">5320</esrs:TotalNumberOfEmployees>
-  <esrs:TotalWaterConsumption contextRef="c01" unitRef="u_m3" decimals="0">412300</esrs:TotalWaterConsumption>
-  <esrs:DescriptionOfWhistleblowerChannel contextRef="c01">Anonymer digitaler Meldekanal mit Ombudsstelle.</esrs:DescriptionOfWhistleblowerChannel>
+  <esrs:EnergyConsumptionRelatedToOwnOperations contextRef="c01" unitRef="u_kWh" decimals="2">1250000.50</esrs:EnergyConsumptionRelatedToOwnOperations>
+  <esrs:GrossScope1GreenhouseGasEmissions contextRef="c01" unitRef="u_tCO2e" decimals="2">6321.75</esrs:GrossScope1GreenhouseGasEmissions>
+  <esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace contextRef="c01">true</esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace>
+  <esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan contextRef="c01">true</esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan>
+  <esrs:NumberOfEmployeesHeadCountDuringPeriod contextRef="c01" unitRef="u_count" decimals="0">5320</esrs:NumberOfEmployeesHeadCountDuringPeriod>
+  <esrs:WaterConsumption contextRef="c01" unitRef="u_m3" decimals="0">412300</esrs:WaterConsumption>
+  <esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory contextRef="c01">Anonymer digitaler Meldekanal mit Ombudsstelle.</esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory>
   <esrs:DisclosureOfNatureOfPriorPeriodMaterialErrorsExplanatory contextRef="c01">Im Berichtszeitraum wurden keine wesentlichen Fehler aus Vorperioden festgestellt.</esrs:DisclosureOfNatureOfPriorPeriodMaterialErrorsExplanatory>
   <esrs:DisclosureOfWhyCorrectionOfPriorPeriodErrorsIsNotPracticableExplanatory contextRef="c01">Eine Korrektur war nicht erforderlich, da keine wesentlichen Fehler aus Vorperioden vorlagen.</esrs:DisclosureOfWhyCorrectionOfPriorPeriodErrorsIsNotPracticableExplanatory>
 </xbrli:xbrl>
