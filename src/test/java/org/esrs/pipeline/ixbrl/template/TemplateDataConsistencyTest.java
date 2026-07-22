@@ -2,6 +2,7 @@ package org.esrs.pipeline.ixbrl.template;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.esrs.pipeline.mapping.MappingRegistry;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -44,14 +45,9 @@ class TemplateDataConsistencyTest {
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode layoutRoot = mapper.readTree(Files.readString(layoutPath, StandardCharsets.UTF_8));
-        JsonNode mappingRoot = mapper.readTree(Files.readString(mapPath, StandardCharsets.UTF_8));
         JsonNode inputRoot = mapper.readTree(Files.readString(inputPath, StandardCharsets.UTF_8));
 
-        Set<String> mappedFields = new HashSet<>();
-        Iterator<String> mappingFields = mappingRoot.path("fieldMappings").fieldNames();
-        while (mappingFields.hasNext()) {
-            mappedFields.add(mappingFields.next());
-        }
+        Set<String> mappedFields = new HashSet<>(MappingRegistry.fromPath(mapPath).all().keySet());
 
         Set<String> inputFields = new HashSet<>();
         for (JsonNode fact : inputRoot.path("facts")) {

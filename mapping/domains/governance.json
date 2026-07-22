@@ -1,0 +1,29 @@
+{
+  "fieldMappings": {
+    "governance.corruptionPolicyExists": {
+      "concept": "esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "dimensions": []
+    },
+    "governance.whistleblowerChannelDescription": {
+      "concept": "esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "governance.natureOfPriorPeriodMaterialErrors": {
+      "concept": "esrs:DisclosureOfNatureOfPriorPeriodMaterialErrorsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "governance.whyCorrectionOfPriorPeriodErrorsNotPracticable": {
+      "concept": "esrs:DisclosureOfWhyCorrectionOfPriorPeriodErrorsIsNotPracticableExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    }
+  }
+}

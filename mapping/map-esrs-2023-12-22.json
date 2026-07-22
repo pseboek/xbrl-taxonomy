@@ -1,68 +1,8 @@
 {
-  "fieldMappings": {
-    "company.totalEnergyConsumption": {
-      "concept": "esrs:EnergyConsumptionRelatedToOwnOperations",
-      "type": "numeric",
-      "unit": "kWh",
-      "period": "duration",
-      "decimals": 2,
-      "dimensions": []
-    },
-    "climate.scope1GrossEmissions": {
-      "concept": "esrs:GrossScope1GreenhouseGasEmissions",
-      "type": "numeric",
-      "unit": "tCO2e",
-      "period": "duration",
-      "decimals": 2,
-      "dimensions": []
-    },
-    "governance.corruptionPolicyExists": {
-      "concept": "esrs:PoliciesOnAnticorruptionConsistentWithUnitedNationsConventionAgainstCorruptionAreInPlace",
-      "type": "enumeration",
-      "period": "duration",
-      "enumerationDomain": "esrs:YesNoDomain",
-      "dimensions": []
-    },
-    "strategy.climateTransitionPlanExists": {
-      "concept": "esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan",
-      "type": "enumeration",
-      "period": "duration",
-      "enumerationDomain": "esrs:YesNoDomain",
-      "dimensions": []
-    },
-    "workforce.totalEmployees": {
-      "concept": "esrs:NumberOfEmployeesHeadCountDuringPeriod",
-      "type": "numeric",
-      "unit": "count",
-      "period": "duration",
-      "decimals": 0,
-      "dimensions": []
-    },
-    "water.totalWaterConsumption": {
-      "concept": "esrs:WaterConsumption",
-      "type": "numeric",
-      "unit": "m3",
-      "period": "duration",
-      "decimals": 0,
-      "dimensions": []
-    },
-    "governance.whistleblowerChannelDescription": {
-      "concept": "esrs:InformationAboutEstablishmentOfInternalWhistleblowerReportingChannelsExplanatory",
-      "type": "text",
-      "period": "duration",
-      "dimensions": []
-    },
-    "governance.natureOfPriorPeriodMaterialErrors": {
-      "concept": "esrs:DisclosureOfNatureOfPriorPeriodMaterialErrorsExplanatory",
-      "type": "text",
-      "period": "duration",
-      "dimensions": []
-    },
-    "governance.whyCorrectionOfPriorPeriodErrorsNotPracticable": {
-      "concept": "esrs:DisclosureOfWhyCorrectionOfPriorPeriodErrorsIsNotPracticableExplanatory",
-      "type": "text",
-      "period": "duration",
-      "dimensions": []
-    }
-  }
+  "imports": [
+    "domains/environment.json",
+    "domains/social.json",
+    "domains/governance.json"
+  ],
+  "fieldMappings": {}
 }
