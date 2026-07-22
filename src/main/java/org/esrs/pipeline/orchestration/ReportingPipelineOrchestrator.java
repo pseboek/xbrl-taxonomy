@@ -67,12 +67,13 @@ public class ReportingPipelineOrchestrator {
         FactBuilder.FactBuildResult facts = factBuilder.build(envelope, mappingRegistry, contexts.fieldOccurrenceContext());
 
         Path xbrlOut = outputDir.resolve("report-instance.xml");
+        String schemaRefHref = "../xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs_all.xsd";
         xbrlInstanceWriter.write(
             xbrlOut,
             envelope,
             contexts.contexts(),
             facts.facts(),
-            "xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs_all.xsd"
+            schemaRefHref
         );
 
         String renderedTemplate = templateRenderer.render(templateFile, envelope);

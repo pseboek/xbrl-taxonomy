@@ -1,1 +1,15 @@
-Arelle skipped.
+[arelle:disclosureSystemName] Disclosure System "esef" not recognized (a plug-in may be needed). - 
+[ix11.8.1.3:missingHeader] Inline XBRL ix:header element not found - report-ixbrl.xhtml 
+[ix11.14.1.2:missingResources] Inline XBRL ix:resources element not found - report-ixbrl.xhtml 
+[ix11.12.1.2:missingReferences] Instance fact missing schema definition: esrs:TotalEnergyConsumption of Inline Element ix:nonFraction - report-ixbrl.xhtml 31
+[ix11.12.1.2:missingReferences] Instance fact missing schema definition: esrs:GrossScope1GHGEmissions of Inline Element ix:nonFraction - report-ixbrl.xhtml 35
+[ix11.12.1.2:missingReferences] Instance fact missing schema definition: esrs:PoliciesRelatedToCorruptionAndBribery of Inline Element ix:nonNumeric - report-ixbrl.xhtml 43
+[ix11.12.1.2:missingReferences] Instance fact missing schema definition: esrs:DescriptionOfWhistleblowerChannel of Inline Element ix:nonNumeric - report-ixbrl.xhtml 44
+[ix11.12.1.2:missingReferences] Instance fact missing schema definition: esrs:ClimateTransitionPlanAdopted of Inline Element ix:nonNumeric - report-ixbrl.xhtml 49
+[ix11.12.1.2:missingReferences] Instance fact missing schema definition: esrs:TotalNumberOfEmployees of Inline Element ix:nonFraction - report-ixbrl.xhtml 64
+[ix11.12.1.2:missingReferences] Instance fact missing schema definition: esrs:TotalWaterConsumption of Inline Element ix:nonFraction - report-ixbrl.xhtml 68
+[ix11.12.1.2:missingReferences] There must be at least one reference - report-ixbrl.xhtml 
+[ix11.12.1.2:missingReferenceTargets] Found no ix:references element having target '(default)' in IXDS. - report-ixbrl.xhtml 
+[info] loaded in 0,06 secs at 2026-07-22T08:07:11 - C:\Users\psebo\Desktop\ESRS-Set1-XBRL-Taxonomy\output\report-ixbrl.xhtml 
+[ix11.8.1.3:headerMissing] Inline XBRL document set must have at least one ix:header element - report-ixbrl.xhtml 
+[info] validated in 0,00 secs - C:\Users\psebo\Desktop\ESRS-Set1-XBRL-Taxonomy\output\report-ixbrl.xhtml 

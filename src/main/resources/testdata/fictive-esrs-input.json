@@ -20,12 +20,7 @@
     {
       "field": "climate.scope1GrossEmissions",
       "value": "6321.75",
-      "dimensions": [
-        {
-          "axisQname": "esrs:ConsolidationApproachAxis",
-          "memberQname": "esrs:OperationalControlMember"
-        }
-      ],
+      "dimensions": [],
       "unitOverride": null,
       "decimalsOverride": 2
     },
@@ -60,6 +55,20 @@
     {
       "field": "governance.whistleblowerChannelDescription",
       "value": "Anonymer digitaler Meldekanal mit Ombudsstelle.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "governance.natureOfPriorPeriodMaterialErrors",
+      "value": "Im Berichtszeitraum wurden keine wesentlichen Fehler aus Vorperioden festgestellt.",
+      "dimensions": [],
+      "unitOverride": null,
+      "decimalsOverride": null
+    },
+    {
+      "field": "governance.whyCorrectionOfPriorPeriodErrorsNotPracticable",
+      "value": "Eine Korrektur war nicht erforderlich, da keine wesentlichen Fehler aus Vorperioden vorlagen.",
       "dimensions": [],
       "unitOverride": null,
       "decimalsOverride": null

@@ -19,7 +19,7 @@ public class XbrlInstanceWriter {
     private static final String NS_LINK = "http://www.xbrl.org/2003/linkbase";
     private static final String NS_XLINK = "http://www.w3.org/1999/xlink";
     private static final String NS_XBRLDI = "http://xbrl.org/2006/xbrldi";
-    private static final String NS_ESRS = "https://xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs";
+    private static final String NS_ESRS = "https://xbrl.efrag.org/taxonomy/esrs/2023-12-22";
     private static final String NS_ISO4217 = "http://www.xbrl.org/2003/iso4217";
 
     public void write(Path outputFile,

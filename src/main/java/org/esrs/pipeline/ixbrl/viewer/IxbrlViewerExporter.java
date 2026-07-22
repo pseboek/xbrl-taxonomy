@@ -16,10 +16,12 @@ public class IxbrlViewerExporter {
 
     public ViewerExportResult export(Path ixbrlXhtml, Path htmlOutput) throws IOException, InterruptedException {
         Files.createDirectories(htmlOutput.getParent());
+        String viewerPlugin = System.getenv().getOrDefault("IXBRL_VIEWER_PLUGIN", "iXBRLViewerPlugin");
+
         List<String> cmd = new ArrayList<>();
         cmd.add(arelleCommand);
         cmd.add("--plugins");
-        cmd.add("iXBRLViewerPlugin");
+        cmd.add(viewerPlugin);
         cmd.add("--file");
         cmd.add(ixbrlXhtml.toString());
         cmd.add("--save-viewer");

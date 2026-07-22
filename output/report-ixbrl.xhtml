@@ -1,23 +1,22 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ix="http://www.xbrl.org/2013/inlineXBRL"
-      xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs"
-      lang="de">
+    xmlns:esrs="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22"
+      xml:lang="de">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>ESRS Bericht - Muster AG</title>
     <link rel="stylesheet" href="assets/report.css" />
 </head>
 <body>
-<header class="hero">
+<div class="hero">
     <h1>ESRS Nachhaltigkeitsbericht</h1>
     <p class="meta">Unternehmen: Muster AG (529900T8BM49AURSDO55)</p>
     <p class="meta">Berichtszeitraum: 2025-01-01 bis 2025-12-31</p>
-</header>
+</div>
 
-<main class="content">
-    <section>
+<div class="content">
+    <div>
         <h2>Energie und Klima</h2>
         <table>
             <thead>
@@ -33,24 +32,24 @@
             </tr>
             <tr>
                 <td>Scope-1-Emissionen</td>
-                <td><ix:nonFraction name="esrs:GrossScope1GHGEmissions" contextRef="c11" unitRef="u_tCO2e" decimals="2">6321.75</ix:nonFraction></td>
+                <td><ix:nonFraction name="esrs:GrossScope1GHGEmissions" contextRef="c01" unitRef="u_tCO2e" decimals="2">6321.75</ix:nonFraction></td>
             </tr>
             </tbody>
         </table>
-    </section>
+    </div>
 
-    <section>
+    <div>
         <h2>Governance</h2>
         <p>Korruptionsrichtlinie vorhanden: <ix:nonNumeric name="esrs:PoliciesRelatedToCorruptionAndBribery" contextRef="c01">esrs:YesMember</ix:nonNumeric></p>
         <p>Whistleblower-Kanal: <ix:nonNumeric name="esrs:DescriptionOfWhistleblowerChannel" contextRef="c01">Anonymer digitaler Meldekanal mit Ombudsstelle.</ix:nonNumeric></p>
-    </section>
+    </div>
 
-    <section>
+    <div>
         <h2>Strategie</h2>
         <p>Klimatransitionsplan vorhanden: <ix:nonNumeric name="esrs:ClimateTransitionPlanAdopted" contextRef="c01">esrs:YesMember</ix:nonNumeric></p>
-    </section>
+    </div>
 
-    <section>
+    <div>
         <h2>Mitarbeitende und Ressourcen</h2>
         <table>
             <thead>
@@ -70,9 +69,9 @@
             </tr>
             </tbody>
         </table>
-    </section>
-</main>
+    </div>
+</div>
 
-<script src="assets/report.js"></script>
+<script type="text/javascript" src="assets/report.js"></script>
 </body>
 </html>

@@ -32,8 +32,24 @@ $env:SKIP_ARELLE = "false"
 $env:FAIL_ON_VALIDATION_ISSUES = "true"
 $env:REQUIRE_VIEWER_PLUGIN = "true"
 
+if ([string]::IsNullOrWhiteSpace($env:IXBRL_VIEWER_PLUGIN)) {
+    $localViewerPlugin = Resolve-Path "./arelle/plugin/iXBRLViewerPlugin/__init__.py" -ErrorAction SilentlyContinue
+    if ($null -ne $localViewerPlugin) {
+        $env:IXBRL_VIEWER_PLUGIN = $localViewerPlugin.Path
+    }
+}
+
 Write-Host "Running strict production gate with ARELLE_CMD=$ArelleCmd"
 mvn -B test
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Strict production gate failed during tests."
+    exit $LASTEXITCODE
+}
+
 mvn -B exec:java
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Strict production gate failed during pipeline execution."
+    exit $LASTEXITCODE
+}
 
 Write-Host "Strict production gate finished successfully."

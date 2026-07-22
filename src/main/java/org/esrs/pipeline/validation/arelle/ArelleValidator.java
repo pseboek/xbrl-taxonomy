@@ -29,8 +29,14 @@ public class ArelleValidator {
         cmd.add(taxonomyPackageRoot.toString());
         cmd.add("--logFile");
         cmd.add(logFile.toString());
-        cmd.add("--logFormat");
-        cmd.add("text");
+        cmd.add("--logFileMode");
+        cmd.add("w");
+
+        String logFormat = System.getenv("ARELLE_LOG_FORMAT");
+        if (logFormat != null && !logFormat.isBlank()) {
+            cmd.add("--logFormat");
+            cmd.add(logFormat);
+        }
 
         Process process;
         try {
