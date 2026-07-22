@@ -1,0 +1,12 @@
+{
+  "fieldMappings": {
+    "workforce.totalEmployees": {
+      "concept": "esrs:NumberOfEmployeesHeadCountDuringPeriod",
+      "type": "numeric",
+      "unit": "count",
+      "period": "duration",
+      "decimals": 0,
+      "dimensions": []
+    }
+  }
+}

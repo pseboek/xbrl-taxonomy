@@ -75,6 +75,7 @@ public class IxbrlEmbeddingService {
 
     private String buildHeader(Map<ContextKey, String> contexts, Map<String, String> units, String schemaRefHref) {
         StringWriter out = new StringWriter();
+        out.append("<div style=\"display:none\">\n");
         out.append("<ix:header>\n");
         out.append("    <ix:references>\n");
         out.append("        <link:schemaRef xlink:type=\"simple\" xlink:href=\"")
@@ -131,6 +132,7 @@ public class IxbrlEmbeddingService {
 
         out.append("    </ix:resources>\n");
         out.append("</ix:header>\n");
+        out.append("</div>\n");
         return out.toString();
     }
 

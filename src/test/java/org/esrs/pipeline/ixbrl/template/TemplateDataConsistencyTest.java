@@ -1,9 +1,5 @@
 package org.esrs.pipeline.ixbrl.template;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Test;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,8 +9,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.esrs.pipeline.mapping.MappingRegistry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 class TemplateDataConsistencyTest {
     private static final Pattern FACT_PLACEHOLDER = Pattern.compile("\\{\\{fact:([a-zA-Z0-9_]+)\\}\\}");
@@ -44,14 +45,9 @@ class TemplateDataConsistencyTest {
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode layoutRoot = mapper.readTree(Files.readString(layoutPath, StandardCharsets.UTF_8));
-        JsonNode mappingRoot = mapper.readTree(Files.readString(mapPath, StandardCharsets.UTF_8));
         JsonNode inputRoot = mapper.readTree(Files.readString(inputPath, StandardCharsets.UTF_8));
 
-        Set<String> mappedFields = new HashSet<>();
-        Iterator<String> mappingFields = mappingRoot.path("fieldMappings").fieldNames();
-        while (mappingFields.hasNext()) {
-            mappedFields.add(mappingFields.next());
-        }
+        Set<String> mappedFields = new HashSet<>(MappingRegistry.fromPath(mapPath).all().keySet());
 
         Set<String> inputFields = new HashSet<>();
         for (JsonNode fact : inputRoot.path("facts")) {

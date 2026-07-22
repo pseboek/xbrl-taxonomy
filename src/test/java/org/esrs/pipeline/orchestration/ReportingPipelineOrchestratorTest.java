@@ -30,6 +30,7 @@ class ReportingPipelineOrchestratorTest {
         assertTrue(Files.exists(outputDir.resolve("report-interaktiv.html")));
 
         String ixbrl = Files.readString(outputDir.resolve("report-ixbrl.xhtml"), StandardCharsets.UTF_8);
+        assertTrue(ixbrl.contains("<div style=\"display:none\">"));
         assertTrue(ixbrl.contains("<ix:header>"));
         assertTrue(ixbrl.contains("<ix:resources>"));
         assertTrue(ixbrl.contains("<link:schemaRef"));

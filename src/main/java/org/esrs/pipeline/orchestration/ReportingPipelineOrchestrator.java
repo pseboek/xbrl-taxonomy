@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.esrs.pipeline.api.ApiIngestionService;
+import org.esrs.pipeline.config.PipelineConfig;
 import org.esrs.pipeline.ixbrl.embedding.IxbrlEmbeddingService;
 import org.esrs.pipeline.ixbrl.template.IxbrlTemplateRenderer;
 import org.esrs.pipeline.ixbrl.viewer.IxbrlViewerExporter;
@@ -19,8 +20,12 @@ import org.esrs.pipeline.validation.arelle.ArelleValidator;
 import org.esrs.pipeline.xbrl.context.ContextBuilder;
 import org.esrs.pipeline.xbrl.fact.FactBuilder;
 import org.esrs.pipeline.xbrl.serializer.XbrlInstanceWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReportingPipelineOrchestrator {
+    private static final Logger LOG = LoggerFactory.getLogger(ReportingPipelineOrchestrator.class);
+
     private final ApiIngestionService ingestionService;
     private final ContextBuilder contextBuilder;
     private final FactBuilder factBuilder;
@@ -30,16 +35,37 @@ public class ReportingPipelineOrchestrator {
     private final ArelleValidator arelleValidator;
     private final IxbrlViewerExporter viewerExporter;
     private final MappingTaxonomyValidator mappingTaxonomyValidator;
+    private final PipelineConfig config;
 
     public ReportingPipelineOrchestrator(String arelleCommand) {
+        this(new PipelineConfig(
+            Path.of(".").toAbsolutePath().normalize(),
+            Path.of("src/main/resources/testdata/fictive-esrs-input.json"),
+            Path.of("mapping/map-esrs-2023-12-22.json"),
+            Path.of("templates/report-base.xhtml"),
+            Path.of("mapping/report-layout-map.json"),
+            Path.of("output"),
+            Path.of("."),
+            arelleCommand,
+            true,
+            true,
+            false,
+            null,
+            null,
+            "iXBRLViewerPlugin"
+        ));
+    }
+
+    public ReportingPipelineOrchestrator(PipelineConfig config) {
+        this.config = config;
         this.ingestionService = new ApiIngestionService();
         this.contextBuilder = new ContextBuilder();
         this.factBuilder = new FactBuilder();
         this.xbrlInstanceWriter = new XbrlInstanceWriter();
         this.templateRenderer = new IxbrlTemplateRenderer();
         this.embeddingService = new IxbrlEmbeddingService();
-        this.arelleValidator = new ArelleValidator(arelleCommand);
-        this.viewerExporter = new IxbrlViewerExporter(arelleCommand);
+        this.arelleValidator = new ArelleValidator(config.arelleCommand(), config.arelleDisclosureSystem(), config.arelleLogFormat());
+        this.viewerExporter = new IxbrlViewerExporter(config.arelleCommand(), config.ixbrlViewerPlugin());
         this.mappingTaxonomyValidator = new MappingTaxonomyValidator();
     }
 
@@ -62,6 +88,10 @@ public class ReportingPipelineOrchestrator {
                               boolean skipArelle,
                               boolean failOnValidationIssues,
                               boolean requireViewerPlugin) throws IOException, InterruptedException {
+        LOG.info("Pipeline run started. skipArelle={}, failOnValidationIssues={}, requireViewerPlugin={}",
+            skipArelle,
+            failOnValidationIssues,
+            requireViewerPlugin);
         Files.createDirectories(outputDir);
 
         ReportEnvelope envelope = ingestionService.loadFromJson(inputJson);
@@ -124,8 +154,13 @@ public class ReportingPipelineOrchestrator {
         }
 
         if (failOnValidationIssues && hasBlockingIssues(validationIssues)) {
+            LOG.error("Validation gate failed with blocking issues.");
             throw new IllegalStateException("Validation gate failed: " + summarize(validationIssues));
         }
+
+        LOG.info("Pipeline run completed. validationIssues={}, viewerFallbackUsed={}",
+            validationIssues.size(),
+            viewerExportResult.fallbackUsed());
 
         return new PipelineResult(xbrlOut, ixbrlOut, viewerOut, validationIssues, viewerExportResult.fallbackUsed());
     }

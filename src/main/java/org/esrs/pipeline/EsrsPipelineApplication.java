@@ -1,44 +1,46 @@
 package org.esrs.pipeline;
 
 import java.nio.file.Path;
+
+import org.esrs.pipeline.config.PipelineConfig;
 import org.esrs.pipeline.orchestration.ReportingPipelineOrchestrator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class EsrsPipelineApplication {
+    private static final Logger LOG = LoggerFactory.getLogger(EsrsPipelineApplication.class);
+
     private EsrsPipelineApplication() {
     }
 
     public static void main(String[] args) throws Exception {
         Path root = Path.of(".").toAbsolutePath().normalize();
-        Path inputJson = root.resolve("src/main/resources/testdata/fictive-esrs-input.json");
-        Path mappingFile = root.resolve("mapping/map-esrs-2023-12-22.json");
-        Path templateFile = root.resolve("templates/report-base.xhtml");
-        Path layoutMap = root.resolve("mapping/report-layout-map.json");
-        Path outputDir = root.resolve("output");
+        PipelineConfig config = PipelineConfig.load(root);
 
-        String arelleCommand = System.getenv().getOrDefault("ARELLE_CMD", "arelleCmdLine");
-        boolean skipArelle = Boolean.parseBoolean(System.getenv().getOrDefault("SKIP_ARELLE", "true"));
-        boolean failOnValidationIssues = Boolean.parseBoolean(System.getenv().getOrDefault("FAIL_ON_VALIDATION_ISSUES", "true"));
-        boolean requireViewerPlugin = Boolean.parseBoolean(System.getenv().getOrDefault("REQUIRE_VIEWER_PLUGIN", "false"));
+        LOG.info("Starting ESRS pipeline with input={}, mapping={}, output={}",
+            config.inputJson(),
+            config.mappingFile(),
+            config.outputDir());
 
-        ReportingPipelineOrchestrator orchestrator = new ReportingPipelineOrchestrator(arelleCommand);
+        ReportingPipelineOrchestrator orchestrator = new ReportingPipelineOrchestrator(config);
         ReportingPipelineOrchestrator.PipelineResult result = orchestrator.run(
-            inputJson,
-            mappingFile,
-            templateFile,
-            layoutMap,
-            outputDir,
-            root,
-            skipArelle,
-            failOnValidationIssues,
-            requireViewerPlugin
+            config.inputJson(),
+            config.mappingFile(),
+            config.templateFile(),
+            config.layoutMap(),
+            config.outputDir(),
+            config.taxonomyRoot(),
+            config.skipArelle(),
+            config.failOnValidationIssues(),
+            config.requireViewerPlugin()
         );
 
-        System.out.println("XBRL: " + result.xbrlPath());
-        System.out.println("iXBRL: " + result.ixbrlPath());
-        System.out.println("Viewer: " + result.interactiveHtmlPath());
-        System.out.println("Viewer fallback used: " + result.viewerFallbackUsed());
+        LOG.info("XBRL: {}", result.xbrlPath());
+        LOG.info("iXBRL: {}", result.ixbrlPath());
+        LOG.info("Viewer: {}", result.interactiveHtmlPath());
+        LOG.info("Viewer fallback used: {}", result.viewerFallbackUsed());
         result.validationIssues().forEach(issue ->
-            System.out.println(issue.severity() + " " + issue.code() + " - " + issue.message())
+            LOG.info("{} {} - {}", issue.severity(), issue.code(), issue.message())
         );
     }
 }
