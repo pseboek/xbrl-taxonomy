@@ -78,4 +78,23 @@ class FactBuilderTest {
             () -> builder.build(instantEnvelope, registry, Map.of("company.totalEnergyConsumption#1", "c1")));
         assertTrue(ex.getMessage().contains("Period mismatch"));
     }
+
+    @Test
+    void shouldAcceptConfiguredAllowedEnumerationValue() throws Exception {
+        ReportEnvelope envelope = new ReportEnvelope(
+            new ReportingEntity("scheme", "id", "entity"),
+            new ReportingPeriod(LocalDate.parse("2025-01-01"), LocalDate.parse("2025-12-31"), false),
+            List.of(new DisclosureFact("strategy.targetTypeAbsoluteOrRelative", "Absolute", List.of(), null, null))
+        );
+        MappingRegistry registry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));
+        FactBuilder builder = new FactBuilder();
+
+        FactBuilder.FactBuildResult result = builder.build(
+            envelope,
+            registry,
+            Map.of("strategy.targetTypeAbsoluteOrRelative#1", "c1")
+        );
+
+        assertEquals("Absolute", result.facts().getFirst().value());
+    }
 }

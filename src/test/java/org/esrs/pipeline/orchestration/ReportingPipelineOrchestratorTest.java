@@ -38,6 +38,9 @@ class ReportingPipelineOrchestratorTest {
         assertTrue(ixbrl.contains("<ix:nonNumeric"));
         assertTrue(ixbrl.contains("Vollstaendige Faktentabelle"));
         assertTrue(ixbrl.contains("facts-table"));
+        assertTrue(ixbrl.contains("Absolute Scope 1 Reduktion"));
+        assertTrue(ixbrl.contains("<ix:nonFraction name=\"esrs:AbsoluteValueOfScope1GreenhouseGasEmissionsReduction\""));
+        assertTrue(ixbrl.contains("Adressierung prekaerer Arbeit"));
         assertTrue(!ixbrl.contains("{{fact:"), "All fact placeholders should be embedded in iXBRL output.");
         assertTrue(!ixbrl.contains("{{facts:all}}"), "Dynamic fact table marker should be replaced in iXBRL output.");
     }

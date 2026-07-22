@@ -5,6 +5,47 @@
       "type": "enumeration",
       "period": "duration",
       "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "governance.administrativeBodiesInformedAboutImpacts": {
+      "concept": "esrs:AdministrativeManagementAndSupervisoryBodiesAreInformedAboutMaterialImpactsRisksAndOpportunitiesImplementationOfDueDiligenceOrResultsAndEffectivenessOfPoliciesActionsMetricsAndTargetsAdoptedToAddressThem",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "governance.administrativeBodiesInformedAboutStakeholderViews": {
+      "concept": "esrs:AdministrativeManagementAndSupervisoryBodiesAreInformedAboutViewsAndInterestsOfAffectedStakeholdersWithRegardToSustainabilityrelatedImpacts",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "governance.actionsToProvideRemedyTaken": {
+      "concept": "esrs:ActionToProvideAndOrEnableRemedyInRelationToActualMaterialImpactOnOwnWorkforceValueChainWorkersAffectedCommunitiesConsumersAndEndUsersHasBeenTaken",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "governance.actionsAvoidNegativeImpactsInValueChain": {
+      "concept": "esrs:ActionIsTakenToAvoidCausingOrContributingToMaterialNegativeImpactsOnValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersThroughOwnPractices",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "governance.affectedChannelsAccessible": {
+      "concept": "esrs:AffectedCommunitiesConsumersAndEndusersThatMayBeAffectedAreAbleToAccessChannelsAtLevelOfUndertakingTheyAreAffectedBy",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
       "dimensions": []
     },
     "governance.whistleblowerChannelDescription": {

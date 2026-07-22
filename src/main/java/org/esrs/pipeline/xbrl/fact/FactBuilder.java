@@ -141,6 +141,13 @@ public class FactBuilder {
                 }
                 return "esrs:YesMember".equals(trimmed) ? "true" : "false";
             }
+
+            if (entry.allowedValues() != null && !entry.allowedValues().isEmpty()) {
+                if (!entry.allowedValues().contains(trimmed)) {
+                    throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
+                }
+                return trimmed;
+            }
             return trimmed;
         }
 

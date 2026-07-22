@@ -2,7 +2,17 @@
   "imports": [
     "domains/environment.json",
     "domains/social.json",
-    "domains/governance.json"
+    "domains/governance.json",
+    "domains/strategy.json"
   ],
-  "fieldMappings": {}
+  "fieldMappings": {
+    "strategy.climateTransitionPlanExists": {
+      "concept": "esrs:AdministrativeManagementAndOrSupervisoryBodiesHaveApprovedTransitionPlan",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    }
+  }
 }

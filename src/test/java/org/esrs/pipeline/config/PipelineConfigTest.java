@@ -19,6 +19,8 @@ class PipelineConfigTest {
         assertTrue(config.failOnValidationIssues());
         assertFalse(config.requireViewerPlugin());
         assertEquals("iXBRLViewerPlugin", config.ixbrlViewerPlugin());
+        assertTrue(config.enforceMappingScope());
+        assertEquals(root.resolve("mapping/scopes/esrs-full-scope.json"), config.mappingScopeFile());
 
         assertEquals(root.resolve("mapping/map-esrs-2023-12-22.json"), config.mappingFile());
         assertEquals(root.resolve("templates/report-base.xhtml"), config.templateFile());

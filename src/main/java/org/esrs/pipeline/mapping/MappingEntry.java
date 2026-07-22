@@ -9,6 +9,7 @@ public record MappingEntry(String field,
                            String unit,
                            String period,
                            String enumerationDomain,
+                           List<String> allowedValues,
                            Integer decimals,
                            List<DimensionSelection> dimensions) {
 }

@@ -7,6 +7,72 @@
       "period": "duration",
       "decimals": 0,
       "dimensions": []
+    },
+    "workforce.adjustmentsForDisabilitiesMade": {
+      "concept": "esrs:AdjustmentsToPhysicalEnvironmentToEnsureHealthAndSafetyForWorkersCustomersAndOtherVisitorsWithDisabilitiesHaveBeenMade",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "workforce.addressPrecariousWork": {
+      "concept": "esrs:DescriptionOfApproachToTakingActionInRelationToSpecificMaterialNegativeImpactsOnValueChainWorkersAffectedCommunitiesConsumersAndEndusersExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "workforce.addressWorkerSafety": {
+      "concept": "esrs:DescriptionOfInternalFunctionsThatAreInvolvedInManagingImpactsAndTypesOfActionTakenByInternalFunctionsToAddressNegativeAndAdvancePositiveImpactsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "workforce.addressForcedOrChildLabour": {
+      "concept": "esrs:DescriptionOfHowPoliciesAreAlignedWithRelevantInternationallyRecognisedInstrumentsExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "communities.affectedCommunitiesLikelyImpacted": {
+      "concept": "esrs:AffectedCommunitiesAreLikelyToBeImpacted",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "communities.areIndigenousPeoplesAffected": {
+      "concept": "esrs:AffectedCommunitiesAreIndigenousPeoples",
+      "type": "enumeration",
+      "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
+      "dimensions": []
+    },
+    "social.accessToAdequateFood": {
+      "concept": "esrs:DescriptionOfAdditionalActionsOrInitiativesWithPrimaryPurposeOfDeliveringPositiveImpactsForOwnWorkforceValueChainWorkersAffectedCommunitiesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "social.accessToAdequateHousingOwnWorkforce": {
+      "concept": "esrs:DescriptionOfHowEffectivenessOfActionsAndInitiativesInDeliveringOutcomesForOwnWorkforceNOValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersIsTrackedAndAssessedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "social.accessToAdequateHousingValueChainWorkers": {
+      "concept": "esrs:DescriptionOfHowItIsEnsuredThatProcessesToProvideOrEnableRemedyInEventOfMaterialNegativeImpactsOnValueChainWorkersNOAffectedCommunitiesNOConsumersAndEndusersAreAvailableAndEffectiveInTheirImplementationAndOutcomesExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
+    },
+    "social.accessToAdequateHousingCommunities": {
+      "concept": "esrs:DescriptionOfHowStakeholderEngagementIsOrganisedExplanatory",
+      "type": "text",
+      "period": "duration",
+      "dimensions": []
     }
   }
 }

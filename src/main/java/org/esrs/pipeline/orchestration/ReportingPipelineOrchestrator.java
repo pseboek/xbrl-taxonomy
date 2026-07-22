@@ -13,6 +13,7 @@ import org.esrs.pipeline.ixbrl.embedding.IxbrlEmbeddingService;
 import org.esrs.pipeline.ixbrl.template.IxbrlTemplateRenderer;
 import org.esrs.pipeline.ixbrl.viewer.IxbrlViewerExporter;
 import org.esrs.pipeline.mapping.MappingRegistry;
+import org.esrs.pipeline.mapping.MappingScopeValidator;
 import org.esrs.pipeline.mapping.MappingTaxonomyValidator;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.model.ValidationIssue;
@@ -35,6 +36,7 @@ public class ReportingPipelineOrchestrator {
     private final ArelleValidator arelleValidator;
     private final IxbrlViewerExporter viewerExporter;
     private final MappingTaxonomyValidator mappingTaxonomyValidator;
+    private final MappingScopeValidator mappingScopeValidator;
     private final PipelineConfig config;
 
     public ReportingPipelineOrchestrator(String arelleCommand) {
@@ -46,10 +48,12 @@ public class ReportingPipelineOrchestrator {
             Path.of("mapping/report-layout-map.json"),
             Path.of("output"),
             Path.of("."),
+            Path.of("mapping/scopes/esrs-full-scope.json"),
             arelleCommand,
             true,
             true,
             false,
+            true,
             null,
             null,
             "iXBRLViewerPlugin"
@@ -67,6 +71,7 @@ public class ReportingPipelineOrchestrator {
         this.arelleValidator = new ArelleValidator(config.arelleCommand(), config.arelleDisclosureSystem(), config.arelleLogFormat());
         this.viewerExporter = new IxbrlViewerExporter(config.arelleCommand(), config.ixbrlViewerPlugin());
         this.mappingTaxonomyValidator = new MappingTaxonomyValidator();
+        this.mappingScopeValidator = new MappingScopeValidator();
     }
 
     public PipelineResult run(Path inputJson,
@@ -96,6 +101,9 @@ public class ReportingPipelineOrchestrator {
 
         ReportEnvelope envelope = ingestionService.loadFromJson(inputJson);
         MappingRegistry mappingRegistry = MappingRegistry.fromPath(mappingFile);
+        if (config.enforceMappingScope()) {
+            mappingScopeValidator.validate(mappingRegistry, layoutMap, config.mappingScopeFile());
+        }
         mappingTaxonomyValidator.validate(mappingRegistry, taxonomyRoot);
 
         ContextBuilder.ContextBuildResult contexts = contextBuilder.build(envelope);
