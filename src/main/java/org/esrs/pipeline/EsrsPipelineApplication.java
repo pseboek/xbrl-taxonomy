@@ -39,6 +39,7 @@ public final class EsrsPipelineApplication {
         LOG.info("iXBRL: {}", result.ixbrlPath());
         LOG.info("Viewer: {}", result.interactiveHtmlPath());
         LOG.info("Viewer fallback used: {}", result.viewerFallbackUsed());
+        LOG.info("Taxonomy visualization: {}", config.outputDir().resolve("taxonomy-visualization.html"));
         result.validationIssues().forEach(issue ->
             LOG.info("{} {} - {}", issue.severity(), issue.code(), issue.message())
         );
