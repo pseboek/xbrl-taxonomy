@@ -5,5 +5,4 @@
 /META-INF/
 /xbrl.efrag.org/
 /.VSCodeCounter/
-output/taxonomy-visualization.html
-output/taxonomy-visualization-*.html
+output/taxonomy-visualization-tree.html
