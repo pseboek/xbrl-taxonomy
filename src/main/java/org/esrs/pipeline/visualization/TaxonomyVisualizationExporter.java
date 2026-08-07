@@ -619,15 +619,27 @@ public class TaxonomyVisualizationExporter {
                         const edges=%s;
                         const nodeMeta=%s;
                         const themeColorCache=new Map();
+                        const distinctThemePalette=[
+                            '#0B5FFF','#FF6B00','#00A878','#D7263D','#7B61FF','#1F8A70','#C1121F','#118AB2','#F4A261','#3A86FF',
+                            '#8338EC','#06D6A0','#EF476F','#2B2D42','#E76F51','#2A9D8F','#264653','#B5179E','#4CC9F0','#FB8500',
+                            '#43AA8B','#F94144','#277DA1','#90BE6D','#F3722C','#577590','#9D4EDD','#F72585','#4361EE','#3A0CA3',
+                            '#4D908E','#BC4749','#1D3557','#E63946','#8D99AE','#A7C957','#6A4C93','#1982C4','#FF595E','#FFCA3A',
+                            '#8AC926','#1982C4','#6A4C93','#FF924C','#52B788','#D00000','#00B4D8','#9B5DE5'
+                        ];
                         let selectedNode='';
                         function normalize(t){return (t||'').toLowerCase();}
                         function fallbackTheme(name){const n=(name||'');const stripped=n.includes('_')?n.substring(n.indexOf('_')+1):n;const m=stripped.match(/^[A-Z]+(?=[A-Z][a-z]|$)|^[A-Z]?[a-z]+|^[a-z]+/);return (m?m[0]:'other').toLowerCase();}
                         function buildThemeColorMap(){
                             const baseThemes=Array.from(new Set(Object.values(nodeMeta).map(m=>(m&&m.theme)?m.theme:'other'))).sort();
                             baseThemes.forEach((theme,i)=>{
-                                const hue=(i*137.508)%%360;
-                                const sat=74;
-                                const lig=(i%%2===0)?44:56;
+                                if(i<distinctThemePalette.length){
+                                    themeColorCache.set(theme,distinctThemePalette[i]);
+                                    return;
+                                }
+                                const overflow=i-distinctThemePalette.length;
+                                const hue=(overflow*137.508)%%360;
+                                const sat=(overflow%%3===0)?82:((overflow%%3===1)?74:68);
+                                const lig=(overflow%%2===0)?46:58;
                                 themeColorCache.set(theme,`hsl(${hue} ${sat}%% ${lig}%%)`);
                             });
                         }
@@ -635,10 +647,15 @@ public class TaxonomyVisualizationExporter {
                             const key=(theme&&theme.trim())?theme:'other';
                             if(!themeColorCache.has(key)){
                                 const i=themeColorCache.size;
-                                const hue=(i*137.508)%%360;
-                                const sat=74;
-                                const lig=(i%%2===0)?44:56;
-                                themeColorCache.set(key,`hsl(${hue} ${sat}%% ${lig}%%)`);
+                                if(i<distinctThemePalette.length){
+                                    themeColorCache.set(key,distinctThemePalette[i]);
+                                } else {
+                                    const overflow=i-distinctThemePalette.length;
+                                    const hue=(overflow*137.508)%%360;
+                                    const sat=(overflow%%3===0)?82:((overflow%%3===1)?74:68);
+                                    const lig=(overflow%%2===0)?46:58;
+                                    themeColorCache.set(key,`hsl(${hue} ${sat}%% ${lig}%%)`);
+                                }
                             }
                             return themeColorCache.get(key);
                         }
