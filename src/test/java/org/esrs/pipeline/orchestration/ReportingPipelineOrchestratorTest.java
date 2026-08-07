@@ -29,6 +29,11 @@ class ReportingPipelineOrchestratorTest {
         assertTrue(Files.exists(outputDir.resolve("report-ixbrl.xhtml")));
         assertTrue(Files.exists(outputDir.resolve("report-interaktiv.html")));
         assertTrue(Files.exists(outputDir.resolve("taxonomy-visualization.html")));
+        assertTrue(Files.exists(outputDir.resolve("taxonomy-visualization-tree.html")));
+        assertTrue(Files.exists(outputDir.resolve("taxonomy-visualization-graph.html")));
+        assertTrue(Files.exists(outputDir.resolve("taxonomy-visualization-layer.html")));
+        assertTrue(Files.exists(outputDir.resolve("taxonomy-visualization-matrix.html")));
+        assertTrue(Files.exists(outputDir.resolve("taxonomy-visualization-flow.html")));
 
         String ixbrl = Files.readString(outputDir.resolve("report-ixbrl.xhtml"), StandardCharsets.UTF_8);
         assertTrue(ixbrl.contains("<div style=\"display:none\">"));
@@ -46,10 +51,10 @@ class ReportingPipelineOrchestratorTest {
         assertTrue(!ixbrl.contains("{{facts:all}}"), "Dynamic fact table marker should be replaced in iXBRL output.");
 
         String visualization = Files.readString(outputDir.resolve("taxonomy-visualization.html"), StandardCharsets.UTF_8);
-        assertTrue(visualization.contains("ESRS Taxonomie-Explorer"));
-        assertTrue(visualization.contains("Präsentationshierarchie"));
-        assertTrue(visualization.contains("taxonomySearch"));
-        assertTrue(visualization.contains("Dimensionsfilter ist ausgeblendet"));
+        assertTrue(visualization.contains("ESRS Taxonomie-Visualisierungen"));
+        assertTrue(visualization.contains("taxonomy-visualization-tree.html"));
+        assertTrue(visualization.contains("taxonomy-visualization-graph.html"));
+        assertTrue(visualization.contains("taxonomy-visualization-layer.html"));
     }
 
     @Test

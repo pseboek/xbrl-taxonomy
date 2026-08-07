@@ -15,6 +15,11 @@ class TaxonomyVisualizationExporterTest {
         Path root = Path.of(".").toAbsolutePath().normalize();
         Path outputDir = Files.createTempDirectory("taxonomy-visualization");
         Path outputHtml = outputDir.resolve("taxonomy-visualization.html");
+        Path treeHtml = outputDir.resolve("taxonomy-visualization-tree.html");
+        Path graphHtml = outputDir.resolve("taxonomy-visualization-graph.html");
+        Path layerHtml = outputDir.resolve("taxonomy-visualization-layer.html");
+        Path matrixHtml = outputDir.resolve("taxonomy-visualization-matrix.html");
+        Path flowHtml = outputDir.resolve("taxonomy-visualization-flow.html");
 
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
         assertDoesNotThrow(() -> exporter.export(
@@ -25,14 +30,27 @@ class TaxonomyVisualizationExporterTest {
         ));
 
         assertTrue(Files.exists(outputHtml));
+        assertTrue(Files.exists(treeHtml));
+        assertTrue(Files.exists(graphHtml));
+        assertTrue(Files.exists(layerHtml));
+        assertTrue(Files.exists(matrixHtml));
+        assertTrue(Files.exists(flowHtml));
 
         String html = Files.readString(outputHtml, StandardCharsets.UTF_8);
-        assertTrue(html.contains("ESRS Taxonomie-Explorer"));
-        assertTrue(html.contains("Präsentationshierarchie"));
-        assertTrue(html.contains("Layout-Zuordnung"));
-        assertTrue(html.contains("taxonomySearch"));
-        assertTrue(html.contains("Dimensionsfilter ist ausgeblendet"));
-        assertTrue(html.contains("toggleAll(true)") || html.contains("expandAll(true)"));
-        assertTrue(html.contains("Konzept") || html.contains("Typ") || html.contains("Periode") || html.contains("Einheit") || html.contains("Enumeration") || html.contains("Placeholder"));
+        assertTrue(html.contains("ESRS Taxonomie-Visualisierungen"));
+        assertTrue(html.contains("taxonomy-visualization-tree.html"));
+        assertTrue(html.contains("taxonomy-visualization-graph.html"));
+        assertTrue(html.contains("taxonomy-visualization-layer.html"));
+        assertTrue(html.contains("taxonomy-visualization-matrix.html"));
+        assertTrue(html.contains("taxonomy-visualization-flow.html"));
+
+        String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
+        assertTrue(tree.contains("Präsentationshierarchie"));
+
+        String graph = Files.readString(graphHtml, StandardCharsets.UTF_8);
+        assertTrue(graph.contains("layer-toggle"));
+
+        String layer = Files.readString(layerHtml, StandardCharsets.UTF_8);
+        assertTrue(layer.contains("Unterelemente einblenden"));
     }
 }

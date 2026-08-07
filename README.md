@@ -15,8 +15,12 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 1. `output/report-instance.xml` (XBRL Instanz),
 2. `output/report-ixbrl.xhtml` (iXBRL Bericht),
 3. `output/report-interaktiv.html` (Viewer-Ausgabe),
-4. `output/taxonomy-visualization.html` (hierarchischer Taxonomie-Explorer),
-5. `output/taxonomy-visualization.html` (interaktiver Taxonomie-Explorer der Präsentationshierarchie),
+4. `output/taxonomy-visualization.html` (Visualisierungs-Index),
+5. `output/taxonomy-visualization-tree.html` (Tree View),
+6. `output/taxonomy-visualization-graph.html` (Graph View),
+7. `output/taxonomy-visualization-layer.html` (Layer View),
+8. `output/taxonomy-visualization-matrix.html` (Matrix View),
+9. `output/taxonomy-visualization-flow.html` (Flow View),
 6. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
@@ -65,8 +69,23 @@ mvn exec:java
 
 Danach findest du die Dateien unter `output/`:
 
-- `taxonomy-visualization.html` fuer den interaktiven Explorer
-- `taxonomy-visualization.html` fuer den interaktiven Explorer und Dokumentation im Browser
+- `taxonomy-visualization.html` als Startseite/Index
+- `taxonomy-visualization-tree.html` fuer Hierarchie + Drilldown
+- `taxonomy-visualization-graph.html` fuer den interaktiven Dependency-Graph
+- `taxonomy-visualization-layer.html` fuer Layer-Analyse mit aufklappbaren Unterelementen
+- `taxonomy-visualization-matrix.html` fuer Konzept- und Mapping-Analyse
+- `taxonomy-visualization-flow.html` fuer die Prozess-/Journey-Sicht
+
+Der Explorer enthaelt 5 Ansichten (Tabs):
+
+1. Tree: Presentation-Hierarchie mit Drilldown
+2. Graph: Interaktiver Abhängigkeitsgraph (Sample) aus Linkbase-Kanten
+3. Layer: Linkbase-Layer (Dateien/Kanten) + externe HREF-Samples
+4. Matrix: Konzeptindex + Layout-Zuordnung
+5. Flow: Reporting-Flow von Datensammlung bis Disclosure
+
+Im Graph-View koennen Layer direkt per Checkbox ein-/ausgeblendet werden.
+Im Layer-View lassen sich Unterelemente pro Layer bei Bedarf aufklappen.
 
 Wenn du den vollen End-to-End-Lauf mit Tests und Validierung willst, nutze alternativ:
 
@@ -109,8 +128,12 @@ Zentrale Projektdateien:
 - `templates/report-base.xhtml`
 - `templates/assets/report.css`
 - `templates/assets/report.js`
-- `output/taxonomy-visualization.html` — neuer hierarchischer Explorer für Mapping, Layout und Konzeptbeziehungen.
-- `output/taxonomy-visualization.html` — interaktive Taxonomie-Visualisierung auf Basis der ESRS-Presentation-Linkbase.
+- `output/taxonomy-visualization.html` — Indexseite mit Links auf getrennte Visualisierungsansichten.
+- `output/taxonomy-visualization-tree.html` — Baumansicht aus der Presentation-Linkbase.
+- `output/taxonomy-visualization-graph.html` — interaktive Graphansicht (Layer-Toggles, Zoom/Pan, Nachbarschafts-Highlight).
+- `output/taxonomy-visualization-layer.html` — Layer-Übersicht mit aufklappbaren Unterelementen.
+- `output/taxonomy-visualization-matrix.html` — analytische Matrixsicht für Konzepte und Mapping.
+- `output/taxonomy-visualization-flow.html` — Prozesssicht entlang des Reporting-Flows.
 
 Hinweise:
 
