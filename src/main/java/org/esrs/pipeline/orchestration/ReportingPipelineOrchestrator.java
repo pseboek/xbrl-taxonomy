@@ -18,6 +18,7 @@ import org.esrs.pipeline.mapping.MappingTaxonomyValidator;
 import org.esrs.pipeline.model.ReportEnvelope;
 import org.esrs.pipeline.model.ValidationIssue;
 import org.esrs.pipeline.validation.arelle.ArelleValidator;
+import org.esrs.pipeline.visualization.TaxonomyVisualizationExporter;
 import org.esrs.pipeline.xbrl.context.ContextBuilder;
 import org.esrs.pipeline.xbrl.fact.FactBuilder;
 import org.esrs.pipeline.xbrl.serializer.XbrlInstanceWriter;
@@ -35,6 +36,7 @@ public class ReportingPipelineOrchestrator {
     private final IxbrlEmbeddingService embeddingService;
     private final ArelleValidator arelleValidator;
     private final IxbrlViewerExporter viewerExporter;
+    private final TaxonomyVisualizationExporter visualizationExporter;
     private final MappingTaxonomyValidator mappingTaxonomyValidator;
     private final MappingScopeValidator mappingScopeValidator;
     private final PipelineConfig config;
@@ -70,6 +72,7 @@ public class ReportingPipelineOrchestrator {
         this.embeddingService = new IxbrlEmbeddingService();
         this.arelleValidator = new ArelleValidator(config.arelleCommand(), config.arelleDisclosureSystem(), config.arelleLogFormat());
         this.viewerExporter = new IxbrlViewerExporter(config.arelleCommand(), config.ixbrlViewerPlugin());
+        this.visualizationExporter = new TaxonomyVisualizationExporter();
         this.mappingTaxonomyValidator = new MappingTaxonomyValidator();
         this.mappingScopeValidator = new MappingScopeValidator();
     }
@@ -161,6 +164,14 @@ public class ReportingPipelineOrchestrator {
             viewerExportResult = new IxbrlViewerExporter.ViewerExportResult(false, 0, "Viewer export skipped by configuration.");
         }
 
+        Path taxonomyVisualizationOut = outputDir.resolve("taxonomy-visualization.html");
+        TaxonomyVisualizationExporter.VisualizationResult visualizationResult = visualizationExporter.export(
+            mappingRegistry,
+            taxonomyRoot,
+            layoutMap,
+            taxonomyVisualizationOut
+        );
+
         if (failOnValidationIssues && hasBlockingIssues(validationIssues)) {
             LOG.error("Validation gate failed with blocking issues.");
             throw new IllegalStateException("Validation gate failed: " + summarize(validationIssues));
@@ -169,6 +180,11 @@ public class ReportingPipelineOrchestrator {
         LOG.info("Pipeline run completed. validationIssues={}, viewerFallbackUsed={}",
             validationIssues.size(),
             viewerExportResult.fallbackUsed());
+        LOG.info("Taxonomy visualization written to {} (fields={}, concepts={}, placeholders={})",
+            visualizationResult.outputPath(),
+            visualizationResult.fieldCount(),
+            visualizationResult.conceptCount(),
+            visualizationResult.placeholderCount());
 
         return new PipelineResult(xbrlOut, ixbrlOut, viewerOut, validationIssues, viewerExportResult.fallbackUsed());
     }

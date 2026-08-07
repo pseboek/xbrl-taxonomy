@@ -15,7 +15,9 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 1. `output/report-instance.xml` (XBRL Instanz),
 2. `output/report-ixbrl.xhtml` (iXBRL Bericht),
 3. `output/report-interaktiv.html` (Viewer-Ausgabe),
-4. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+4. `output/taxonomy-visualization.html` (hierarchischer Taxonomie-Explorer),
+5. `output/taxonomy-visualization.html` (interaktiver Taxonomie-Explorer der Präsentationshierarchie),
+6. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -50,6 +52,26 @@ Standardlauf (ohne Arelle-Blockade):
 ```powershell
 $env:SKIP_ARELLE = "true"
 mvn exec:java
+```
+
+## Visualisierungen erzeugen
+
+Die Taxonomie-Visualisierungen werden bei einem normalen Pipeline-Lauf automatisch geschrieben. Fuer die lokale Erzeugung reicht meist:
+
+```powershell
+$env:SKIP_ARELLE = "true"
+mvn exec:java
+```
+
+Danach findest du die Dateien unter `output/`:
+
+- `taxonomy-visualization.html` fuer den interaktiven Explorer
+- `taxonomy-visualization.html` fuer den interaktiven Explorer und Dokumentation im Browser
+
+Wenn du den vollen End-to-End-Lauf mit Tests und Validierung willst, nutze alternativ:
+
+```powershell
+./scripts/run-strict-production-gate.ps1 -ArelleCmd "arelleCmdLine"
 ```
 
 ## Strict Production Gate
@@ -87,6 +109,8 @@ Zentrale Projektdateien:
 - `templates/report-base.xhtml`
 - `templates/assets/report.css`
 - `templates/assets/report.js`
+- `output/taxonomy-visualization.html` — neuer hierarchischer Explorer für Mapping, Layout und Konzeptbeziehungen.
+- `output/taxonomy-visualization.html` — interaktive Taxonomie-Visualisierung auf Basis der ESRS-Presentation-Linkbase.
 
 Hinweise:
 
