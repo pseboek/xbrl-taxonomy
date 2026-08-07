@@ -21,7 +21,7 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 7. `output/taxonomy-visualization-layer.html` (Layer View),
 8. `output/taxonomy-visualization-matrix.html` (Matrix View),
 9. `output/taxonomy-visualization-flow.html` (Flow View),
-6. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+10. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -76,15 +76,23 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-matrix.html` fuer Konzept- und Mapping-Analyse
 - `taxonomy-visualization-flow.html` fuer die Prozess-/Journey-Sicht
 
-Der Explorer enthaelt 5 Ansichten (Tabs):
+Der Explorer enthaelt 5 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
-2. Graph: Interaktiver Abhängigkeitsgraph (Sample) aus Linkbase-Kanten
+2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
 3. Layer: Linkbase-Layer (Dateien/Kanten) + externe HREF-Samples
 4. Matrix: Konzeptindex + Layout-Zuordnung
 5. Flow: Reporting-Flow von Datensammlung bis Disclosure
 
 Im Graph-View koennen Layer direkt per Checkbox ein-/ausgeblendet werden.
+Zusatzfunktionen im Graph-View:
+
+- Suchfeld mit Fokus auf Treffer inkl. automatischer Zentrierung
+- Themenbasierte Knotengruppierung aus Mapping-Domaenen (nicht nur Name/Praefix)
+- Distinkte, kontraststarke Gruppenfarben
+- Adaptive Label-Dichte je Zoomstufe (optional: alle Labels anzeigen)
+- Klick auf Knoten zeigt Thema, Layer, Grad und Nachbarn (je Nachbar eigene Zeile)
+
 Im Layer-View lassen sich Unterelemente pro Layer bei Bedarf aufklappen.
 
 Wenn du den vollen End-to-End-Lauf mit Tests und Validierung willst, nutze alternativ:
@@ -130,7 +138,7 @@ Zentrale Projektdateien:
 - `templates/assets/report.js`
 - `output/taxonomy-visualization.html` — Indexseite mit Links auf getrennte Visualisierungsansichten.
 - `output/taxonomy-visualization-tree.html` — Baumansicht aus der Presentation-Linkbase.
-- `output/taxonomy-visualization-graph.html` — interaktive Graphansicht (Layer-Toggles, Zoom/Pan, Nachbarschafts-Highlight).
+- `output/taxonomy-visualization-graph.html` — interaktive Graphansicht (Layer-Toggles, Zoom/Pan, Suche/Fokus, Themenfarben, Nachbarschafts-Highlight).
 - `output/taxonomy-visualization-layer.html` — Layer-Übersicht mit aufklappbaren Unterelementen.
 - `output/taxonomy-visualization-matrix.html` — analytische Matrixsicht für Konzepte und Mapping.
 - `output/taxonomy-visualization-flow.html` — Prozesssicht entlang des Reporting-Flows.

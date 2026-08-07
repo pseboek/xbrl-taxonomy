@@ -1,6 +1,6 @@
 # Checkliste und Statusbericht: XBRL/iXBRL Java-Umsetzung
 
-Stand: 2026-07-22
+Stand: 2026-08-07
 
 ## Zweck
 
@@ -58,6 +58,7 @@ Sie dient gleichzeitig als:
 | iXBRL-Template-Engine | Musterbericht + Inline XBRL | Erfuellt | `IxbrlTemplateRenderer` + `IxbrlEmbeddingService` implementiert (inkl. dynamischer Vollfaktentabelle `{{facts:all}}`) |
 | Arelle-Validator-Adapter | automatische Validierung | Erfuellt | `ArelleValidator` + `ValidationReportParser` implementiert |
 | iXBRL-Viewer-Export | `report-interaktiv.html` | Erfuellt | `IxbrlViewerExporter` implementiert (inkl. Fallback) |
+| Taxonomy-Visualisierungs-Suite (HTML) | Split-Views fuer Analyse/Navigation | Erfuellt | `TaxonomyVisualizationExporter` erzeugt Index + Tree/Graph/Layer/Matrix/Flow |
 | CI-Gates (XBRL/iXBRL/Viewer) | automatisierte Qualitätssicherung | Erfuellt | GitHub-Workflow `.github/workflows/ci-xbrl-ixbrl-java.yml` angelegt |
 | Fiktive JSON-Testdatei (Pflicht) | Frühtest Datapoint/Ausprägung | Erfuellt | `src/main/resources/testdata/fictive-esrs-input.json` angelegt |
 
@@ -83,6 +84,8 @@ Sie dient gleichzeitig als:
 - [x] Beispiel-iXBRL-XHTML (`report-ixbrl.xhtml`)
 - [x] Arelle-Validierungsreport
 - [x] Interaktive Viewer-HTML (`report-interaktiv.html`)
+- [x] Taxonomy-Visualisierungs-Index (`output/taxonomy-visualization.html`)
+- [x] Taxonomy-Visualisierungs-Views (`tree`, `graph`, `layer`, `matrix`, `flow`)
 
 ## E. Qualitäts- und Abnahmestatus
 
@@ -93,6 +96,7 @@ Sie dient gleichzeitig als:
 | Viewer-Konvertierung erfolgreich | Erfuellt | Strict Production Gate erfolgreich; Viewer-Export ohne Fallback bestaetigt (`Viewer fallback used: false`) |
 | Enumerationen/Dimensionen korrekt gemappt | Erfuellt | `YesNoDomain`-Normalisierung + generische `allowedValues`-Validierung im `FactBuilder` + Unit-Tests |
 | Reproduzierbarer End-to-End-Lauf | Erfuellt | Integrationstest `ReportingPipelineOrchestratorTest` + reproduzierbare Artefakte vorhanden |
+| Taxonomy-Graph interaktiv nutzbar | Erfuellt | Layer-Filter, Zoom/Pan, Suche mit Auto-Fokus, domain-basierte Themenfarben, Knoten-Detailpanel implementiert |
 
 ## F. Priorisierte nächste Schritte (Implementierungsreihenfolge)
 
@@ -122,3 +126,4 @@ Pflege diese Status-Checkliste pro Iteration und aktualisiere offene/erfuellte P
 - Die Mapping-Abdeckung wurde gegenüber dem MVP deutlich erweitert, domain-spezifisch strukturiert und durch Scope-Checks abgesichert.
 - Die Pipeline besitzt nun zentrale Konfiguration, strukturiertes Logging (SLF4J/Logback) und ein verpflichtendes Coverage-Gate in CI (`mvn -Pcoverage verify`).
 - Der strict Productive-Gate-Run ist als Skript und optionaler CI-Job implementiert und läuft aktuell erfolgreich (`Viewer fallback used: false`).
+- Die Taxonomy-Visualisierung wurde in getrennte HTML-Ansichten aufgeteilt; der Graph ist interaktiv (Filter, Fokus-Suche, Detailansicht, distinkte Themenfarben).
