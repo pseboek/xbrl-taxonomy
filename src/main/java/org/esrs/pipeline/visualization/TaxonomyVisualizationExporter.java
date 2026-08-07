@@ -69,7 +69,7 @@ public class TaxonomyVisualizationExporter {
         Path flowHtml = outputHtml.resolveSibling(stem + "-flow.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
-        Files.writeString(graphHtml, renderGraphHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(layerHtml, renderLayerHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(matrixHtml, renderMatrixHtml(mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(flowHtml, renderFlowHtml(forest, metadata, mappingsByConcept, layoutSnapshot), StandardCharsets.UTF_8);
@@ -241,7 +241,9 @@ public class TaxonomyVisualizationExporter {
         long xsdImportCount = 0;
         Map<String, Long> fileCountByLayer = new TreeMap<>();
         Map<String, Long> edgeCountByLayer = new TreeMap<>();
-        List<LinkEdge> sampleEdges = new ArrayList<>();
+        Map<String, List<LinkEdge>> sampleEdgesByLayer = new TreeMap<>();
+        Set<String> sampledEdgeKeys = new HashSet<>();
+        final int maxSamplePerLayer = 180;
         Set<String> hrefTargets = new TreeSet<>();
 
         try (Stream<Path> stream = Files.walk(taxonomyBase)) {
@@ -285,17 +287,53 @@ public class TaxonomyVisualizationExporter {
                     }
 
                     edgeCountByLayer.merge(layer, 1L, Long::sum);
-                    if (sampleEdges.size() >= 220) {
-                        continue;
-                    }
-
                     String from = element.getAttributeNS(XLINK_NS, "from");
                     String to = element.getAttributeNS(XLINK_NS, "to");
                     String source = locators.getOrDefault(from, from);
                     String target = locators.getOrDefault(to, to);
                     if (source != null && !source.isBlank() && target != null && !target.isBlank()) {
-                        sampleEdges.add(new LinkEdge(source, target, layer));
+                        String edgeKey = layer + "|" + source + "|" + target;
+                        List<LinkEdge> layerSample = sampleEdgesByLayer.computeIfAbsent(layer, key -> new ArrayList<>());
+                        if (layerSample.size() < maxSamplePerLayer && sampledEdgeKeys.add(edgeKey)) {
+                            layerSample.add(new LinkEdge(source, target, layer));
+                        }
                     }
+                }
+            }
+        }
+
+        List<LinkEdge> sampleEdges = new ArrayList<>();
+        List<String> preferredOrder = List.of("presentation", "calculation", "definition", "dimension", "label", "reference", "other");
+        final int samplePerLayerBudget = 70;
+        final int sampleTotalBudget = 420;
+
+        for (String layer : preferredOrder) {
+            List<LinkEdge> layerSample = sampleEdgesByLayer.get(layer);
+            if (layerSample == null || layerSample.isEmpty()) {
+                continue;
+            }
+            int limit = Math.min(samplePerLayerBudget, layerSample.size());
+            for (int i = 0; i < limit && sampleEdges.size() < sampleTotalBudget; i++) {
+                sampleEdges.add(layerSample.get(i));
+            }
+            if (sampleEdges.size() >= sampleTotalBudget) {
+                break;
+            }
+        }
+
+        if (sampleEdges.size() < sampleTotalBudget) {
+            for (Map.Entry<String, List<LinkEdge>> entry : sampleEdgesByLayer.entrySet()) {
+                if (preferredOrder.contains(entry.getKey())) {
+                    continue;
+                }
+                for (LinkEdge edge : entry.getValue()) {
+                    if (sampleEdges.size() >= sampleTotalBudget) {
+                        break;
+                    }
+                    sampleEdges.add(edge);
+                }
+                if (sampleEdges.size() >= sampleTotalBudget) {
+                    break;
                 }
             }
         }
@@ -529,8 +567,10 @@ public class TaxonomyVisualizationExporter {
         return renderPage("Matrix View", body.toString(), script);
     }
 
-    private String renderGraphHtml(TaxonomyMetadata metadata) {
+    private String renderGraphHtml(TaxonomyMetadata metadata,
+                                   Map<String, List<MappingEntry>> mappingsByConcept) {
         StringBuilder body = new StringBuilder();
+        Map<String, GraphNodeMeta> nodeMeta = buildGraphNodeMeta(metadata, mappingsByConcept);
         body.append("<h1>Graph View: Dependency Explorer</h1>")
             .append("<p class=\"lead\">Interaktive Graphansicht mit Layer-Filtern, Zoom/Pan und Nachbarschafts-Highlight per Klick.</p>")
             .append("<div class=\"layer-toolbar\" id=\"layerToggles\">");
@@ -541,38 +581,306 @@ public class TaxonomyVisualizationExporter {
                 .append(escapeHtml(layer))
                 .append("</label>");
         }
-        body.append("</div><div class=\"graph-wrap\"><svg id=\"dependencyGraph\" class=\"graph\" viewBox=\"0 0 1400 620\"></svg></div>")
-            .append("<p class=\"muted\">Hinweis: Darstellung basiert auf einem Edge-Sample zur Performance-Stabilität.</p>");
+                body.append("<input id=\"graphSearch\" type=\"search\" class=\"graph-search\" placeholder=\"Knoten suchen (Konzept, Feld, Domain...)\" oninput=\"drawGraph()\">")
+                        .append("<button type=\"button\" class=\"secondary\" onclick=\"clearGraphSearch()\">Suche löschen</button>");
+        body.append("<label class=\"filter\"><input type=\"checkbox\" id=\"graphShowLabels\" onchange=\"drawGraph()\"> Labels anzeigen</label>")
+            .append("</div><div class=\"theme-legend\" id=\"themeLegend\"></div>")
+            .append("<div class=\"graph-wrap\"><svg id=\"dependencyGraph\" class=\"graph\" viewBox=\"0 0 1400 620\"></svg></div>")
+                        .append("<div class=\"node-info\" id=\"nodeInfo\">Knoten anklicken, um Details zu sehen (Thema aus Mapping-Domäne, Grad, Layer, Nachbarn).</div>")
+            .append("<p class=\"muted\">Hinweis: Darstellung basiert auf einem layer-balancierten Edge-Sample zur Performance-Stabilität.</p>");
 
-        StringBuilder script = new StringBuilder();
-        script.append("<script>const edges=[");
+                StringBuilder edgesJson = new StringBuilder();
+                edgesJson.append('[');
         for (int i = 0; i < metadata.sampleEdges().size(); i++) {
             LinkEdge edge = metadata.sampleEdges().get(i);
             if (i > 0) {
-                script.append(',');
+                                edgesJson.append(',');
             }
-            script.append("{s:\"").append(escapeJs(edge.source())).append("\",t:\"").append(escapeJs(edge.target())).append("\",layer:\"").append(escapeJs(edge.layer())).append("\"}");
+                        edgesJson.append("{s:\"").append(escapeJs(edge.source())).append("\",t:\"").append(escapeJs(edge.target())).append("\",layer:\"").append(escapeJs(edge.layer())).append("\"}");
         }
-        script.append("];let selectedNode='';function drawGraph(){const svg=document.getElementById('dependencyGraph');if(!svg)return;svg.innerHTML='';"
-            + "const selected=new Set(Array.from(document.querySelectorAll('.layer-toggle:checked')).map(e=>e.value));"
-            + "const filtered=edges.filter(e=>selected.size===0||selected.has(e.layer));if(!filtered.length)return;"
-            + "const names=new Map();filtered.forEach(e=>{if(!names.has(e.s))names.set(e.s,names.size);if(!names.has(e.t))names.set(e.t,names.size);});"
-            + "const nodes=Array.from(names.keys()).slice(0,220);const idx=new Map(nodes.map((n,i)=>[n,i]));"
-            + "const filtered2=filtered.filter(e=>idx.has(e.s)&&idx.has(e.t));const ns='http://www.w3.org/2000/svg';"
-            + "const g=document.createElementNS(ns,'g');svg.appendChild(g);"
-            + "const pos=nodes.map((_,i)=>{const a=(2*Math.PI*i)/nodes.length;return{x:700+Math.cos(a)*620,y:310+Math.sin(a)*250};});"
-            + "const colors={presentation:'#245b8f',calculation:'#be5d00',definition:'#3a7f2a',label:'#6a4c93',reference:'#00798c',dimension:'#7a6a00',other:'#6b7280'};"
-            + "const adj=new Map();nodes.forEach(n=>adj.set(n,new Set()));filtered2.forEach(e=>{adj.get(e.s).add(e.t);adj.get(e.t).add(e.s);});"
-            + "filtered2.forEach(e=>{const si=idx.get(e.s),ti=idx.get(e.t);const p1=pos[si],p2=pos[ti];const l=document.createElementNS(ns,'line');l.setAttribute('x1',p1.x);l.setAttribute('y1',p1.y);l.setAttribute('x2',p2.x);l.setAttribute('y2',p2.y);l.setAttribute('stroke',colors[e.layer]||colors.other);l.setAttribute('stroke-width','1.4');l.setAttribute('stroke-opacity','0.32');l.dataset.s=e.s;l.dataset.t=e.t;g.appendChild(l);});"
-            + "nodes.forEach((name,i)=>{const p=pos[i];const c=document.createElementNS(ns,'circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','3.4');c.setAttribute('fill','#17324d');c.dataset.n=name;c.style.cursor='pointer';c.addEventListener('click',()=>{selectedNode=(selectedNode===name)?'':name;highlight();});g.appendChild(c);if(i%14===0){const t=document.createElementNS(ns,'text');t.setAttribute('x',p.x+6);t.setAttribute('y',p.y-4);t.setAttribute('font-size','10');t.setAttribute('fill','#17324d');t.textContent=name;g.appendChild(t);}});"
-            + "function highlight(){const neighbors=selectedNode?adj.get(selectedNode):null;g.querySelectorAll('line').forEach(l=>{if(!selectedNode){l.setAttribute('stroke-opacity','0.32');l.setAttribute('stroke-width','1.4');return;}const hit=l.dataset.s===selectedNode||l.dataset.t===selectedNode||(neighbors&&neighbors.has(l.dataset.s)&&neighbors.has(l.dataset.t));l.setAttribute('stroke-opacity',hit?'0.86':'0.08');l.setAttribute('stroke-width',hit?'2.2':'1');});"
-            + "g.querySelectorAll('circle').forEach(c=>{if(!selectedNode){c.setAttribute('r','3.4');c.setAttribute('fill','#17324d');return;}const n=c.dataset.n;const hit=n===selectedNode||(neighbors&&neighbors.has(n));c.setAttribute('r',hit?'5.2':'2.5');c.setAttribute('fill',n===selectedNode?'#be5d00':(hit?'#245b8f':'#9fb2c4'));});}"
-            + "let scale=1,tx=0,ty=0,drag=false,sx=0,sy=0;function apply(){g.setAttribute('transform',`translate(${tx} ${ty}) scale(${scale})`);}"
-            + "svg.onwheel=(ev)=>{ev.preventDefault();scale=Math.max(0.35,Math.min(3.4,scale*(ev.deltaY<0?1.08:0.92)));apply();};"
-            + "svg.onmousedown=(ev)=>{drag=true;sx=ev.clientX;sy=ev.clientY;};svg.onmouseup=()=>{drag=false;};svg.onmouseleave=()=>{drag=false;};"
-            + "svg.onmousemove=(ev)=>{if(!drag)return;tx+=ev.clientX-sx;ty+=ev.clientY-sy;sx=ev.clientX;sy=ev.clientY;apply();};apply();highlight();}"
-            + "window.addEventListener('DOMContentLoaded',drawGraph);</script>");
-        return renderPage("Graph View", body.toString(), script.toString());
+                edgesJson.append(']');
+
+                StringBuilder nodeMetaJson = new StringBuilder();
+                nodeMetaJson.append('{');
+                int metaIndex = 0;
+                for (Map.Entry<String, GraphNodeMeta> entry : nodeMeta.entrySet()) {
+                        if (metaIndex++ > 0) {
+                                nodeMetaJson.append(',');
+                        }
+                        nodeMetaJson.append("\"").append(escapeJs(entry.getKey())).append("\":")
+                                .append("{theme:\"").append(escapeJs(entry.getValue().theme())).append("\",")
+                                .append("search:\"").append(escapeJs(entry.getValue().search())).append("\",")
+                                .append("domains:\"").append(escapeJs(entry.getValue().domains())).append("\"}");
+                }
+                nodeMetaJson.append('}');
+
+                String script = """
+                        <script>
+                        const edges=%s;
+                        const nodeMeta=%s;
+                        const themeColorCache=new Map();
+                        let selectedNode='';
+                        function normalize(t){return (t||'').toLowerCase();}
+                        function fallbackTheme(name){const n=(name||'');const stripped=n.includes('_')?n.substring(n.indexOf('_')+1):n;const m=stripped.match(/^[A-Z]+(?=[A-Z][a-z]|$)|^[A-Z]?[a-z]+|^[a-z]+/);return (m?m[0]:'other').toLowerCase();}
+                        function buildThemeColorMap(){
+                            const baseThemes=Array.from(new Set(Object.values(nodeMeta).map(m=>(m&&m.theme)?m.theme:'other'))).sort();
+                            baseThemes.forEach((theme,i)=>{
+                                const hue=(i*137.508)%%360;
+                                const sat=74;
+                                const lig=(i%%2===0)?44:56;
+                                themeColorCache.set(theme,`hsl(${hue} ${sat}%% ${lig}%%)`);
+                            });
+                        }
+                        function colorForTheme(theme){
+                            const key=(theme&&theme.trim())?theme:'other';
+                            if(!themeColorCache.has(key)){
+                                const i=themeColorCache.size;
+                                const hue=(i*137.508)%%360;
+                                const sat=74;
+                                const lig=(i%%2===0)?44:56;
+                                themeColorCache.set(key,`hsl(${hue} ${sat}%% ${lig}%%)`);
+                            }
+                            return themeColorCache.get(key);
+                        }
+                        function shortName(name,max){return name.length<=max?name:(name.substring(0,max-1)+'…');}
+                        function escHtml(value){return (value||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');}
+                        function metaFor(name){return nodeMeta[name]||{theme:fallbackTheme(name),search:normalize(name),domains:'-'};}
+                        function setInfo(html){const el=document.getElementById('nodeInfo');if(el)el.innerHTML=html;}
+                        function clearGraphSearch(){const inp=document.getElementById('graphSearch');if(inp){inp.value='';}drawGraph();}
+                        function drawGraph(){
+                            const svg=document.getElementById('dependencyGraph');
+                            if(!svg)return;
+                            svg.innerHTML='';
+                            const selectedLayers=new Set(Array.from(document.querySelectorAll('.layer-toggle:checked')).map(e=>e.value));
+                            const showAllLabels=!!(document.getElementById('graphShowLabels')&&document.getElementById('graphShowLabels').checked);
+                            const query=normalize((document.getElementById('graphSearch')||{value:''}).value.trim());
+                            let layerEdges=edges.filter(e=>selectedLayers.has(e.layer));
+                            if(!layerEdges.length){
+                                const ns='http://www.w3.org/2000/svg';
+                                const t=document.createElementNS(ns,'text');
+                                t.setAttribute('x','30');t.setAttribute('y','42');t.setAttribute('fill','#5b7086');t.setAttribute('font-size','15');
+                                t.textContent='Keine Kanten fuer die aktuell gewaehlten Layer.';
+                                svg.appendChild(t);
+                                setInfo('Keine Daten fuer die aktuelle Layer-Auswahl.');
+                                const legend=document.getElementById('themeLegend');if(legend)legend.innerHTML='';
+                                return;
+                            }
+
+                            const adjAll=new Map();
+                            layerEdges.forEach(e=>{if(!adjAll.has(e.s))adjAll.set(e.s,new Set());if(!adjAll.has(e.t))adjAll.set(e.t,new Set());adjAll.get(e.s).add(e.t);adjAll.get(e.t).add(e.s);});
+
+                            let focusNodes=[];
+                            if(query){
+                                const candidates=Array.from(adjAll.keys()).filter(n=>{const meta=metaFor(n);return normalize(meta.search).includes(query) || normalize(n).includes(query);});
+                                focusNodes=candidates;
+                                if(candidates.length){
+                                    const keep=new Set(candidates);
+                                    candidates.forEach(n=>{(adjAll.get(n)||new Set()).forEach(m=>keep.add(m));});
+                                    const queryEdges=layerEdges.filter(e=>keep.has(e.s)||keep.has(e.t));
+                                    if(queryEdges.length){
+                                        layerEdges=queryEdges;
+                                    }
+                                }
+                            }
+
+                            const byLayer=new Map();
+                            layerEdges.forEach(e=>{if(!byLayer.has(e.layer))byLayer.set(e.layer,[]);byLayer.get(e.layer).push(e);});
+                            const sampledEdges=[];
+                            const activeLayerOrder=Array.from(selectedLayers).sort();
+                            const perLayerBudget=query?140:95;
+                            const totalBudget=query?520:360;
+                            for(const layer of activeLayerOrder){
+                                const arr=byLayer.get(layer)||[];
+                                for(let i=0;i<arr.length && i<perLayerBudget && sampledEdges.length<totalBudget;i++){
+                                    sampledEdges.push(arr[i]);
+                                }
+                            }
+                            const effectiveEdges=sampledEdges.length?sampledEdges:layerEdges;
+                            const names=new Map();
+                            effectiveEdges.forEach(e=>{if(!names.has(e.s))names.set(e.s,names.size);if(!names.has(e.t))names.set(e.t,names.size);});
+                            const nodes=Array.from(names.keys());
+                            const idx=new Map(nodes.map((n,i)=>[n,i]));
+                            const filteredEdges=effectiveEdges.filter(e=>idx.has(e.s)&&idx.has(e.t));
+                            if(!filteredEdges.length){
+                                setInfo('Suche hat keine Kanten im aktuellen Layer-Sample gefunden.');
+                                const legend=document.getElementById('themeLegend');if(legend)legend.innerHTML='';
+                                return;
+                            }
+
+                            const ns='http://www.w3.org/2000/svg';
+                            const g=document.createElementNS(ns,'g');
+                            svg.appendChild(g);
+                            const width=1400,height=620,pad=36;
+                            let seed=1337;
+                            const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+                            const pos=nodes.map(()=>({x:pad+rand()*(width-2*pad),y:pad+rand()*(height-2*pad),vx:0,vy:0}));
+                            const degree=new Array(nodes.length).fill(0);
+                            filteredEdges.forEach(e=>{degree[idx.get(e.s)]++;degree[idx.get(e.t)]++;});
+                            for(let iter=0;iter<120;iter++){
+                                for(let i=0;i<pos.length;i++){
+                                    for(let j=i+1;j<pos.length;j++){
+                                        let dx=pos[j].x-pos[i].x,dy=pos[j].y-pos[i].y;
+                                        let d2=dx*dx+dy*dy+0.01;
+                                        let force=900/d2;
+                                        let d=Math.sqrt(d2);
+                                        let fx=(dx/d)*force,fy=(dy/d)*force;
+                                        pos[i].vx-=fx;pos[i].vy-=fy;pos[j].vx+=fx;pos[j].vy+=fy;
+                                    }
+                                }
+                                for(const e of filteredEdges){
+                                    const si=idx.get(e.s),ti=idx.get(e.t);
+                                    let dx=pos[ti].x-pos[si].x,dy=pos[ti].y-pos[si].y;
+                                    let d=Math.sqrt(dx*dx+dy*dy)+0.001;
+                                    let target=68+Math.min(72,Math.abs(degree[si]-degree[ti])*1.2);
+                                    let spring=(d-target)*0.014;
+                                    let fx=(dx/d)*spring,fy=(dy/d)*spring;
+                                    pos[si].vx+=fx;pos[si].vy+=fy;pos[ti].vx-=fx;pos[ti].vy-=fy;
+                                }
+                                for(let i=0;i<pos.length;i++){
+                                    let gx=(width/2-pos[i].x)*0.0018,gy=(height/2-pos[i].y)*0.0018;
+                                    pos[i].vx=(pos[i].vx+gx)*0.84;
+                                    pos[i].vy=(pos[i].vy+gy)*0.84;
+                                    pos[i].x=Math.max(pad,Math.min(width-pad,pos[i].x+pos[i].vx));
+                                    pos[i].y=Math.max(pad,Math.min(height-pad,pos[i].y+pos[i].vy));
+                                }
+                            }
+
+                            const layerColors={presentation:'#245b8f',calculation:'#be5d00',definition:'#3a7f2a',label:'#6a4c93',reference:'#00798c',dimension:'#7a6a00',other:'#6b7280'};
+                            const nodeTheme=new Map(nodes.map(n=>[n,metaFor(n).theme]));
+                            const nodeColor=new Map(nodes.map(n=>[n,colorForTheme(nodeTheme.get(n))]));
+                            const themeCounts=new Map();
+                            nodeTheme.forEach(v=>themeCounts.set(v,(themeCounts.get(v)||0)+1));
+                            const legend=document.getElementById('themeLegend');
+                            if(legend){
+                                const top=Array.from(themeCounts.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
+                                legend.innerHTML=top.map(([theme,count])=>`<span class="theme-chip"><span class="dot" style="background:${colorForTheme(theme)}"></span>${theme} (${count})</span>`).join('');
+                            }
+
+                            const adj=new Map();nodes.forEach(n=>adj.set(n,new Set()));
+                            filteredEdges.forEach(e=>{adj.get(e.s).add(e.t);adj.get(e.t).add(e.s);});
+                            const layerByNode=new Map(nodes.map(n=>[n,new Set()]));
+                            filteredEdges.forEach(e=>{layerByNode.get(e.s).add(e.layer);layerByNode.get(e.t).add(e.layer);});
+                            const labelByNode=new Map();
+
+                            filteredEdges.forEach(e=>{
+                                const si=idx.get(e.s),ti=idx.get(e.t);
+                                const p1=pos[si],p2=pos[ti];
+                                const l=document.createElementNS(ns,'line');
+                                l.setAttribute('x1',p1.x);l.setAttribute('y1',p1.y);l.setAttribute('x2',p2.x);l.setAttribute('y2',p2.y);
+                                l.setAttribute('stroke',layerColors[e.layer]||layerColors.other);
+                                l.setAttribute('stroke-width','1.4');l.setAttribute('stroke-opacity','0.32');
+                                l.dataset.s=e.s;l.dataset.t=e.t;
+                                g.appendChild(l);
+                            });
+
+                            nodes.forEach((name,i)=>{
+                                const p=pos[i];
+                                const c=document.createElementNS(ns,'circle');
+                                c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','3.6');
+                                c.setAttribute('fill',nodeColor.get(name));c.setAttribute('fill-opacity','0.95');
+                                c.dataset.n=name;c.dataset.theme=nodeTheme.get(name);c.style.cursor='pointer';
+                                const tt=document.createElementNS(ns,'title');tt.textContent=name;c.appendChild(tt);
+                                c.addEventListener('click',()=>{selectedNode=(selectedNode===name)?'':name;highlight();});
+                                g.appendChild(c);
+
+                                const t=document.createElementNS(ns,'text');
+                                t.setAttribute('x',p.x+7);t.setAttribute('y',p.y-5);t.setAttribute('font-size','10');
+                                t.setAttribute('fill','#17324d');t.setAttribute('opacity','0.88');
+                                t.dataset.n=name;t.textContent=showAllLabels?name:shortName(name,34);
+                                g.appendChild(t);
+                                labelByNode.set(name,t);
+                            });
+
+                            let scale=1,tx=0,ty=0,drag=false,sx=0,sy=0;
+                            if(query && focusNodes.length){
+                                const keptFocus=focusNodes.filter(n=>idx.has(n));
+                                if(keptFocus.length){
+                                    let cx=0,cy=0;
+                                    keptFocus.forEach(n=>{const p=pos[idx.get(n)];cx+=p.x;cy+=p.y;});
+                                    cx/=keptFocus.length;cy/=keptFocus.length;
+                                    scale=1.28;
+                                    tx=(width/2)-cx*scale;
+                                    ty=(height/2)-cy*scale;
+                                    if(!selectedNode || !idx.has(selectedNode)){
+                                        selectedNode=keptFocus[0];
+                                    }
+                                }
+                            }
+
+                            function updateLabelVisibility(){
+                                const neighbors=selectedNode?adj.get(selectedNode):null;
+                                labelByNode.forEach((labelEl,name)=>{
+                                    const i=idx.get(name);
+                                    if(selectedNode){
+                                        const near=name===selectedNode||(neighbors&&neighbors.has(name));
+                                        labelEl.hidden=!(near || scale>=2.1);
+                                        return;
+                                    }
+                                    if(showAllLabels){
+                                        labelEl.textContent=name;
+                                        labelEl.hidden=false;
+                                        return;
+                                    }
+                                    labelEl.textContent=shortName(name,34);
+                                    if(scale>=2.0){labelEl.hidden=false;return;}
+                                    if(scale>=1.55){labelEl.hidden=(i%%3!==0);return;}
+                                    if(scale>=1.2){labelEl.hidden=(i%%7!==0);return;}
+                                    labelEl.hidden=true;
+                                });
+                            }
+
+                            function highlight(){
+                                const neighbors=selectedNode?adj.get(selectedNode):null;
+                                g.querySelectorAll('line').forEach(l=>{
+                                    if(!selectedNode){l.setAttribute('stroke-opacity','0.32');l.setAttribute('stroke-width','1.4');return;}
+                                    const hit=l.dataset.s===selectedNode||l.dataset.t===selectedNode;
+                                    l.setAttribute('stroke-opacity',hit?'0.94':'0.07');
+                                    l.setAttribute('stroke-width',hit?'2.4':'1');
+                                });
+                                g.querySelectorAll('circle').forEach(c=>{
+                                    const n=c.dataset.n;
+                                    if(!selectedNode){
+                                        c.setAttribute('r','3.6');
+                                        c.setAttribute('fill',nodeColor.get(n));
+                                        c.setAttribute('fill-opacity','0.95');
+                                        return;
+                                    }
+                                    const hit=n===selectedNode||(neighbors&&neighbors.has(n));
+                                    c.setAttribute('r',n===selectedNode?'6.2':(hit?'4.9':'2.4'));
+                                    c.setAttribute('fill',n===selectedNode?'#be5d00':(hit?nodeColor.get(n):'#c7d4e2'));
+                                    c.setAttribute('fill-opacity',hit?'1':'0.55');
+                                });
+                                updateLabelVisibility();
+                                if(!selectedNode){
+                                    setInfo('Knoten anklicken, um Details zu sehen (Thema aus Mapping-Domäne, Grad, Layer, Nachbarn).');
+                                    return;
+                                }
+                                const neigh=Array.from(neighbors||[]);
+                                const layers=Array.from(layerByNode.get(selectedNode)||[]).sort();
+                                const meta=metaFor(selectedNode);
+                                const neighborsHtml=neigh.length?neigh.map(n=>`<div class="neighbor-item">${escHtml(n)}</div>`).join(''):'<div class="neighbor-item">-</div>';
+                                setInfo(`<strong>${escHtml(selectedNode)}</strong><br><span class="muted">Thema (Domain):</span> ${escHtml(meta.theme)} &nbsp; <span class="muted">Grad:</span> ${neigh.length} &nbsp; <span class="muted">Layer:</span> ${escHtml(layers.join(', ')||'-')}<br><span class="muted">Domains:</span> ${escHtml(meta.domains||'-')}<br><span class="muted">Nachbarn:</span><div class="neighbor-list">${neighborsHtml}</div>`);
+                            }
+
+                            function apply(){
+                                g.setAttribute('transform',`translate(${tx} ${ty}) scale(${scale})`);
+                                updateLabelVisibility();
+                            }
+
+                            svg.onwheel=(ev)=>{ev.preventDefault();scale=Math.max(0.35,Math.min(3.4,scale*(ev.deltaY<0?1.08:0.92)));apply();};
+                            svg.onmousedown=(ev)=>{drag=true;sx=ev.clientX;sy=ev.clientY;};
+                            svg.onmouseup=()=>{drag=false;};
+                            svg.onmouseleave=()=>{drag=false;};
+                            svg.onmousemove=(ev)=>{if(!drag)return;tx+=ev.clientX-sx;ty+=ev.clientY-sy;sx=ev.clientX;sy=ev.clientY;apply();};
+                            apply();
+                            highlight();
+                        }
+                        buildThemeColorMap();
+                        window.addEventListener('DOMContentLoaded',drawGraph);
+                        </script>
+                        """.formatted(edgesJson, nodeMetaJson);
+
+                return renderPage("Graph View", body.toString(), script);
     }
 
     private String renderLayerHtml(TaxonomyMetadata metadata) {
@@ -640,6 +948,99 @@ public class TaxonomyVisualizationExporter {
         return grouped;
     }
 
+    private Map<String, GraphNodeMeta> buildGraphNodeMeta(TaxonomyMetadata metadata,
+                                                           Map<String, List<MappingEntry>> mappingsByConcept) {
+        Map<String, GraphNodeMeta> meta = new TreeMap<>();
+        Set<String> nodes = new TreeSet<>();
+        for (LinkEdge edge : metadata.sampleEdges()) {
+            nodes.add(edge.source());
+            nodes.add(edge.target());
+        }
+
+        for (String node : nodes) {
+            List<MappingEntry> mappedEntries = mappingsByConcept.getOrDefault(normalizeConceptKey(node), List.of());
+            List<String> domains = deriveDomainThemes(mappedEntries);
+            String theme = domains.isEmpty() ? deriveThemeFromNodeName(node) : domains.get(0);
+            String domainsJoined = domains.isEmpty() ? "-" : String.join(", ", domains);
+
+            StringBuilder search = new StringBuilder(node.toLowerCase(Locale.ROOT));
+            search.append(' ').append(theme).append(' ').append(domainsJoined.toLowerCase(Locale.ROOT));
+            for (MappingEntry entry : mappedEntries) {
+                if (entry.field() != null) {
+                    search.append(' ').append(entry.field().toLowerCase(Locale.ROOT));
+                }
+                if (entry.concept() != null) {
+                    search.append(' ').append(entry.concept().toLowerCase(Locale.ROOT));
+                }
+                if (entry.type() != null) {
+                    search.append(' ').append(entry.type().toLowerCase(Locale.ROOT));
+                }
+                if (entry.period() != null) {
+                    search.append(' ').append(entry.period().toLowerCase(Locale.ROOT));
+                }
+                if (entry.unit() != null) {
+                    search.append(' ').append(entry.unit().toLowerCase(Locale.ROOT));
+                }
+            }
+
+            meta.put(node, new GraphNodeMeta(theme, search.toString(), domainsJoined));
+        }
+        return meta;
+    }
+
+    private List<String> deriveDomainThemes(List<MappingEntry> mappedEntries) {
+        if (mappedEntries == null || mappedEntries.isEmpty()) {
+            return List.of();
+        }
+        Set<String> domains = new LinkedHashSet<>();
+        for (MappingEntry entry : mappedEntries) {
+            addDomainToken(domains, entry.enumerationDomain());
+            if (entry.dimensions() != null) {
+                for (DimensionSelection dimension : entry.dimensions()) {
+                    addDomainToken(domains, dimension.axisQname());
+                    addDomainToken(domains, dimension.memberQname());
+                }
+            }
+        }
+        return new ArrayList<>(domains);
+    }
+
+    private void addDomainToken(Set<String> domains, String rawValue) {
+        if (rawValue == null || rawValue.isBlank()) {
+            return;
+        }
+        String token = rawValue.trim();
+        int colon = token.indexOf(':');
+        if (colon >= 0 && colon < token.length() - 1) {
+            token = token.substring(colon + 1);
+        }
+        if (token.startsWith("esrs_")) {
+            token = token.substring(5);
+        }
+        token = token.replaceAll("[^A-Za-z0-9]+", " ").trim().toLowerCase(Locale.ROOT);
+        if (token.isBlank()) {
+            return;
+        }
+        String compact = token.replace(' ', '-');
+        domains.add(compact.length() > 40 ? compact.substring(0, 40) : compact);
+    }
+
+    private String deriveThemeFromNodeName(String node) {
+        if (node == null || node.isBlank()) {
+            return "other";
+        }
+        String value = node;
+        if (value.startsWith("esrs_")) {
+            value = value.substring(5);
+        }
+        int underscore = value.indexOf('_');
+        if (underscore > 0) {
+            value = value.substring(0, underscore);
+        }
+        String cleaned = value.replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
+        return cleaned.isBlank() ? "other" : cleaned;
+    }
+
     private String viewCard(String title, String href, String description) {
         return "<article class=\"flow-step\"><div class=\"title\">" + escapeHtml(title)
             + "</div><div class=\"muted\">" + escapeHtml(description)
@@ -685,6 +1086,13 @@ public class TaxonomyVisualizationExporter {
             .append(".flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}.flow-step{background:#fff;border:1px solid #d9e3ee;border-radius:14px;padding:12px;}")
             .append(".flow-step .title{font-weight:700;margin:4px 0;}.flow-step .count{font-size:1.3rem;font-weight:700;color:#17324d;}.flow-step .step{font-size:.75rem;color:#5b7086;text-transform:uppercase;letter-spacing:.05em;}")
             .append(".layer-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px;}")
+            .append(".graph-search{min-width:300px;flex:1;border:1px solid #cfdbe8;border-radius:999px;padding:9px 12px;font-size:.95rem;}")
+            .append(".theme-legend{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px;}")
+            .append(".theme-chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d9e3ee;border-radius:999px;padding:5px 10px;font-size:.84rem;color:#355066;}")
+            .append(".theme-chip .dot{width:10px;height:10px;border-radius:999px;display:inline-block;}")
+            .append(".node-info{margin-top:10px;background:#fff;border:1px solid #d9e3ee;border-radius:10px;padding:10px 12px;line-height:1.45;color:#28445f;}")
+            .append(".neighbor-list{margin-top:4px;display:grid;gap:3px;}")
+            .append(".neighbor-item{font-family:Consolas,monospace;font-size:.9rem;overflow-wrap:anywhere;}")
             .append("a{color:#1e5f99;text-decoration:none;}code{background:#eef4fa;padding:2px 6px;border-radius:6px;}.muted{color:#5b7086;}")
             .append("</style></head><body><main>")
             .append(body)
@@ -1248,6 +1656,11 @@ public class TaxonomyVisualizationExporter {
     }
 
     private record LinkEdge(String source, String target, String layer) {
+    }
+
+    private record GraphNodeMeta(String theme,
+                                 String search,
+                                 String domains) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,
