@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 11 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 12 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -13,6 +13,7 @@ Diese Doku erklaert alle 11 Visualisierungsansichten aus dem Taxonomy Explorer:
 9. Reference
 10. Calculation
 11. Intersection
+12. Validation
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -32,6 +33,7 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-reference.html
 - taxonomy-visualization-calculation.html
 - taxonomy-visualization-intersection.html
+- taxonomy-visualization-validation.html
 
 ## Lesestrategie (allgemein)
 
@@ -232,6 +234,7 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 - Reference: Wenn du Normnachweise je Konzept (ESRS/Regulation) nachvollziehen willst.
 - Calculation: Wenn du Auswirkungen auf Rollups/Formeln bei Konzeptaenderungen abschaetzen willst.
 - Intersection: Wenn du sinnvolle Dimensionskombinationen je Hypercube abschaetzen willst.
+- Validation: Wenn du Regeldateien und ihre Konzeptabhaengigkeiten gezielt analysieren willst.
 
 ---
 
@@ -318,3 +321,20 @@ Wie man sie liest:
 Beispiel:
 
 - Wenn ein Hypercube bei ScopeAxis x GeographyAxis eine hohe Kombinationszahl zeigt, sollte fuer jede relevante Region/Scope-Kombination mindestens ein Plausibilitaetstest vorgesehen werden.
+
+## 12) Validation View lesen
+
+Was die Ansicht zeigt:
+
+- Formula-Dateien und die darin gefundenen ESRS-Konzeptverwendungen.
+- Konzept-Hotspots nach Mention-Haeufigkeit.
+
+Wie man sie liest:
+
+1. In "Formula-Datei -> Konzepte" die wichtigsten Regeldateien identifizieren.
+2. In "Konzept-Hotspots" auf hohe Mention-Zahlen achten.
+3. Bei Aenderungen an diesen Konzepten gezielt Validierungs-Regressionstests planen.
+
+Beispiel:
+
+- Wenn ein Konzept in vielen Formula-Dateien auftaucht, ist es ein starker Validierungs-Hotspot. Aenderungen sollten mit erweiterten Tests gegen mehrere Disclosure-Kontexte abgesichert werden.

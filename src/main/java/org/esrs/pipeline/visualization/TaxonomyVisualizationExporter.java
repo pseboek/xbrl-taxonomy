@@ -88,6 +88,7 @@ public class TaxonomyVisualizationExporter {
         Path referenceHtml = outputHtml.resolveSibling(stem + "-reference.html");
         Path calculationHtml = outputHtml.resolveSibling(stem + "-calculation.html");
         Path intersectionHtml = outputHtml.resolveSibling(stem + "-intersection.html");
+        Path validationHtml = outputHtml.resolveSibling(stem + "-validation.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -100,7 +101,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(referenceHtml, renderReferenceHtml(mappingsByConcept, placeholdersByField, conceptReferences), StandardCharsets.UTF_8);
         Files.writeString(calculationHtml, renderCalculationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(intersectionHtml, renderIntersectionHtml(metadata), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml), StandardCharsets.UTF_8);
+        Files.writeString(validationHtml, renderValidationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -337,7 +339,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0));
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0));
         }
 
         long xsdElementCount = 0;
@@ -350,6 +352,7 @@ public class TaxonomyVisualizationExporter {
         Set<String> hrefTargets = new TreeSet<>();
         Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept = new TreeMap<>();
         Map<String, Integer> formulaMentionsByConcept = new TreeMap<>();
+        Map<String, Set<String>> formulaConceptsByFileRaw = new TreeMap<>();
         List<DimensionalArc> dimensionalArcs = new ArrayList<>();
 
         try (Stream<Path> stream = Files.walk(taxonomyBase)) {
@@ -374,6 +377,7 @@ public class TaxonomyVisualizationExporter {
                 if (isFormulaFile(file)) {
                     String formulaXml = Files.readString(file, StandardCharsets.UTF_8);
                     collectFormulaConceptMentionsFromText(formulaXml, formulaMentionsByConcept);
+                    collectFormulaConceptsByFile(formulaXml, file, taxonomyRoot, formulaConceptsByFileRaw);
                 }
 
                 Document document = parseXml(file);
@@ -457,6 +461,10 @@ public class TaxonomyVisualizationExporter {
 
         List<String> hrefSample = hrefTargets.stream().limit(80).toList();
         HypercubeMetadata hypercubeMetadata = buildHypercubeMetadata(dimensionalArcs);
+        Map<String, List<String>> formulaConceptsByFile = new TreeMap<>();
+        for (Map.Entry<String, Set<String>> entry : formulaConceptsByFileRaw.entrySet()) {
+            formulaConceptsByFile.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
         return new TaxonomyMetadata(
             xsdElementCount,
             xsdImportCount,
@@ -466,6 +474,7 @@ public class TaxonomyVisualizationExporter {
             hrefSample,
             taxonomyEnumerationsByConcept,
             formulaMentionsByConcept,
+            formulaConceptsByFile,
             hypercubeMetadata
         );
     }
@@ -484,6 +493,21 @@ public class TaxonomyVisualizationExporter {
         while (matcher.find()) {
             String qname = matcher.group();
             formulaMentionsByConcept.merge(normalizeConceptKey(qname), 1, Integer::sum);
+        }
+    }
+
+    private void collectFormulaConceptsByFile(String formulaXml,
+                                              Path formulaFile,
+                                              Path taxonomyRoot,
+                                              Map<String, Set<String>> formulaConceptsByFile) {
+        if (formulaXml == null || formulaXml.isBlank()) {
+            return;
+        }
+        String fileLabel = taxonomyRoot.relativize(formulaFile).toString().replace('\\', '/');
+        Set<String> concepts = formulaConceptsByFile.computeIfAbsent(fileLabel, key -> new TreeSet<>());
+        Matcher matcher = FORMULA_ESRS_QNAME_PATTERN.matcher(formulaXml);
+        while (matcher.find()) {
+            concepts.add(matcher.group());
         }
     }
 
@@ -669,7 +693,8 @@ public class TaxonomyVisualizationExporter {
                                       Path enumerationHtml,
                                       Path referenceHtml,
                                       Path calculationHtml,
-                                      Path intersectionHtml) {
+                                      Path intersectionHtml,
+                                      Path validationHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -693,8 +718,105 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("9. Reference", fileNameOnly(referenceHtml), "Konzept-zu-ESRS-Referenznachweise (Traceability)"))
             .append(viewCard("10. Calculation", fileNameOnly(calculationHtml), "Calculation- und Formula-Abhaengigkeiten (Sample + Impact)"))
             .append(viewCard("11. Intersection", fileNameOnly(intersectionHtml), "Kombinationen von Dimensionen je Hypercube"))
+            .append(viewCard("12. Validation", fileNameOnly(validationHtml), "Rule-Abhaengigkeiten: Formula-Dateien und referenzierte Konzepte"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderValidationHtml(TaxonomyMetadata metadata,
+                                        Map<String, List<MappingEntry>> mappingsByConcept) {
+        Map<String, List<String>> formulaConceptsByFile = metadata.formulaConceptsByFile();
+        List<FormulaRuleRow> ruleRows = new ArrayList<>();
+
+        for (Map.Entry<String, List<String>> entry : formulaConceptsByFile.entrySet()) {
+            List<String> concepts = entry.getValue();
+            Set<String> mappedFields = new TreeSet<>();
+            for (String concept : concepts) {
+                List<MappingEntry> mappings = mappingsByConcept.getOrDefault(normalizeConceptKey(concept), List.of());
+                for (MappingEntry mapping : mappings) {
+                    mappedFields.add(mapping.field());
+                }
+            }
+            ruleRows.add(new FormulaRuleRow(entry.getKey(), concepts, mappedFields));
+        }
+
+        ruleRows.sort(Comparator.comparingInt((FormulaRuleRow row) -> row.concepts().size()).reversed()
+            .thenComparing(FormulaRuleRow::formulaFile));
+
+        List<ValidationConceptRow> conceptRows = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : metadata.formulaMentionsByConcept().entrySet()) {
+            String conceptKey = entry.getKey();
+            List<MappingEntry> mappings = mappingsByConcept.getOrDefault(conceptKey, List.of());
+            String concept = mappings.isEmpty() ? conceptKey : mappings.get(0).concept();
+            Set<String> fields = mappings.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+            conceptRows.add(new ValidationConceptRow(concept, entry.getValue(), fields));
+        }
+        conceptRows.sort(Comparator.comparingInt(ValidationConceptRow::mentions).reversed().thenComparing(ValidationConceptRow::concept));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Validation View: Rule Dependency</h1>")
+            .append("<p class=\"lead\">Diese Sicht verbindet Formula-Regeldateien mit den darin referenzierten ESRS-Konzepten. Damit laesst sich schnell erkennen, welche Konzepte bei Regelanpassungen betroffen sein koennen.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Formula-Dateien", ruleRows.size()))
+            .append(summaryCard("Konzepte in Formeln", metadata.formulaMentionsByConcept().size()))
+            .append(summaryCard("Mentions gesamt", metadata.formulaMentionsByConcept().values().stream().mapToInt(Integer::intValue).sum()))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"validationSearch\" type=\"search\" placeholder=\"Formula-Datei, Konzept oder Feld suchen...\" oninput=\"applyValidationFilter()\"></div>")
+            .append("<section><h2>Formula-Datei -> Konzepte</h2><table class=\"layout-table\"><thead><tr><th>Formula-Datei</th><th>Konzepte</th><th>Gemappte Felder</th></tr></thead><tbody>");
+
+        if (ruleRows.isEmpty()) {
+            body.append("<tr><td colspan=\"3\" class=\"muted\">Keine Formula-Abhaengigkeiten gefunden.</td></tr>");
+        }
+
+        for (FormulaRuleRow row : ruleRows) {
+            String search = normalizeSearch(row.formulaFile() + " " + String.join(" ", row.concepts()) + " " + String.join(" ", row.fields()));
+            body.append("<tr class=\"validation-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.formulaFile()))
+                .append("</code></td><td>")
+                .append(escapeHtml(limitJoined(new TreeSet<>(row.concepts()), 8)))
+                .append("</td><td>")
+                .append(row.fields().isEmpty() ? "-" : escapeHtml(limitJoined(row.fields(), 6)))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>")
+            .append("<section><h2>Konzept-Hotspots (Mentions)</h2><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Mentions</th><th>Gemappte Felder</th></tr></thead><tbody>");
+
+        if (conceptRows.isEmpty()) {
+            body.append("<tr><td colspan=\"3\" class=\"muted\">Keine Konzept-Mentions gefunden.</td></tr>");
+        }
+
+        int conceptLimit = Math.min(400, conceptRows.size());
+        for (int i = 0; i < conceptLimit; i++) {
+            ValidationConceptRow row = conceptRows.get(i);
+            String search = normalizeSearch(row.concept() + " " + row.mentions() + " " + String.join(" ", row.fields()));
+            body.append("<tr class=\"validation-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(row.mentions())
+                .append("</td><td>")
+                .append(row.fields().isEmpty() ? "-" : escapeHtml(limitJoined(row.fields(), 6)))
+                .append("</td></tr>");
+        }
+        if (conceptRows.size() > conceptLimit) {
+            body.append("<tr><td colspan=\"3\" class=\"muted\">Nur die ersten ")
+                .append(conceptLimit)
+                .append(" Konzepte werden angezeigt. Bitte Suche nutzen.</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyValidationFilter(){const q=normalize(document.getElementById('validationSearch').value.trim());"
+            + "document.querySelectorAll('.validation-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+
+        return renderPage("Validation View", body.toString(), script);
     }
 
     private String renderIntersectionHtml(TaxonomyMetadata metadata) {
@@ -2609,6 +2731,16 @@ public class TaxonomyVisualizationExporter {
                                    long combinationCount) {
     }
 
+    private record FormulaRuleRow(String formulaFile,
+                                  List<String> concepts,
+                                  Set<String> fields) {
+    }
+
+    private record ValidationConceptRow(String concept,
+                                        int mentions,
+                                        Set<String> fields) {
+    }
+
     private record TaxonomyMetadata(long xsdElementCount,
                                     long xsdImportCount,
                                     Map<String, Long> fileCountByLayer,
@@ -2617,6 +2749,7 @@ public class TaxonomyVisualizationExporter {
                                     List<String> hrefTargets,
                                     Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept,
                                     Map<String, Integer> formulaMentionsByConcept,
+                                    Map<String, List<String>> formulaConceptsByFile,
                                     HypercubeMetadata hypercubeMetadata) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();
