@@ -84,6 +84,7 @@ public class TaxonomyVisualizationExporter {
         Path flowHtml = outputHtml.resolveSibling(stem + "-flow.html");
         Path hypercubeHtml = outputHtml.resolveSibling(stem + "-hypercube.html");
         Path hypercube3dHtml = outputHtml.resolveSibling(stem + "-hypercube-3d.html");
+        Path localThreeJs = outputHtml.resolveSibling("three.min.js");
         Path coverageHtml = outputHtml.resolveSibling(stem + "-coverage.html");
         Path enumerationHtml = outputHtml.resolveSibling(stem + "-enumeration.html");
         Path referenceHtml = outputHtml.resolveSibling(stem + "-reference.html");
@@ -101,6 +102,7 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(flowHtml, renderFlowHtml(forest, metadata, mappingsByConcept, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(hypercubeHtml, renderHypercubeHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(hypercube3dHtml, renderHypercube3dHtml(metadata), StandardCharsets.UTF_8);
+        copyLocalThreeBundle(taxonomyRoot, localThreeJs);
         Files.writeString(coverageHtml, renderCoverageHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
         Files.writeString(enumerationHtml, renderEnumerationHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
         Files.writeString(referenceHtml, renderReferenceHtml(mappingsByConcept, placeholdersByField, conceptReferences), StandardCharsets.UTF_8);
@@ -120,6 +122,14 @@ public class TaxonomyVisualizationExporter {
             mappingsByConcept.size(),
             layoutSnapshot.placeholderMappings().size()
         );
+    }
+
+    private void copyLocalThreeBundle(Path taxonomyRoot, Path targetFile) throws IOException {
+        Path localBundle = taxonomyRoot.resolve("templates").resolve("assets").resolve("vendor").resolve("three.min.js");
+        if (!Files.exists(localBundle)) {
+            return;
+        }
+        Files.copy(localBundle, targetFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
     }
 
     private LayoutSnapshot loadLayoutSnapshot(Path layoutMap) throws IOException {
@@ -828,8 +838,7 @@ public class TaxonomyVisualizationExporter {
                             .hypercube-3d-stage{height:min(1080px,calc(100vh - 130px));min-height:620px;}
                         }
                         </style>
-                        <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-                        <script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+                        <script src="three.min.js"></script>
                         <script>
                         const hypercubeData=__HYPERCUBE_DATA__;
                         const stage=document.getElementById('hypercube3dStage');
@@ -839,7 +848,7 @@ public class TaxonomyVisualizationExporter {
                         const tableBody=document.getElementById('hypercube3dTable');
 
                         let scene,camera,renderer,controls,raycaster;
-                        const pointer=new THREE.Vector2();
+                        let pointer;
                         const pickables=[];
                         const cubeGroups=[];
                         let hovered=null;
@@ -851,10 +860,12 @@ public class TaxonomyVisualizationExporter {
                         }
 
                         function initScene(){
-                            if(typeof THREE==='undefined' || !THREE.OrbitControls){
-                                info.textContent='Three.js konnte nicht geladen werden. Bitte Internetzugang oder lokales Bundle pruefen.';
+                            if(typeof THREE==='undefined'){
+                                info.textContent='Three.js konnte nicht geladen werden. Bitte lokales Bundle pruefen (output/three.min.js).';
                                 return;
                             }
+
+                            pointer=new THREE.Vector2();
 
                             scene=new THREE.Scene();
                             scene.background=new THREE.Color(0x070f18);
@@ -870,9 +881,7 @@ public class TaxonomyVisualizationExporter {
                             renderer.setSize(width,height,false);
                             renderer.outputColorSpace=THREE.SRGBColorSpace;
 
-                            controls=new THREE.OrbitControls(camera,renderer.domElement);
-                            controls.enableDamping=true;
-                            controls.dampingFactor=0.045;
+                            controls=createSimpleOrbitController(camera,renderer.domElement);
                             controls.target.set(0,0,0);
                             controls.minDistance=40;
                             controls.maxDistance=1400;
@@ -909,6 +918,108 @@ public class TaxonomyVisualizationExporter {
                             const grid=new THREE.GridHelper(1200,28,0x2b4f72,0x1c3148);
                             grid.position.y=-38;
                             scene.add(grid);
+                        }
+
+                        function createSimpleOrbitController(camera,domElement){
+                            const state={
+                                target:new THREE.Vector3(0,0,0),
+                                distance:370,
+                                azimuth:0.78,
+                                polar:1.1,
+                                minDistance:40,
+                                maxDistance:1400,
+                                rotating:false,
+                                panning:false,
+                                lastX:0,
+                                lastY:0
+                            };
+
+                            const tmpDir=new THREE.Vector3();
+                            const tmpRight=new THREE.Vector3();
+                            const tmpUp=new THREE.Vector3();
+
+                            function clampPolar(){
+                                state.polar=Math.max(0.1,Math.min(Math.PI-0.1,state.polar));
+                            }
+
+                            function clampDistance(){
+                                state.distance=Math.max(state.minDistance,Math.min(state.maxDistance,state.distance));
+                            }
+
+                            function apply(){
+                                clampPolar();
+                                clampDistance();
+                                const sin=Math.sin(state.polar);
+                                const x=state.target.x+state.distance*sin*Math.cos(state.azimuth);
+                                const y=state.target.y+state.distance*Math.cos(state.polar);
+                                const z=state.target.z+state.distance*sin*Math.sin(state.azimuth);
+                                camera.position.set(x,y,z);
+                                camera.lookAt(state.target);
+                            }
+
+                            function onPointerDown(event){
+                                state.lastX=event.clientX;
+                                state.lastY=event.clientY;
+                                state.rotating=event.button===0;
+                                state.panning=event.button===2;
+                                if(state.rotating||state.panning){
+                                    domElement.setPointerCapture?.(event.pointerId);
+                                }
+                            }
+
+                            function onPointerMove(event){
+                                if(!state.rotating && !state.panning){
+                                    return;
+                                }
+                                const dx=event.clientX-state.lastX;
+                                const dy=event.clientY-state.lastY;
+                                state.lastX=event.clientX;
+                                state.lastY=event.clientY;
+
+                                if(state.rotating){
+                                    state.azimuth-=dx*0.007;
+                                    state.polar-=dy*0.006;
+                                } else if(state.panning){
+                                    const panScale=Math.max(0.08,state.distance*0.0017);
+                                    camera.getWorldDirection(tmpDir);
+                                    tmpRight.crossVectors(tmpDir,camera.up).normalize();
+                                    tmpUp.copy(camera.up).normalize();
+                                    state.target.addScaledVector(tmpRight,-dx*panScale);
+                                    state.target.addScaledVector(tmpUp,dy*panScale);
+                                }
+                                apply();
+                            }
+
+                            function onPointerUp(event){
+                                state.rotating=false;
+                                state.panning=false;
+                                domElement.releasePointerCapture?.(event.pointerId);
+                            }
+
+                            function onWheel(event){
+                                event.preventDefault();
+                                const factor=event.deltaY<0?0.9:1.1;
+                                state.distance*=factor;
+                                apply();
+                            }
+
+                            domElement.addEventListener('contextmenu',event=>event.preventDefault());
+                            domElement.addEventListener('pointerdown',onPointerDown);
+                            domElement.addEventListener('pointermove',onPointerMove);
+                            domElement.addEventListener('pointerup',onPointerUp);
+                            domElement.addEventListener('pointercancel',onPointerUp);
+                            domElement.addEventListener('wheel',onWheel,{passive:false});
+
+                            return {
+                                target:state.target,
+                                minDistance:state.minDistance,
+                                maxDistance:state.maxDistance,
+                                update(){
+                                    state.minDistance=this.minDistance;
+                                    state.maxDistance=this.maxDistance;
+                                    apply();
+                                }
+                            };
                         }
 
                         function buildCubeScene(cubes){
@@ -1035,7 +1146,7 @@ public class TaxonomyVisualizationExporter {
                         }
 
                         function onPointerMove(event){
-                            if(!renderer||!camera||!raycaster){
+                            if(!renderer||!camera||!raycaster||!pointer){
                                 return;
                             }
                             const rect=renderer.domElement.getBoundingClientRect();

@@ -92,7 +92,7 @@ class TaxonomyVisualizationExporterTest {
 
         String hypercube3d = Files.readString(hypercube3dHtml, StandardCharsets.UTF_8);
         assertTrue(hypercube3d.contains("Hypercube 3D View"));
-        assertTrue(hypercube3d.contains("unpkg.com/three"));
+        assertTrue(hypercube3d.contains("three.min.js"));
 
         String coverage = Files.readString(coverageHtml, StandardCharsets.UTF_8);
         assertTrue(coverage.contains("Coverage View"));
