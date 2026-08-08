@@ -46,6 +46,12 @@ public class TaxonomyVisualizationExporter {
     private static final String XLINK_NS = "http://www.w3.org/1999/xlink";
     private static final String XS_NS = "http://www.w3.org/2001/XMLSchema";
     private static final String PARENT_CHILD_ARCROLE = "http://www.xbrl.org/2003/arcrole/parent-child";
+    private static final String DIM_ARCROLE_ALL = "http://xbrl.org/int/dim/arcrole/all";
+    private static final String DIM_ARCROLE_NOT_ALL = "http://xbrl.org/int/dim/arcrole/notAll";
+    private static final String DIM_ARCROLE_HYPERCUBE_DIMENSION = "http://xbrl.org/int/dim/arcrole/hypercube-dimension";
+    private static final String DIM_ARCROLE_DIMENSION_DOMAIN = "http://xbrl.org/int/dim/arcrole/dimension-domain";
+    private static final String DIM_ARCROLE_DOMAIN_MEMBER = "http://xbrl.org/int/dim/arcrole/domain-member";
+    private static final String DIM_ARCROLE_DIMENSION_DEFAULT = "http://xbrl.org/int/dim/arcrole/dimension-default";
     private static final Pattern XSD_ELEMENT_TAG_PATTERN = Pattern.compile("<(?:xsd|xs):element\\b[^>]*>");
     private static final Pattern XSD_NAME_ATTR_PATTERN = Pattern.compile("\\bname=\"([^\"]+)\"");
     private static final Pattern XSD_TYPE_ATTR_PATTERN = Pattern.compile("\\btype=\"([^\"]+)\"");
@@ -74,13 +80,15 @@ public class TaxonomyVisualizationExporter {
         Path layerHtml = outputHtml.resolveSibling(stem + "-layer.html");
         Path matrixHtml = outputHtml.resolveSibling(stem + "-matrix.html");
         Path flowHtml = outputHtml.resolveSibling(stem + "-flow.html");
+        Path hypercubeHtml = outputHtml.resolveSibling(stem + "-hypercube.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(layerHtml, renderLayerHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(matrixHtml, renderMatrixHtml(mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(flowHtml, renderFlowHtml(forest, metadata, mappingsByConcept, layoutSnapshot), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml), StandardCharsets.UTF_8);
+        Files.writeString(hypercubeHtml, renderHypercubeHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -241,7 +249,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of());
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), new HypercubeMetadata(List.of(), 0));
         }
 
         long xsdElementCount = 0;
@@ -253,6 +261,7 @@ public class TaxonomyVisualizationExporter {
         final int maxSamplePerLayer = 180;
         Set<String> hrefTargets = new TreeSet<>();
         Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept = new TreeMap<>();
+        List<DimensionalArc> dimensionalArcs = new ArrayList<>();
 
         try (Stream<Path> stream = Files.walk(taxonomyBase)) {
             for (Path file : stream.filter(Files::isRegularFile).toList()) {
@@ -300,11 +309,16 @@ public class TaxonomyVisualizationExporter {
                     String to = element.getAttributeNS(XLINK_NS, "to");
                     String source = locators.getOrDefault(from, from);
                     String target = locators.getOrDefault(to, to);
+                    String arcrole = element.getAttributeNS(XLINK_NS, "arcrole");
                     if (source != null && !source.isBlank() && target != null && !target.isBlank()) {
                         String edgeKey = layer + "|" + source + "|" + target;
                         List<LinkEdge> layerSample = sampleEdgesByLayer.computeIfAbsent(layer, key -> new ArrayList<>());
                         if (layerSample.size() < maxSamplePerLayer && sampledEdgeKeys.add(edgeKey)) {
                             layerSample.add(new LinkEdge(source, target, layer));
+                        }
+
+                        if (isDimensionalArcrole(arcrole)) {
+                            dimensionalArcs.add(new DimensionalArc(source, target, arcrole));
                         }
                     }
                 }
@@ -348,6 +362,7 @@ public class TaxonomyVisualizationExporter {
         }
 
         List<String> hrefSample = hrefTargets.stream().limit(80).toList();
+        HypercubeMetadata hypercubeMetadata = buildHypercubeMetadata(dimensionalArcs);
         return new TaxonomyMetadata(
             xsdElementCount,
             xsdImportCount,
@@ -355,8 +370,79 @@ public class TaxonomyVisualizationExporter {
             edgeCountByLayer,
             sampleEdges,
             hrefSample,
-            taxonomyEnumerationsByConcept
+            taxonomyEnumerationsByConcept,
+            hypercubeMetadata
         );
+    }
+
+    private boolean isDimensionalArcrole(String arcrole) {
+        if (arcrole == null || arcrole.isBlank()) {
+            return false;
+        }
+        return DIM_ARCROLE_ALL.equals(arcrole)
+            || DIM_ARCROLE_NOT_ALL.equals(arcrole)
+            || DIM_ARCROLE_HYPERCUBE_DIMENSION.equals(arcrole)
+            || DIM_ARCROLE_DIMENSION_DOMAIN.equals(arcrole)
+            || DIM_ARCROLE_DOMAIN_MEMBER.equals(arcrole)
+            || DIM_ARCROLE_DIMENSION_DEFAULT.equals(arcrole);
+    }
+
+    private HypercubeMetadata buildHypercubeMetadata(List<DimensionalArc> dimensionalArcs) {
+        if (dimensionalArcs == null || dimensionalArcs.isEmpty()) {
+            return new HypercubeMetadata(List.of(), 0);
+        }
+
+        Map<String, Set<String>> primariesAllByCube = new TreeMap<>();
+        Map<String, Set<String>> primariesNotAllByCube = new TreeMap<>();
+        Map<String, Set<String>> dimensionsByCube = new TreeMap<>();
+        Map<String, Set<String>> domainsByDimension = new TreeMap<>();
+        Map<String, Set<String>> membersByDomain = new TreeMap<>();
+        Map<String, Set<String>> defaultsByDimension = new TreeMap<>();
+
+        for (DimensionalArc arc : dimensionalArcs) {
+            switch (arc.arcrole()) {
+                case DIM_ARCROLE_ALL -> primariesAllByCube.computeIfAbsent(arc.target(), key -> new TreeSet<>()).add(arc.source());
+                case DIM_ARCROLE_NOT_ALL -> primariesNotAllByCube.computeIfAbsent(arc.target(), key -> new TreeSet<>()).add(arc.source());
+                case DIM_ARCROLE_HYPERCUBE_DIMENSION -> dimensionsByCube.computeIfAbsent(arc.source(), key -> new TreeSet<>()).add(arc.target());
+                case DIM_ARCROLE_DIMENSION_DOMAIN -> domainsByDimension.computeIfAbsent(arc.source(), key -> new TreeSet<>()).add(arc.target());
+                case DIM_ARCROLE_DOMAIN_MEMBER -> membersByDomain.computeIfAbsent(arc.source(), key -> new TreeSet<>()).add(arc.target());
+                case DIM_ARCROLE_DIMENSION_DEFAULT -> defaultsByDimension.computeIfAbsent(arc.source(), key -> new TreeSet<>()).add(arc.target());
+                default -> {
+                    // no-op
+                }
+            }
+        }
+
+        Set<String> cubeNames = new TreeSet<>();
+        cubeNames.addAll(primariesAllByCube.keySet());
+        cubeNames.addAll(primariesNotAllByCube.keySet());
+        cubeNames.addAll(dimensionsByCube.keySet());
+
+        List<HypercubeCube> cubes = new ArrayList<>();
+        int relationCount = dimensionalArcs.size();
+
+        for (String cube : cubeNames) {
+            List<String> allPrimaries = new ArrayList<>(primariesAllByCube.getOrDefault(cube, Set.of()));
+            List<String> notAllPrimaries = new ArrayList<>(primariesNotAllByCube.getOrDefault(cube, Set.of()));
+            List<String> dimensions = new ArrayList<>(dimensionsByCube.getOrDefault(cube, Set.of()));
+
+            Map<String, List<String>> domainsPerDimension = new LinkedHashMap<>();
+            Map<String, List<String>> defaultsPerDimension = new LinkedHashMap<>();
+            Map<String, List<String>> membersPerDomain = new LinkedHashMap<>();
+
+            for (String dimension : dimensions) {
+                List<String> domains = new ArrayList<>(domainsByDimension.getOrDefault(dimension, Set.of()));
+                domainsPerDimension.put(dimension, domains);
+                defaultsPerDimension.put(dimension, new ArrayList<>(defaultsByDimension.getOrDefault(dimension, Set.of())));
+                for (String domain : domains) {
+                    membersPerDomain.put(domain, new ArrayList<>(membersByDomain.getOrDefault(domain, Set.of())));
+                }
+            }
+
+            cubes.add(new HypercubeCube(cube, allPrimaries, notAllPrimaries, dimensions, domainsPerDimension, defaultsPerDimension, membersPerDomain));
+        }
+
+        return new HypercubeMetadata(cubes, relationCount);
     }
 
     private void collectEnumerationConceptsFromText(String xsdText,
@@ -465,7 +551,8 @@ public class TaxonomyVisualizationExporter {
                                       Path graphHtml,
                                       Path layerHtml,
                                       Path matrixHtml,
-                                      Path flowHtml) {
+                                      Path flowHtml,
+                                      Path hypercubeHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -483,8 +570,140 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("3. Layer", fileNameOnly(layerHtml), "Layer-Übersicht mit aufklappbaren Unterelementen"))
             .append(viewCard("4. Matrix", fileNameOnly(matrixHtml), "Konzeptindex und Layout-Zuordnung"))
             .append(viewCard("5. Flow", fileNameOnly(flowHtml), "Reporting-Flow von Input bis Disclosure"))
+            .append(viewCard("6. Hypercube", fileNameOnly(hypercubeHtml), "Dimensionale Struktur mit Hypercubes, Achsen, Domains und Members"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderHypercubeHtml(TaxonomyMetadata metadata) {
+        HypercubeMetadata hypercubeMetadata = metadata.hypercubeMetadata();
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Hypercube View: Dimensionale Taxonomie</h1>")
+            .append("<p class=\"lead\">Sicht auf XBRL-Dimensionsbeziehungen aus den Definition-Linkbases: all/notAll, hypercube-dimension, dimension-domain, domain-member und dimension-default.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Hypercubes", hypercubeMetadata.cubes().size()))
+            .append(summaryCard("Dimensionale Relationen", hypercubeMetadata.relationCount()))
+            .append("</div>")
+            .append("<div class=\"hypercube-legend\">")
+            .append("<span class=\"legend-pill binding-all\">all: Kontext muss Hypercube enthalten</span>")
+            .append("<span class=\"legend-pill binding-not-all\">notAll: Negativ-/Ausschlussbindung</span>")
+            .append("</div>")
+            .append("<section><h2>Hypercube-Struktur</h2><div class=\"role-list\">\n");
+
+        if (hypercubeMetadata.cubes().isEmpty()) {
+            body.append("<div class=\"layout-row muted\">Keine Hypercube-Beziehungen gefunden.</div>");
+        }
+
+        for (HypercubeCube cube : hypercubeMetadata.cubes()) {
+            body.append("<details class=\"role\" open><summary><span><code>")
+                .append(escapeHtml(cube.cube()))
+                .append("</code></span><span class=\"role-meta\">")
+                .append(cube.dimensions().size()).append(" Dimension(en), ")
+                .append(cube.primaryItemsAll().size() + cube.primaryItemsNotAll().size()).append(" Primary Item Bindings</span></summary>")
+                .append("<div class=\"node-children\">")
+                .append(renderBindingList("Primary (all)", cube.primaryItemsAll(), "binding-all"))
+                .append(renderBindingList("Primary (notAll)", cube.primaryItemsNotAll(), "binding-not-all"))
+                .append("<div class=\"facet-grid\">");
+
+            for (String dimension : cube.dimensions()) {
+                body.append(renderDimensionFacet(cube, dimension));
+            }
+
+            body.append("</div></div></details>");
+        }
+
+        body.append("</div></section>");
+        return renderPage("Hypercube View", body.toString(), "");
+    }
+
+    private String renderBindingList(String label, List<String> values, String cssClass) {
+        if (values == null || values.isEmpty()) {
+            return "";
+        }
+        StringBuilder html = new StringBuilder();
+        html.append("<div class=\"layout-row binding-group\"><strong>")
+            .append(escapeHtml(label))
+            .append("</strong><div class=\"binding-list\">");
+        int limit = Math.min(30, values.size());
+        for (int i = 0; i < limit; i++) {
+            html.append("<span class=\"binding-pill ")
+                .append(escapeHtml(cssClass))
+                .append("\"><code>")
+                .append(escapeHtml(values.get(i)))
+                .append("</code></span>");
+        }
+        if (values.size() > limit) {
+            html.append("<span class=\"muted\">+")
+                .append(values.size() - limit)
+                .append(" weitere</span>");
+        }
+        html.append("</div></div>");
+        return html.toString();
+    }
+
+    private String renderDimensionFacet(HypercubeCube cube, String dimension) {
+        StringBuilder html = new StringBuilder();
+        List<String> defaults = cube.defaultsPerDimension().getOrDefault(dimension, List.of());
+        List<String> domains = cube.domainsPerDimension().getOrDefault(dimension, List.of());
+
+        html.append("<article class=\"facet-card\"><header class=\"facet-head\"><div class=\"node-title\"><code>")
+            .append(escapeHtml(dimension))
+            .append("</code></div><div class=\"facet-meta\">")
+            .append("<span class=\"legend-pill\">Domains: ")
+            .append(domains.size())
+            .append("</span>")
+            .append("<span class=\"legend-pill\">Defaults: ")
+            .append(defaults.size())
+            .append("</span></div></header>");
+
+        if (!defaults.isEmpty()) {
+            html.append("<div class=\"layout-row\"><strong>Default Member</strong><div class=\"facet-members\">");
+            int defaultsLimit = Math.min(8, defaults.size());
+            for (int i = 0; i < defaultsLimit; i++) {
+                html.append("<span class=\"legend-pill\"><code>")
+                    .append(escapeHtml(defaults.get(i)))
+                    .append("</code></span>");
+            }
+            if (defaults.size() > defaultsLimit) {
+                html.append("<span class=\"muted\">+")
+                    .append(defaults.size() - defaultsLimit)
+                    .append(" weitere</span>");
+            }
+            html.append("</div></div>");
+        }
+
+        if (domains.isEmpty()) {
+            html.append("<div class=\"layout-row muted\">Keine Domain-Verknüpfung für diese Dimension gefunden.</div></article>");
+            return html.toString();
+        }
+
+        for (String domain : domains) {
+            List<String> members = cube.membersPerDomain().getOrDefault(domain, List.of());
+            html.append("<div class=\"facet-domain\"><div class=\"facet-domain-title\"><code>")
+                .append(escapeHtml(domain))
+                .append("</code><span class=\"muted\">")
+                .append(members.size())
+                .append(" Member</span></div><div class=\"facet-members\">");
+            if (members.isEmpty()) {
+                html.append("<span class=\"muted\">Keine Domain-Member im Sample gefunden.</span>");
+            } else {
+                int limit = Math.min(24, members.size());
+                for (int i = 0; i < limit; i++) {
+                    html.append("<span class=\"legend-pill\"><code>")
+                        .append(escapeHtml(members.get(i)))
+                        .append("</code></span>");
+                }
+                if (members.size() > limit) {
+                    html.append("<span class=\"muted\">+")
+                        .append(members.size() - limit)
+                        .append(" weitere</span>");
+                }
+            }
+            html.append("</div></div>");
+        }
+
+        html.append("</article>");
+        return html.toString();
     }
 
     private String renderTreeHtml(PresentationForest forest,
@@ -1163,6 +1382,24 @@ public class TaxonomyVisualizationExporter {
             .append(".theme-legend{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px;}")
             .append(".theme-chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d9e3ee;border-radius:999px;padding:5px 10px;font-size:.84rem;color:#355066;}")
             .append(".theme-chip .dot{width:10px;height:10px;border-radius:999px;display:inline-block;}")
+            .append(".hypercube-legend{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px;}")
+            .append(".legend-pill{display:inline-flex;align-items:flex-start;gap:6px;background:#fff;border:1px solid #d9e3ee;border-radius:999px;padding:4px 10px;font-size:.82rem;color:#355066;max-width:100%;}")
+            .append(".binding-pill{display:inline-flex;align-items:flex-start;background:#fff;border:1px solid #d9e3ee;border-radius:999px;padding:4px 8px;max-width:100%;}")
+            .append(".binding-pill.binding-all,.legend-pill.binding-all{background:#e7f6ea;border-color:#9ed8aa;color:#1b5e32;}")
+            .append(".binding-pill.binding-not-all,.legend-pill.binding-not-all{background:#ffefdc;border-color:#f1b775;color:#8a3c00;}")
+            .append(".binding-group{display:grid;gap:8px;}")
+            .append(".binding-list{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}")
+            .append(".facet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;}")
+            .append(".facet-card{background:#f8fbfe;border:1px solid #d9e3ee;border-radius:14px;padding:10px 12px;display:grid;gap:10px;}")
+            .append(".facet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}")
+            .append(".facet-meta{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;max-width:60%;}")
+            .append(".facet-domain{background:#fff;border:1px solid #e5edf5;border-radius:10px;padding:8px 10px;display:grid;gap:8px;}")
+            .append(".facet-domain-title{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}")
+            .append(".facet-members{display:flex;flex-wrap:wrap;gap:6px;}")
+            .append(".binding-pill code,.legend-pill code,.facet-domain-title code{white-space:normal;overflow-wrap:anywhere;word-break:break-word;max-width:100%;}")
+            .append(".facet-domain-title code{display:block;max-width:100%;}")
+            .append(".layout-row code{white-space:normal;overflow-wrap:anywhere;word-break:break-word;}")
+            .append("@media (max-width: 900px){.facet-head{flex-direction:column;}.facet-meta{max-width:100%;justify-content:flex-start;}}")
             .append(".node-info{margin-top:10px;background:#fff;border:1px solid #d9e3ee;border-radius:10px;padding:10px 12px;line-height:1.45;color:#28445f;}")
             .append(".neighbor-list{margin-top:4px;display:grid;gap:3px;}")
             .append(".neighbor-item{font-family:Consolas,monospace;font-size:.9rem;overflow-wrap:anywhere;}")
@@ -1761,7 +1998,8 @@ public class TaxonomyVisualizationExporter {
                                     Map<String, Long> edgeCountByLayer,
                                     List<LinkEdge> sampleEdges,
                                     List<String> hrefTargets,
-                                    Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept) {
+                                    Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept,
+                                    HypercubeMetadata hypercubeMetadata) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();
             layers.addAll(fileCountByLayer.keySet());
@@ -1773,6 +2011,24 @@ public class TaxonomyVisualizationExporter {
     private record TaxonomyEnumeration(boolean multiValued,
                                        String domain,
                                        String linkrole) {
+    }
+
+    private record DimensionalArc(String source,
+                                  String target,
+                                  String arcrole) {
+    }
+
+    private record HypercubeCube(String cube,
+                                 List<String> primaryItemsAll,
+                                 List<String> primaryItemsNotAll,
+                                 List<String> dimensions,
+                                 Map<String, List<String>> domainsPerDimension,
+                                 Map<String, List<String>> defaultsPerDimension,
+                                 Map<String, List<String>> membersPerDomain) {
+    }
+
+    private record HypercubeMetadata(List<HypercubeCube> cubes,
+                                     int relationCount) {
     }
 
     public record VisualizationResult(Path outputPath,
