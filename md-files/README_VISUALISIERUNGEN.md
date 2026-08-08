@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 10 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 11 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -12,6 +12,7 @@ Diese Doku erklaert alle 10 Visualisierungsansichten aus dem Taxonomy Explorer:
 8. Enumeration
 9. Reference
 10. Calculation
+11. Intersection
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -30,6 +31,7 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-enumeration.html
 - taxonomy-visualization-reference.html
 - taxonomy-visualization-calculation.html
+- taxonomy-visualization-intersection.html
 
 ## Lesestrategie (allgemein)
 
@@ -229,6 +231,7 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 - Enumeration: Wenn du erlaubte Werte, Domains und enum2-Hinweise pro Konzept pruefen willst.
 - Reference: Wenn du Normnachweise je Konzept (ESRS/Regulation) nachvollziehen willst.
 - Calculation: Wenn du Auswirkungen auf Rollups/Formeln bei Konzeptaenderungen abschaetzen willst.
+- Intersection: Wenn du sinnvolle Dimensionskombinationen je Hypercube abschaetzen willst.
 
 ---
 
@@ -298,3 +301,20 @@ Wie man sie liest:
 Beispiel:
 
 - Ein Konzept mit hoher Degree-Zahl und vielen Formula-Mentions ist ein Hotspot. Aenderungen dort koennen sowohl Aggregationen als auch Formellogik beeinflussen.
+
+## 11) Intersection View lesen
+
+Was die Ansicht zeigt:
+
+- Paarweise Dimension-Kombinationen je Hypercube.
+- Member-Anzahlen pro Dimension und daraus abgeleitete A x B Kombinationen.
+
+Wie man sie liest:
+
+1. Nach Hypercube filtern und die wichtigsten Dimensionspaare identifizieren.
+2. Auf hohe A x B Werte achten: diese Kontexte sind fachlich und technisch komplexer.
+3. Kombinationen fuer Testfall-Design und Priorisierung der Validierung nutzen.
+
+Beispiel:
+
+- Wenn ein Hypercube bei ScopeAxis x GeographyAxis eine hohe Kombinationszahl zeigt, sollte fuer jede relevante Region/Scope-Kombination mindestens ein Plausibilitaetstest vorgesehen werden.

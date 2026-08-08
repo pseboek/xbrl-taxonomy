@@ -87,6 +87,7 @@ public class TaxonomyVisualizationExporter {
         Path enumerationHtml = outputHtml.resolveSibling(stem + "-enumeration.html");
         Path referenceHtml = outputHtml.resolveSibling(stem + "-reference.html");
         Path calculationHtml = outputHtml.resolveSibling(stem + "-calculation.html");
+        Path intersectionHtml = outputHtml.resolveSibling(stem + "-intersection.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -98,7 +99,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(enumerationHtml, renderEnumerationHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
         Files.writeString(referenceHtml, renderReferenceHtml(mappingsByConcept, placeholdersByField, conceptReferences), StandardCharsets.UTF_8);
         Files.writeString(calculationHtml, renderCalculationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml), StandardCharsets.UTF_8);
+        Files.writeString(intersectionHtml, renderIntersectionHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -666,7 +668,8 @@ public class TaxonomyVisualizationExporter {
                                       Path coverageHtml,
                                       Path enumerationHtml,
                                       Path referenceHtml,
-                                      Path calculationHtml) {
+                                      Path calculationHtml,
+                                      Path intersectionHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -689,8 +692,96 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("8. Enumeration", fileNameOnly(enumerationHtml), "Enumeration-Domaenen, Allowed Values und Taxonomie-Hinweise"))
             .append(viewCard("9. Reference", fileNameOnly(referenceHtml), "Konzept-zu-ESRS-Referenznachweise (Traceability)"))
             .append(viewCard("10. Calculation", fileNameOnly(calculationHtml), "Calculation- und Formula-Abhaengigkeiten (Sample + Impact)"))
+            .append(viewCard("11. Intersection", fileNameOnly(intersectionHtml), "Kombinationen von Dimensionen je Hypercube"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderIntersectionHtml(TaxonomyMetadata metadata) {
+        HypercubeMetadata hypercubeMetadata = metadata.hypercubeMetadata();
+        List<IntersectionRow> rows = new ArrayList<>();
+
+        for (HypercubeCube cube : hypercubeMetadata.cubes()) {
+            List<String> dimensions = cube.dimensions();
+            if (dimensions.size() < 2) {
+                continue;
+            }
+            for (int i = 0; i < dimensions.size(); i++) {
+                for (int j = i + 1; j < dimensions.size(); j++) {
+                    String first = dimensions.get(i);
+                    String second = dimensions.get(j);
+                    int firstMembers = memberCountForDimension(cube, first);
+                    int secondMembers = memberCountForDimension(cube, second);
+                    long combinations = (long) firstMembers * (long) secondMembers;
+                    rows.add(new IntersectionRow(cube.cube(), first, second, firstMembers, secondMembers, combinations));
+                }
+            }
+        }
+
+        rows.sort(Comparator.comparingLong(IntersectionRow::combinationCount).reversed()
+            .thenComparing(IntersectionRow::cube)
+            .thenComparing(IntersectionRow::dimensionA)
+            .thenComparing(IntersectionRow::dimensionB));
+
+        long totalCombinations = rows.stream().mapToLong(IntersectionRow::combinationCount).sum();
+        long cubesWithPairs = rows.stream().map(IntersectionRow::cube).distinct().count();
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Intersection View: Dimension-Kombinationen</h1>")
+            .append("<p class=\"lead\">Diese Sicht zeigt pro Hypercube die Paarkombinationen von Dimensionen und die daraus ableitbare Menge moeglicher Member-Kombinationen.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Hypercubes mit Paaren", cubesWithPairs))
+            .append(summaryCard("Dimensionspaare", rows.size()))
+            .append(summaryCard("Kombinationen (Summe)", totalCombinations))
+            .append(summaryCard("Dimensionale Relationen", hypercubeMetadata.relationCount()))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"intersectionSearch\" type=\"search\" placeholder=\"Hypercube oder Dimension suchen...\" oninput=\"applyIntersectionFilter()\"></div>")
+            .append("<section><h2>Dimensionspaare pro Hypercube</h2><table class=\"layout-table\"><thead><tr><th>Hypercube</th><th>Dimension A</th><th>Dimension B</th><th>Member A</th><th>Member B</th><th>A x B</th></tr></thead><tbody>");
+
+        if (rows.isEmpty()) {
+            body.append("<tr><td colspan=\"6\" class=\"muted\">Keine Dimensionspaare gefunden. Es werden mindestens zwei Dimensionen je Hypercube benoetigt.</td></tr>");
+        }
+
+        for (IntersectionRow row : rows) {
+            String search = normalizeSearch(row.cube() + " " + row.dimensionA() + " " + row.dimensionB());
+            body.append("<tr class=\"intersection-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.cube()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.dimensionA()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.dimensionB()))
+                .append("</code></td><td>")
+                .append(row.membersA())
+                .append("</td><td>")
+                .append(row.membersB())
+                .append("</td><td>")
+                .append(row.combinationCount())
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyIntersectionFilter(){const q=normalize(document.getElementById('intersectionSearch').value.trim());"
+            + "document.querySelectorAll('.intersection-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+
+        return renderPage("Intersection View", body.toString(), script);
+    }
+
+    private int memberCountForDimension(HypercubeCube cube, String dimension) {
+        int count = 0;
+        List<String> domains = cube.domainsPerDimension().getOrDefault(dimension, List.of());
+        for (String domain : domains) {
+            count += cube.membersPerDomain().getOrDefault(domain, List.of()).size();
+        }
+        if (count == 0) {
+            count = 1;
+        }
+        return count;
     }
 
     private String renderCalculationHtml(TaxonomyMetadata metadata,
@@ -2508,6 +2599,14 @@ public class TaxonomyVisualizationExporter {
                                         int calcDegree,
                                         int formulaMentions,
                                         Set<String> fields) {
+    }
+
+    private record IntersectionRow(String cube,
+                                   String dimensionA,
+                                   String dimensionB,
+                                   int membersA,
+                                   int membersB,
+                                   long combinationCount) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,

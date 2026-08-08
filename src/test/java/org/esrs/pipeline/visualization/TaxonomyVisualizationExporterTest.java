@@ -25,6 +25,7 @@ class TaxonomyVisualizationExporterTest {
         Path enumerationHtml = outputDir.resolve("taxonomy-visualization-enumeration.html");
         Path referenceHtml = outputDir.resolve("taxonomy-visualization-reference.html");
         Path calculationHtml = outputDir.resolve("taxonomy-visualization-calculation.html");
+        Path intersectionHtml = outputDir.resolve("taxonomy-visualization-intersection.html");
 
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
         assertDoesNotThrow(() -> exporter.export(
@@ -45,6 +46,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(Files.exists(enumerationHtml));
         assertTrue(Files.exists(referenceHtml));
         assertTrue(Files.exists(calculationHtml));
+        assertTrue(Files.exists(intersectionHtml));
 
         String html = Files.readString(outputHtml, StandardCharsets.UTF_8);
         assertTrue(html.contains("ESRS Taxonomie-Visualisierungen"));
@@ -58,6 +60,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(html.contains("taxonomy-visualization-enumeration.html"));
         assertTrue(html.contains("taxonomy-visualization-reference.html"));
         assertTrue(html.contains("taxonomy-visualization-calculation.html"));
+        assertTrue(html.contains("taxonomy-visualization-intersection.html"));
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
         assertTrue(tree.contains("Präsentationshierarchie"));
@@ -83,5 +86,8 @@ class TaxonomyVisualizationExporterTest {
 
         String calculation = Files.readString(calculationHtml, StandardCharsets.UTF_8);
         assertTrue(calculation.contains("Calculation View"));
+
+        String intersection = Files.readString(intersectionHtml, StandardCharsets.UTF_8);
+        assertTrue(intersection.contains("Intersection View"));
     }
 }

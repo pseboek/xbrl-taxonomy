@@ -26,7 +26,8 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 12. `output/taxonomy-visualization-enumeration.html` (Enumeration View),
 13. `output/taxonomy-visualization-reference.html` (Reference View),
 14. `output/taxonomy-visualization-calculation.html` (Calculation View),
-15. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+15. `output/taxonomy-visualization-intersection.html` (Intersection View),
+16. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -85,8 +86,9 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-enumeration.html` fuer Enumeration-Domaenen und Allowed Values
 - `taxonomy-visualization-reference.html` fuer Konzept-zu-ESRS-Referenzen (Traceability)
 - `taxonomy-visualization-calculation.html` fuer Calculation- und Formula-Dependency-Analyse
+- `taxonomy-visualization-intersection.html` fuer Dimensionspaar-Kombinationen je Hypercube
 
-Der Explorer enthaelt 10 Ansichten:
+Der Explorer enthaelt 11 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -98,6 +100,7 @@ Der Explorer enthaelt 10 Ansichten:
 8. Enumeration: Browser fuer Domains, Allowed Values und Taxonomie-Infos (enum2:item/set)
 9. Reference: Traceability von Konzepten zu ESRS-/Regulations-Referenzen
 10. Calculation: Impact-Analyse fuer Calculation-Kanten und Formula-Konzeptverwendungen
+11. Intersection: Dimensionspaar-Analyse pro Hypercube (A x B Kombinationen)
 
 ## Visualisierungen lesen und verstehen
 
@@ -159,6 +162,7 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-enumeration.html` — Enumeration-Sicht mit Domain-/Allowed-Value-Informationen.
 - `output/taxonomy-visualization-reference.html` — Referenzsicht fuer Konzept-zu-Norm-Traceability.
 - `output/taxonomy-visualization-calculation.html` — Dependency-Sicht fuer Calculation-Kanten und Formula-Mentions.
+- `output/taxonomy-visualization-intersection.html` — Dimensionspaar-Sicht mit Kombinationen pro Hypercube.
 
 Hinweise:
 
