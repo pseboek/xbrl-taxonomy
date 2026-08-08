@@ -29,6 +29,7 @@ class TaxonomyVisualizationExporterTest {
         Path validationHtml = outputDir.resolve("taxonomy-visualization-validation.html");
         Path allocationHtml = outputDir.resolve("taxonomy-visualization-allocation.html");
         Path statsHtml = outputDir.resolve("taxonomy-visualization-stats.html");
+        Path complexityHtml = outputDir.resolve("taxonomy-visualization-complexity.html");
 
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
         assertDoesNotThrow(() -> exporter.export(
@@ -53,6 +54,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(Files.exists(validationHtml));
         assertTrue(Files.exists(allocationHtml));
         assertTrue(Files.exists(statsHtml));
+        assertTrue(Files.exists(complexityHtml));
 
         String html = Files.readString(outputHtml, StandardCharsets.UTF_8);
         assertTrue(html.contains("ESRS Taxonomie-Visualisierungen"));
@@ -70,6 +72,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(html.contains("taxonomy-visualization-validation.html"));
         assertTrue(html.contains("taxonomy-visualization-allocation.html"));
         assertTrue(html.contains("taxonomy-visualization-stats.html"));
+        assertTrue(html.contains("taxonomy-visualization-complexity.html"));
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
         assertTrue(tree.contains("Präsentationshierarchie"));
@@ -107,5 +110,8 @@ class TaxonomyVisualizationExporterTest {
 
         String stats = Files.readString(statsHtml, StandardCharsets.UTF_8);
         assertTrue(stats.contains("Stats View"));
+
+        String complexity = Files.readString(complexityHtml, StandardCharsets.UTF_8);
+        assertTrue(complexity.contains("Complexity View"));
     }
 }

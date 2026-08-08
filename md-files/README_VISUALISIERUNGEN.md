@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 14 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 15 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -16,6 +16,7 @@ Diese Doku erklaert alle 14 Visualisierungsansichten aus dem Taxonomy Explorer:
 12. Validation
 13. Allocation
 14. Stats
+15. Complexity
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -38,6 +39,7 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-validation.html
 - taxonomy-visualization-allocation.html
 - taxonomy-visualization-stats.html
+- taxonomy-visualization-complexity.html
 
 ## Lesestrategie (allgemein)
 
@@ -241,6 +243,7 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 - Validation: Wenn du Regeldateien und ihre Konzeptabhaengigkeiten gezielt analysieren willst.
 - Allocation: Wenn du Template-Zuordnung und Mapping-Abdeckung je Section analysieren willst.
 - Stats: Wenn du die strukturelle Verteilung von Kanten und Knotenhubs pruefen willst.
+- Complexity: Wenn du Testpriorisierung nach technischem/fachlichem Risiko steuern willst.
 
 ---
 
@@ -379,3 +382,23 @@ Wie man sie liest:
 Beispiel:
 
 - Ein sehr hoher Degree bei wenigen Knoten weist auf zentrale Drehscheiben hin. Mapping-Aenderungen an diesen Konzepten sollten priorisiert mit End-to-End-Tests abgesichert werden.
+
+## 15) Complexity View lesen
+
+Was die Ansicht zeigt:
+
+- Risiko-Score pro Konzept aus vier Signalen:
+    - Dimensionsanzahl,
+    - Enumeration-Signale,
+    - Calculation-Grad,
+    - Formula-Mentions.
+
+Wie man sie liest:
+
+1. Konzepte mit hohem Score als erste Kandidaten fuer Regressionstests waehlen.
+2. Score-Bestandteile vergleichen, um den Treiber zu verstehen (z. B. viele Dimensionen vs. viele Formeln).
+3. Bei Mapping-Aenderungen zuerst High-Risk-Konzepte absichern.
+
+Beispiel:
+
+- Hat ein Konzept Score >= 20 und gleichzeitig hohen Calculation-Grad, sollte es vor Release mindestens durch Unit-, Integrations- und Strict-Gate-Lauf verifiziert werden.

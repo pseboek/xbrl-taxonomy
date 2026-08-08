@@ -91,6 +91,7 @@ public class TaxonomyVisualizationExporter {
         Path validationHtml = outputHtml.resolveSibling(stem + "-validation.html");
         Path allocationHtml = outputHtml.resolveSibling(stem + "-allocation.html");
         Path statsHtml = outputHtml.resolveSibling(stem + "-stats.html");
+        Path complexityHtml = outputHtml.resolveSibling(stem + "-complexity.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -106,7 +107,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(validationHtml, renderValidationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(allocationHtml, renderAllocationHtml(layoutSnapshot, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(statsHtml, renderStatsHtml(metadata), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml), StandardCharsets.UTF_8);
+        Files.writeString(complexityHtml, renderComplexityHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -700,7 +702,8 @@ public class TaxonomyVisualizationExporter {
                                       Path intersectionHtml,
                                       Path validationHtml,
                                       Path allocationHtml,
-                                      Path statsHtml) {
+                                      Path statsHtml,
+                                      Path complexityHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -727,8 +730,109 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("12. Validation", fileNameOnly(validationHtml), "Rule-Abhaengigkeiten: Formula-Dateien und referenzierte Konzepte"))
             .append(viewCard("13. Allocation", fileNameOnly(allocationHtml), "Section-zu-Placeholder-zu-Konzept Zuordnung"))
             .append(viewCard("14. Stats", fileNameOnly(statsHtml), "Linkbase Edge Statistics und Struktur-Hinweise"))
+            .append(viewCard("15. Complexity", fileNameOnly(complexityHtml), "Komplexitaetsindikatoren je Konzept"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderComplexityHtml(TaxonomyMetadata metadata,
+                                        Map<String, List<MappingEntry>> mappingsByConcept) {
+        Map<String, Integer> calcDegree = new TreeMap<>();
+        for (LinkEdge edge : metadata.sampleEdges()) {
+            if (!"calculation".equals(edge.layer())) {
+                continue;
+            }
+            calcDegree.merge(normalizeConceptKey(edge.source()), 1, Integer::sum);
+            calcDegree.merge(normalizeConceptKey(edge.target()), 1, Integer::sum);
+        }
+
+        Set<String> conceptKeys = new TreeSet<>(mappingsByConcept.keySet());
+        conceptKeys.addAll(metadata.formulaMentionsByConcept().keySet());
+        conceptKeys.addAll(calcDegree.keySet());
+
+        List<ComplexityRow> rows = new ArrayList<>();
+        for (String conceptKey : conceptKeys) {
+            List<MappingEntry> entries = mappingsByConcept.getOrDefault(conceptKey, List.of());
+            String concept = entries.isEmpty() ? conceptKey : entries.get(0).concept();
+
+            int dimensionCount = 0;
+            int enumSignals = 0;
+            Set<String> fields = new TreeSet<>();
+            for (MappingEntry entry : entries) {
+                fields.add(entry.field());
+                if (entry.dimensions() != null) {
+                    dimensionCount += entry.dimensions().size();
+                }
+                if (hasEnumeration(entry)) {
+                    enumSignals++;
+                }
+            }
+            if (metadata.taxonomyEnumerationsByConcept().containsKey(conceptKey)) {
+                enumSignals++;
+            }
+
+            int calc = calcDegree.getOrDefault(conceptKey, 0);
+            int formulaMentions = metadata.formulaMentionsByConcept().getOrDefault(conceptKey, 0);
+            int score = (dimensionCount * 3) + (enumSignals * 2) + (calc * 2) + formulaMentions;
+
+            rows.add(new ComplexityRow(concept, score, dimensionCount, enumSignals, calc, formulaMentions, fields));
+        }
+
+        rows.sort(Comparator.comparingInt(ComplexityRow::score).reversed().thenComparing(ComplexityRow::concept));
+
+        long highRisk = rows.stream().filter(row -> row.score() >= 20).count();
+        long mediumRisk = rows.stream().filter(row -> row.score() >= 10 && row.score() < 20).count();
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Complexity View: Concept Complexity Scorer</h1>")
+            .append("<p class=\"lead\">Gewichteter Indikator je Konzept aus Dimensionen, Enumeration-Signalen, Calculation-Grad und Formula-Mentions. Der Score dient zur Priorisierung von Tests und Reviews.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Konzepte", rows.size()))
+            .append(summaryCard("High Risk (>=20)", highRisk))
+            .append(summaryCard("Medium Risk (10-19)", mediumRisk))
+            .append(summaryCard("Formula-Konzepte", metadata.formulaMentionsByConcept().size()))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"complexitySearch\" type=\"search\" placeholder=\"Konzept oder Feld suchen...\" oninput=\"applyComplexityFilter()\"></div>")
+            .append("<section><h2>Score-Tabelle</h2><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Score</th><th>Dimensionen</th><th>Enumeration</th><th>Calc-Grad</th><th>Formula-Mentions</th><th>Felder</th></tr></thead><tbody>");
+
+        int rowLimit = Math.min(600, rows.size());
+        for (int i = 0; i < rowLimit; i++) {
+            ComplexityRow row = rows.get(i);
+            String search = normalizeSearch(row.concept() + " " + String.join(" ", row.fields()));
+            body.append("<tr class=\"complexity-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(row.score())
+                .append("</td><td>")
+                .append(row.dimensionCount())
+                .append("</td><td>")
+                .append(row.enumerationSignals())
+                .append("</td><td>")
+                .append(row.calcDegree())
+                .append("</td><td>")
+                .append(row.formulaMentions())
+                .append("</td><td>")
+                .append(row.fields().isEmpty() ? "-" : escapeHtml(limitJoined(row.fields(), 6)))
+                .append("</td></tr>");
+        }
+
+        if (rows.size() > rowLimit) {
+            body.append("<tr><td colspan=\"7\" class=\"muted\">Nur die ersten ")
+                .append(rowLimit)
+                .append(" Konzepte werden angezeigt. Bitte Suche nutzen.</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyComplexityFilter(){const q=normalize(document.getElementById('complexitySearch').value.trim());"
+            + "document.querySelectorAll('.complexity-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+
+        return renderPage("Complexity View", body.toString(), script);
     }
 
     private String renderStatsHtml(TaxonomyMetadata metadata) {
@@ -2952,6 +3056,15 @@ public class TaxonomyVisualizationExporter {
                                 int outDegree,
                                 int inDegree,
                                 int degree) {
+    }
+
+    private record ComplexityRow(String concept,
+                                 int score,
+                                 int dimensionCount,
+                                 int enumerationSignals,
+                                 int calcDegree,
+                                 int formulaMentions,
+                                 Set<String> fields) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,
