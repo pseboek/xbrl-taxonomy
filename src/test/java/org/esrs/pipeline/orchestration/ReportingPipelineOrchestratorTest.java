@@ -4,6 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.esrs.pipeline.support.TestTaxonomyFixture;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,8 @@ class ReportingPipelineOrchestratorTest {
     void shouldRunEndToEndWithArelleSkipped() throws Exception {
         Path root = Path.of(".").toAbsolutePath().normalize();
         Path outputDir = Files.createTempDirectory("esrs-output");
+        Path taxonomyFixtureRoot = Files.createTempDirectory("esrs-taxonomy-fixture");
+        TestTaxonomyFixture.createMinimalFixture(taxonomyFixtureRoot, root.resolve("mapping/map-esrs-2023-12-22.json"));
 
         ReportingPipelineOrchestrator orchestrator = new ReportingPipelineOrchestrator("arelleCmdLine");
         orchestrator.run(
@@ -21,7 +25,7 @@ class ReportingPipelineOrchestratorTest {
             root.resolve("templates/report-base.xhtml"),
             root.resolve("mapping/report-layout-map.json"),
             outputDir,
-            root,
+            taxonomyFixtureRoot,
             true
         );
 
@@ -60,6 +64,11 @@ class ReportingPipelineOrchestratorTest {
     @Test
     void shouldFailWhenValidationGateIsEnabledAndArelleExecutionFails() {
         Path root = Path.of(".").toAbsolutePath().normalize();
+        Path taxonomyFixtureRoot = assertDoesNotThrow(() -> {
+            Path fixtureRoot = Files.createTempDirectory("esrs-taxonomy-fixture-strict");
+            TestTaxonomyFixture.createMinimalFixture(fixtureRoot, root.resolve("mapping/map-esrs-2023-12-22.json"));
+            return fixtureRoot;
+        });
 
         ReportingPipelineOrchestrator orchestrator = new ReportingPipelineOrchestrator("missing-arelle-command-xyz");
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () ->
@@ -69,7 +78,7 @@ class ReportingPipelineOrchestratorTest {
                 root.resolve("templates/report-base.xhtml"),
                 root.resolve("mapping/report-layout-map.json"),
                 Files.createTempDirectory("esrs-output-strict"),
-                root,
+                taxonomyFixtureRoot,
                 false,
                 true,
                 false

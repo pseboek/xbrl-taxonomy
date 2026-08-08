@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.esrs.pipeline.mapping.MappingRegistry;
+import org.esrs.pipeline.support.TestTaxonomyFixture;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,8 @@ class TaxonomyVisualizationExporterTest {
     @Test
     void shouldExportHierarchicalTaxonomyExplorer() throws Exception {
         Path root = Path.of(".").toAbsolutePath().normalize();
+        Path taxonomyFixtureRoot = Files.createTempDirectory("esrs-taxonomy-fixture-viz");
+        TestTaxonomyFixture.createMinimalFixture(taxonomyFixtureRoot, root.resolve("mapping/map-esrs-2023-12-22.json"));
         Path outputDir = Files.createTempDirectory("taxonomy-visualization");
         Path outputHtml = outputDir.resolve("taxonomy-visualization.html");
         Path treeHtml = outputDir.resolve("taxonomy-visualization-tree.html");
@@ -35,7 +38,7 @@ class TaxonomyVisualizationExporterTest {
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
         assertDoesNotThrow(() -> exporter.export(
             MappingRegistry.fromPath(root.resolve("mapping/map-esrs-2023-12-22.json")),
-            root,
+            taxonomyFixtureRoot,
             root.resolve("mapping/report-layout-map.json"),
             outputHtml
         ));
@@ -79,7 +82,7 @@ class TaxonomyVisualizationExporterTest {
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
         assertTrue(tree.contains("Präsentationshierarchie"));
-        assertTrue(tree.contains("Taxonomie: "));
+        assertTrue(tree.contains("taxonomy-node"));
 
         String graph = Files.readString(graphHtml, StandardCharsets.UTF_8);
         assertTrue(graph.contains("layer-toggle"));
