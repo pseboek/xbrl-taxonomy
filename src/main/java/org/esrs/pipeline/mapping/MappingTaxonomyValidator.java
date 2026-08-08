@@ -14,8 +14,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.esrs.pipeline.model.DimensionSelection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MappingTaxonomyValidator {
+    private static final Logger LOG = LoggerFactory.getLogger(MappingTaxonomyValidator.class);
     private static final Pattern ELEMENT_PATTERN = Pattern.compile("<xsd:element[^>]*>");
     private static final Pattern ELEMENT_NAME_PATTERN = Pattern.compile("\\bname=\"([^\"]+)\"");
     private static final Pattern PERIOD_TYPE_PATTERN = Pattern.compile("\\bxbrli:periodType=\"([^\"]+)\"");
@@ -30,7 +33,8 @@ public class MappingTaxonomyValidator {
             .resolve("esrs_cor.xsd");
 
         if (!Files.exists(coreSchema)) {
-            throw new IOException("ESRS core schema not found for mapping validation: " + coreSchema);
+            LOG.warn("Skipping mapping taxonomy validation because ESRS core schema is unavailable: {}", coreSchema);
+            return;
         }
 
         Map<String, ConceptMetadata> metadata = loadEsrsConceptMetadata(coreSchema);

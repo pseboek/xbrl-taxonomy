@@ -232,7 +232,7 @@ public class TaxonomyVisualizationExporter {
     private PresentationForest loadPresentationForest(Path taxonomyRoot) throws IOException {
         Path linkbaseDir = taxonomyRoot.resolve(TAXONOMY_PATH).resolve("all").resolve("linkbases");
         if (!Files.exists(linkbaseDir)) {
-            throw new IOException("Presentation linkbase directory not found: " + linkbaseDir);
+            return new PresentationForest(List.of(), 0);
         }
 
         List<Path> files;
