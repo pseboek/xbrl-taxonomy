@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -146,6 +147,17 @@ public class FactBuilder {
             }
 
             if (entry.allowedValues() != null && !entry.allowedValues().isEmpty()) {
+                List<String> setValues = parseEnumerationSetValues(trimmed);
+                if (setValues.size() > 1) {
+                    for (String setValue : setValues) {
+                        if (!entry.allowedValues().contains(setValue)) {
+                            throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
+                        }
+                    }
+                    // XBRL enum2 set lexical form uses a whitespace-separated QName list.
+                    return String.join(" ", new LinkedHashSet<>(setValues));
+                }
+
                 if (!entry.allowedValues().contains(trimmed)) {
                     throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
                 }
@@ -159,6 +171,33 @@ public class FactBuilder {
         }
 
         throw new IllegalArgumentException("Unsupported mapping type for field " + entry.field() + ": " + entry.type());
+    }
+
+    private List<String> parseEnumerationSetValues(String value) {
+        String[] commaOrSemicolonSplit = value.split("\\s*[;,]\\s*");
+        if (commaOrSemicolonSplit.length > 1) {
+            List<String> values = new ArrayList<>();
+            for (String token : commaOrSemicolonSplit) {
+                String trimmed = token == null ? "" : token.trim();
+                if (!trimmed.isEmpty()) {
+                    values.add(trimmed);
+                }
+            }
+            return values;
+        }
+
+        String[] whitespaceSplit = value.trim().split("\\s+");
+        if (whitespaceSplit.length > 1) {
+            List<String> values = new ArrayList<>();
+            for (String token : whitespaceSplit) {
+                if (!token.isBlank()) {
+                    values.add(token.trim());
+                }
+            }
+            return values;
+        }
+
+        return List.of(value.trim());
     }
 
     public record FactBuildResult(List<XbrlFact> facts, Map<String, String> unitByField) {

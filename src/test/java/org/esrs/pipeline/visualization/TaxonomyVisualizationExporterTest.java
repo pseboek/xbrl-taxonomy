@@ -46,6 +46,7 @@ class TaxonomyVisualizationExporterTest {
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
         assertTrue(tree.contains("Präsentationshierarchie"));
+        assertTrue(tree.contains("Taxonomie: "));
 
         String graph = Files.readString(graphHtml, StandardCharsets.UTF_8);
         assertTrue(graph.contains("layer-toggle"));

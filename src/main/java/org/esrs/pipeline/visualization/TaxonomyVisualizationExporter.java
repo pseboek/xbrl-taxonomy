@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +46,11 @@ public class TaxonomyVisualizationExporter {
     private static final String XLINK_NS = "http://www.w3.org/1999/xlink";
     private static final String XS_NS = "http://www.w3.org/2001/XMLSchema";
     private static final String PARENT_CHILD_ARCROLE = "http://www.xbrl.org/2003/arcrole/parent-child";
+    private static final Pattern XSD_ELEMENT_TAG_PATTERN = Pattern.compile("<(?:xsd|xs):element\\b[^>]*>");
+    private static final Pattern XSD_NAME_ATTR_PATTERN = Pattern.compile("\\bname=\"([^\"]+)\"");
+    private static final Pattern XSD_TYPE_ATTR_PATTERN = Pattern.compile("\\btype=\"([^\"]+)\"");
+    private static final Pattern XSD_ENUM_DOMAIN_ATTR_PATTERN = Pattern.compile("\\benum2:domain=\"([^\"]+)\"");
+    private static final Pattern XSD_ENUM_LINKROLE_ATTR_PATTERN = Pattern.compile("\\benum2:linkrole=\"([^\"]+)\"");
     public VisualizationResult export(MappingRegistry mappingRegistry,
                                       Path taxonomyRoot,
                                       Path layoutMap,
@@ -234,7 +241,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of());
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of());
         }
 
         long xsdElementCount = 0;
@@ -245,6 +252,7 @@ public class TaxonomyVisualizationExporter {
         Set<String> sampledEdgeKeys = new HashSet<>();
         final int maxSamplePerLayer = 180;
         Set<String> hrefTargets = new TreeSet<>();
+        Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept = new TreeMap<>();
 
         try (Stream<Path> stream = Files.walk(taxonomyBase)) {
             for (Path file : stream.filter(Files::isRegularFile).toList()) {
@@ -255,6 +263,7 @@ public class TaxonomyVisualizationExporter {
                     xsdImportCount += countOccurrences(xsdText, "<xsd:import") + countOccurrences(xsdText, "<xs:import");
                     xsdImportCount += countOccurrences(xsdText, "<xsd:include") + countOccurrences(xsdText, "<xs:include");
                     collectHrefTargetsFromText(xsdText, hrefTargets);
+                    collectEnumerationConceptsFromText(xsdText, taxonomyEnumerationsByConcept);
                     continue;
                 }
                 if (!fileName.endsWith(".xml")) {
@@ -345,8 +354,42 @@ public class TaxonomyVisualizationExporter {
             fileCountByLayer,
             edgeCountByLayer,
             sampleEdges,
-            hrefSample
+            hrefSample,
+            taxonomyEnumerationsByConcept
         );
+    }
+
+    private void collectEnumerationConceptsFromText(String xsdText,
+                                                    Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept) {
+        if (xsdText == null || xsdText.isBlank()) {
+            return;
+        }
+
+        Matcher elementMatcher = XSD_ELEMENT_TAG_PATTERN.matcher(xsdText);
+        while (elementMatcher.find()) {
+            String elementTag = elementMatcher.group();
+            String localName = extractAttribute(elementTag, XSD_NAME_ATTR_PATTERN);
+            String type = extractAttribute(elementTag, XSD_TYPE_ATTR_PATTERN);
+            if (localName == null || type == null) {
+                continue;
+            }
+
+            boolean isSingle = "enum2:enumerationItemType".equals(type);
+            boolean isSet = "enum2:enumerationSetItemType".equals(type);
+            if (!isSingle && !isSet) {
+                continue;
+            }
+
+            String conceptKey = normalizeConceptKey("esrs:" + localName);
+            String domain = extractAttribute(elementTag, XSD_ENUM_DOMAIN_ATTR_PATTERN);
+            String linkrole = extractAttribute(elementTag, XSD_ENUM_LINKROLE_ATTR_PATTERN);
+            taxonomyEnumerationsByConcept.put(conceptKey, new TaxonomyEnumeration(isSet, domain, linkrole));
+        }
+    }
+
+    private String extractAttribute(String elementTag, Pattern pattern) {
+        Matcher matcher = pattern.matcher(elementTag);
+        return matcher.find() ? matcher.group(1) : null;
     }
 
     private int countOccurrences(String text, String token) {
@@ -485,7 +528,7 @@ public class TaxonomyVisualizationExporter {
                 .append("\" data-has-dimensions=\"")
                 .append(role.hasDimensionalMappings(mappingsByConcept))
                 .append("\" data-has-enumeration=\"")
-                .append(role.hasEnumerationMappings(mappingsByConcept))
+                .append(role.hasEnumerationMappings(mappingsByConcept, metadata))
                 .append("\"><summary><span>")
                 .append(escapeHtml(role.displayLabel()))
                 .append("</span><span class=\"role-meta\">")
@@ -493,7 +536,7 @@ public class TaxonomyVisualizationExporter {
                 .append(role.nodeCount()).append(" Knoten</span></summary><div class=\"node-children\">");
 
             for (String rootLabel : role.rootLabels()) {
-                renderNode(body, role, rootLabel, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(), 0);
+                renderNode(body, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(), 0);
             }
             body.append("</div></details>");
         }
@@ -976,7 +1019,8 @@ public class TaxonomyVisualizationExporter {
 
         for (String node : nodes) {
             List<MappingEntry> mappedEntries = mappingsByConcept.getOrDefault(normalizeConceptKey(node), List.of());
-            List<String> domains = deriveDomainThemes(mappedEntries);
+            TaxonomyEnumeration taxonomyEnumeration = taxonomyEnumerationForConcept(metadata, node);
+            List<String> domains = deriveDomainThemes(mappedEntries, taxonomyEnumeration);
             String theme = domains.isEmpty() ? deriveThemeFromNodeName(node) : domains.get(0);
             String domainsJoined = domains.isEmpty() ? "-" : String.join(", ", domains);
 
@@ -1005,21 +1049,33 @@ public class TaxonomyVisualizationExporter {
         return meta;
     }
 
-    private List<String> deriveDomainThemes(List<MappingEntry> mappedEntries) {
-        if (mappedEntries == null || mappedEntries.isEmpty()) {
-            return List.of();
-        }
+    private List<String> deriveDomainThemes(List<MappingEntry> mappedEntries,
+                                            TaxonomyEnumeration taxonomyEnumeration) {
         Set<String> domains = new LinkedHashSet<>();
-        for (MappingEntry entry : mappedEntries) {
-            addDomainToken(domains, entry.enumerationDomain());
-            if (entry.dimensions() != null) {
-                for (DimensionSelection dimension : entry.dimensions()) {
-                    addDomainToken(domains, dimension.axisQname());
-                    addDomainToken(domains, dimension.memberQname());
+        if (mappedEntries != null) {
+            for (MappingEntry entry : mappedEntries) {
+                addDomainToken(domains, entry.enumerationDomain());
+                if (entry.dimensions() != null) {
+                    for (DimensionSelection dimension : entry.dimensions()) {
+                        addDomainToken(domains, dimension.axisQname());
+                        addDomainToken(domains, dimension.memberQname());
+                    }
                 }
             }
         }
+
+        if (taxonomyEnumeration != null) {
+            addDomainToken(domains, taxonomyEnumeration.domain());
+        }
+
         return new ArrayList<>(domains);
+    }
+
+    private TaxonomyEnumeration taxonomyEnumerationForConcept(TaxonomyMetadata metadata, String conceptQname) {
+        if (metadata == null || metadata.taxonomyEnumerationsByConcept() == null || conceptQname == null || conceptQname.isBlank()) {
+            return null;
+        }
+        return metadata.taxonomyEnumerationsByConcept().get(normalizeConceptKey(conceptQname));
     }
 
     private void addDomainToken(Set<String> domains, String rawValue) {
@@ -1230,7 +1286,7 @@ public class TaxonomyVisualizationExporter {
                 .append("\" data-has-dimensions=\"")
                 .append(role.hasDimensionalMappings(mappingsByConcept))
                 .append("\" data-has-enumeration=\"")
-                .append(role.hasEnumerationMappings(mappingsByConcept))
+                .append(role.hasEnumerationMappings(mappingsByConcept, metadata))
                 .append("\">")
                 .append("<summary><span>")
                 .append(escapeHtml(role.displayLabel()))
@@ -1240,7 +1296,7 @@ public class TaxonomyVisualizationExporter {
                 .append("<div class=\"node-children\">");
 
             for (String rootLabel : role.rootLabels()) {
-                renderNode(html, role, rootLabel, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(), 0);
+                renderNode(html, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(), 0);
             }
 
             html.append("</div></details>");
@@ -1470,6 +1526,7 @@ public class TaxonomyVisualizationExporter {
     private void renderNode(StringBuilder html,
                             PresentationRoleGraph role,
                             String label,
+                            TaxonomyMetadata metadata,
                             Map<String, List<MappingEntry>> mappingsByConcept,
                             Map<String, List<String>> placeholdersByField,
                             Set<String> path,
@@ -1480,6 +1537,7 @@ public class TaxonomyVisualizationExporter {
 
         String qname = role.qname(label);
         String display = humanize(qname);
+    TaxonomyEnumeration taxonomyEnumeration = taxonomyEnumerationForConcept(metadata, qname);
         List<MappingEntry> mappedEntries = mappingsByConcept.getOrDefault(normalizeConceptKey(qname), List.of());
         List<String> placeholders = new ArrayList<>();
         for (MappingEntry entry : mappedEntries) {
@@ -1490,7 +1548,8 @@ public class TaxonomyVisualizationExporter {
         }
 
         boolean hasDimensions = mappedEntries.stream().anyMatch(entry -> entry.dimensions() != null && !entry.dimensions().isEmpty());
-        boolean hasEnumeration = mappedEntries.stream().anyMatch(entry -> entry.enumerationDomain() != null && !entry.enumerationDomain().isBlank());
+        boolean hasEnumeration = taxonomyEnumeration != null
+            || mappedEntries.stream().anyMatch(entry -> entry.enumerationDomain() != null && !entry.enumerationDomain().isBlank());
         String searchText = normalizeSearch(role.searchText() + " " + qname + " " + display + " " + mappedEntries.stream().map(MappingEntry::field).collect(Collectors.joining(" ")) + " " + String.join(" ", placeholders));
         String nodeId = fieldId(role.roleLabel() + "-" + qname + "-" + depth + "-" + path.hashCode());
 
@@ -1500,7 +1559,7 @@ public class TaxonomyVisualizationExporter {
         String unitValue = mappedEntries.stream().map(MappingEntry::unit).filter(value -> value != null && !value.isBlank()).distinct().collect(Collectors.joining(", "));
         String placeholderValue = placeholders.isEmpty() ? "" : String.join(", ", new TreeSet<>(placeholders));
         String dimensionsValue = renderDimensionSummary(mappedEntries);
-        String enumerationValue = renderEnumerationSummary(mappedEntries);
+        String enumerationValue = renderEnumerationSummary(mappedEntries, taxonomyEnumeration);
 
         html.append("<details class=\"taxonomy-node\" open data-search=\"")
             .append(escapeHtml(searchText))
@@ -1536,7 +1595,7 @@ public class TaxonomyVisualizationExporter {
             .append("<div class=\"node-children\">");
 
         for (PresentationArc childArc : role.children(label)) {
-            renderNode(html, role, childArc.to(), mappingsByConcept, placeholdersByField, new LinkedHashSet<>(path), depth + 1);
+            renderNode(html, role, childArc.to(), metadata, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(path), depth + 1);
         }
 
         html.append("</div></details>");
@@ -1560,19 +1619,35 @@ public class TaxonomyVisualizationExporter {
         return dimensions.stream().distinct().collect(Collectors.joining(", "));
     }
 
-    private String renderEnumerationSummary(List<MappingEntry> mappedEntries) {
-        if (mappedEntries.isEmpty()) {
-            return "";
-        }
+    private String renderEnumerationSummary(List<MappingEntry> mappedEntries,
+                                            TaxonomyEnumeration taxonomyEnumeration) {
         List<String> enumeration = new ArrayList<>();
-        for (MappingEntry entry : mappedEntries) {
-            if (entry.enumerationDomain() != null && !entry.enumerationDomain().isBlank()) {
-                enumeration.add(entry.enumerationDomain());
-            }
-            if (entry.allowedValues() != null) {
-                enumeration.addAll(entry.allowedValues());
+        if (mappedEntries != null) {
+            for (MappingEntry entry : mappedEntries) {
+                if (entry.enumerationDomain() != null && !entry.enumerationDomain().isBlank()) {
+                    enumeration.add(entry.enumerationDomain());
+                }
+                if (entry.allowedValues() != null) {
+                    enumeration.addAll(entry.allowedValues());
+                }
             }
         }
+
+        if (taxonomyEnumeration != null) {
+            StringBuilder taxonomyInfo = new StringBuilder(
+                taxonomyEnumeration.multiValued()
+                    ? "Taxonomie: Mehrfachauswahl (enum2:set)"
+                    : "Taxonomie: Einzelauswahl (enum2:item)"
+            );
+            if (taxonomyEnumeration.domain() != null && !taxonomyEnumeration.domain().isBlank()) {
+                taxonomyInfo.append(" domain=").append(taxonomyEnumeration.domain());
+            }
+            if (taxonomyEnumeration.linkrole() != null && !taxonomyEnumeration.linkrole().isBlank()) {
+                taxonomyInfo.append(" linkrole=").append(taxonomyEnumeration.linkrole());
+            }
+            enumeration.add(taxonomyInfo.toString());
+        }
+
         if (enumeration.isEmpty()) {
             return "";
         }
@@ -1685,13 +1760,19 @@ public class TaxonomyVisualizationExporter {
                                     Map<String, Long> fileCountByLayer,
                                     Map<String, Long> edgeCountByLayer,
                                     List<LinkEdge> sampleEdges,
-                                    List<String> hrefTargets) {
+                                    List<String> hrefTargets,
+                                    Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();
             layers.addAll(fileCountByLayer.keySet());
             layers.addAll(edgeCountByLayer.keySet());
             return new ArrayList<>(layers);
         }
+    }
+
+    private record TaxonomyEnumeration(boolean multiValued,
+                                       String domain,
+                                       String linkrole) {
     }
 
     public record VisualizationResult(Path outputPath,
@@ -1748,8 +1829,9 @@ public class TaxonomyVisualizationExporter {
             return hasAnyMatchingMapping(mappingsByConcept, TaxonomyVisualizationExporter::hasDimensions, new HashSet<>(), rootLabels);
         }
 
-        private boolean hasEnumerationMappings(Map<String, List<MappingEntry>> mappingsByConcept) {
-            return hasAnyMatchingMapping(mappingsByConcept, TaxonomyVisualizationExporter::hasEnumeration, new HashSet<>(), rootLabels);
+        private boolean hasEnumerationMappings(Map<String, List<MappingEntry>> mappingsByConcept,
+                                               TaxonomyMetadata metadata) {
+            return hasAnyEnumeration(mappingsByConcept, metadata, new HashSet<>(), rootLabels);
         }
 
         private int nodeCount() {
@@ -1779,6 +1861,28 @@ public class TaxonomyVisualizationExporter {
                     return true;
                 }
                 if (hasAnyMatchingMapping(mappingsByConcept, predicate, visited, childLabels(label))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private boolean hasAnyEnumeration(Map<String, List<MappingEntry>> mappingsByConcept,
+                                          TaxonomyMetadata metadata,
+                                          Set<String> visited,
+                                          List<String> labels) {
+            for (String label : labels) {
+                if (!visited.add(label)) {
+                    continue;
+                }
+
+                String qname = qname(label);
+                List<MappingEntry> mappedEntries = mappingsByConcept.getOrDefault(normalizeConceptKey(qname), List.of());
+                if (mappedEntries.stream().anyMatch(TaxonomyVisualizationExporter::hasEnumeration)
+                    || metadata.taxonomyEnumerationsByConcept().containsKey(normalizeConceptKey(qname))) {
+                    return true;
+                }
+                if (hasAnyEnumeration(mappingsByConcept, metadata, visited, childLabels(label))) {
                     return true;
                 }
             }

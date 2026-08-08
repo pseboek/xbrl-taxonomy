@@ -1,5 +1,7 @@
 package org.esrs.pipeline.xbrl.fact;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +18,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 class FactBuilderTest {
+        private static final String ENUM_SET_MAPPING_JSON = """
+                {
+                    \"fieldMappings\": {
+                        \"test.multiEnum\": {
+                            \"concept\": \"esrs:AbsoluteOrRelativeTarget\",
+                            \"type\": \"enumeration\",
+                            \"period\": \"duration\",
+                            \"enumerationDomain\": \"esrs:AbsoluteOrRelativeTargetMember\",
+                            \"allowedValues\": [\"esrs:AbsoluteMember\", \"esrs:RelativeMember\", \"esrs:OtherMember\"],
+                            \"dimensions\": []
+                        }
+                    }
+                }
+                """;
+
     @Test
     void shouldNormalizeYesNoEnumerationToBooleanLexicalValues() throws Exception {
         ReportEnvelope envelope = new ReportEnvelope(
@@ -99,5 +116,44 @@ class FactBuilderTest {
         );
 
         assertEquals("Absolute", result.facts().getFirst().value());
+    }
+
+    @Test
+    void shouldNormalizeEnumerationSetToWhitespaceSeparatedLexicalForm() throws Exception {
+        Path mappingFile = Files.createTempFile("factbuilder-enum-set", ".json");
+        Files.writeString(mappingFile, ENUM_SET_MAPPING_JSON, StandardCharsets.UTF_8);
+
+        ReportEnvelope envelope = new ReportEnvelope(
+            new ReportingEntity("scheme", "id", "entity"),
+            new ReportingPeriod(LocalDate.parse("2025-01-01"), LocalDate.parse("2025-12-31"), false),
+            List.of(new DisclosureFact("test.multiEnum", "esrs:AbsoluteMember, esrs:RelativeMember", List.of(), null, null))
+        );
+        MappingRegistry registry = MappingRegistry.fromPath(mappingFile);
+        FactBuilder builder = new FactBuilder();
+
+        FactBuilder.FactBuildResult result = builder.build(
+            envelope,
+            registry,
+            Map.of("test.multiEnum#1", "c1")
+        );
+
+        assertEquals("esrs:AbsoluteMember esrs:RelativeMember", result.facts().getFirst().value());
+    }
+
+    @Test
+    void shouldRejectEnumerationSetContainingInvalidMember() throws Exception {
+        Path mappingFile = Files.createTempFile("factbuilder-enum-set-invalid", ".json");
+        Files.writeString(mappingFile, ENUM_SET_MAPPING_JSON, StandardCharsets.UTF_8);
+
+        ReportEnvelope envelope = new ReportEnvelope(
+            new ReportingEntity("scheme", "id", "entity"),
+            new ReportingPeriod(LocalDate.parse("2025-01-01"), LocalDate.parse("2025-12-31"), false),
+            List.of(new DisclosureFact("test.multiEnum", "esrs:AbsoluteMember, esrs:InvalidMember", List.of(), null, null))
+        );
+        MappingRegistry registry = MappingRegistry.fromPath(mappingFile);
+        FactBuilder builder = new FactBuilder();
+
+        assertThrows(IllegalArgumentException.class,
+            () -> builder.build(envelope, registry, Map.of("test.multiEnum#1", "c1")));
     }
 }
