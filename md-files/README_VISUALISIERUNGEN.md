@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 13 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 14 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -15,6 +15,7 @@ Diese Doku erklaert alle 13 Visualisierungsansichten aus dem Taxonomy Explorer:
 11. Intersection
 12. Validation
 13. Allocation
+14. Stats
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -36,6 +37,7 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-intersection.html
 - taxonomy-visualization-validation.html
 - taxonomy-visualization-allocation.html
+- taxonomy-visualization-stats.html
 
 ## Lesestrategie (allgemein)
 
@@ -238,6 +240,7 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 - Intersection: Wenn du sinnvolle Dimensionskombinationen je Hypercube abschaetzen willst.
 - Validation: Wenn du Regeldateien und ihre Konzeptabhaengigkeiten gezielt analysieren willst.
 - Allocation: Wenn du Template-Zuordnung und Mapping-Abdeckung je Section analysieren willst.
+- Stats: Wenn du die strukturelle Verteilung von Kanten und Knotenhubs pruefen willst.
 
 ---
 
@@ -358,3 +361,21 @@ Wie man sie liest:
 Beispiel:
 
 - Wenn eine Section viele Placeholders hat, aber mehrere Zeilen ohne Konzept zeigt, ist die Template-Integration dort unvollstaendig und sollte vor dem naechsten Reporting-Lauf nachgezogen werden.
+
+## 14) Stats View lesen
+
+Was die Ansicht zeigt:
+
+- Layer-Verteilung (Dateien, Kanten, Anteil je Layer).
+- Top-Knoten nach Grad (in/out/gesamt) aus dem Edge-Sample.
+- Source-only und Target-only Knoten als Strukturhinweis.
+
+Wie man sie liest:
+
+1. Kantenanteile je Layer gegen Erwartung pruefen (z. B. Definition/Presentation-Balance).
+2. Top-Knoten mit hohem Grad als zentrale Hubs betrachten.
+3. Source-only/Target-only als Hinweise fuer Randbereiche interpretieren (Sample-basiert).
+
+Beispiel:
+
+- Ein sehr hoher Degree bei wenigen Knoten weist auf zentrale Drehscheiben hin. Mapping-Aenderungen an diesen Konzepten sollten priorisiert mit End-to-End-Tests abgesichert werden.

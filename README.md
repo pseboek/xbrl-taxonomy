@@ -29,7 +29,8 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 15. `output/taxonomy-visualization-intersection.html` (Intersection View),
 16. `output/taxonomy-visualization-validation.html` (Validation View),
 17. `output/taxonomy-visualization-allocation.html` (Allocation View),
-18. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+18. `output/taxonomy-visualization-stats.html` (Stats View),
+19. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -91,8 +92,9 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-intersection.html` fuer Dimensionspaar-Kombinationen je Hypercube
 - `taxonomy-visualization-validation.html` fuer Rule-Dependency-Analyse (Formula-Dateien -> Konzepte)
 - `taxonomy-visualization-allocation.html` fuer Section-zu-Placeholder-zu-Konzept-Zuordnung
+- `taxonomy-visualization-stats.html` fuer Linkbase-Edge-Statistik und Struktur-Hinweise
 
-Der Explorer enthaelt 13 Ansichten:
+Der Explorer enthaelt 14 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -107,6 +109,7 @@ Der Explorer enthaelt 13 Ansichten:
 11. Intersection: Dimensionspaar-Analyse pro Hypercube (A x B Kombinationen)
 12. Validation: Regelabhaengigkeiten aus Formula-Dateien und Konzept-Mentions
 13. Allocation: Template-/Placeholder-Zuordnung je Section mit Konzeptbezug
+14. Stats: Struktur- und Qualitaetssicht auf Linkbase-Kanten, Top-Knoten und Randknoten
 
 ## Visualisierungen lesen und verstehen
 
@@ -171,6 +174,7 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-intersection.html` — Dimensionspaar-Sicht mit Kombinationen pro Hypercube.
 - `output/taxonomy-visualization-validation.html` — Validation-Rule-Sicht mit Formula-Dateien und referenzierten Konzepten.
 - `output/taxonomy-visualization-allocation.html` — Zuordnungssicht Section -> Placeholder -> Feld -> Konzept.
+- `output/taxonomy-visualization-stats.html` — Statistiksicht auf Layer, Kantenanteile und Knotengrade.
 
 Hinweise:
 

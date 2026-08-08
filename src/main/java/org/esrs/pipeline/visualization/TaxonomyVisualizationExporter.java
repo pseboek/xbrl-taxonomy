@@ -90,6 +90,7 @@ public class TaxonomyVisualizationExporter {
         Path intersectionHtml = outputHtml.resolveSibling(stem + "-intersection.html");
         Path validationHtml = outputHtml.resolveSibling(stem + "-validation.html");
         Path allocationHtml = outputHtml.resolveSibling(stem + "-allocation.html");
+        Path statsHtml = outputHtml.resolveSibling(stem + "-stats.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -104,7 +105,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(intersectionHtml, renderIntersectionHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(validationHtml, renderValidationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(allocationHtml, renderAllocationHtml(layoutSnapshot, mappingsByConcept), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml), StandardCharsets.UTF_8);
+        Files.writeString(statsHtml, renderStatsHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -697,7 +699,8 @@ public class TaxonomyVisualizationExporter {
                                       Path calculationHtml,
                                       Path intersectionHtml,
                                       Path validationHtml,
-                                      Path allocationHtml) {
+                                      Path allocationHtml,
+                                      Path statsHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -723,8 +726,120 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("11. Intersection", fileNameOnly(intersectionHtml), "Kombinationen von Dimensionen je Hypercube"))
             .append(viewCard("12. Validation", fileNameOnly(validationHtml), "Rule-Abhaengigkeiten: Formula-Dateien und referenzierte Konzepte"))
             .append(viewCard("13. Allocation", fileNameOnly(allocationHtml), "Section-zu-Placeholder-zu-Konzept Zuordnung"))
+            .append(viewCard("14. Stats", fileNameOnly(statsHtml), "Linkbase Edge Statistics und Struktur-Hinweise"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderStatsHtml(TaxonomyMetadata metadata) {
+        Map<String, Integer> outDegree = new TreeMap<>();
+        Map<String, Integer> inDegree = new TreeMap<>();
+        Set<String> nodes = new TreeSet<>();
+
+        for (LinkEdge edge : metadata.sampleEdges()) {
+            nodes.add(edge.source());
+            nodes.add(edge.target());
+            outDegree.merge(edge.source(), 1, Integer::sum);
+            inDegree.merge(edge.target(), 1, Integer::sum);
+        }
+
+        List<NodeStatsRow> topDegreeRows = new ArrayList<>();
+        for (String node : nodes) {
+            int out = outDegree.getOrDefault(node, 0);
+            int in = inDegree.getOrDefault(node, 0);
+            topDegreeRows.add(new NodeStatsRow(node, out, in, out + in));
+        }
+        topDegreeRows.sort(Comparator.comparingInt(NodeStatsRow::degree).reversed().thenComparing(NodeStatsRow::node));
+
+        List<NodeStatsRow> sourceOnly = topDegreeRows.stream()
+            .filter(row -> row.outDegree() > 0 && row.inDegree() == 0)
+            .limit(40)
+            .toList();
+        List<NodeStatsRow> targetOnly = topDegreeRows.stream()
+            .filter(row -> row.inDegree() > 0 && row.outDegree() == 0)
+            .limit(40)
+            .toList();
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Stats View: Linkbase Edge Statistics</h1>")
+            .append("<p class=\"lead\">Kompakte Struktur- und Qualitaetssicht auf Layer-Verteilung, Top-Knoten und potenzielle Randknoten aus dem Edge-Sample.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Layer gesamt", metadata.allLayers().size()))
+            .append(summaryCard("Sample-Kanten", metadata.sampleEdges().size()))
+            .append(summaryCard("Sample-Knoten", nodes.size()))
+            .append(summaryCard("Source-only", sourceOnly.size()))
+            .append(summaryCard("Target-only", targetOnly.size()))
+            .append("</div>")
+            .append("<section><h2>Layer-Verteilung</h2><table class=\"layout-table\"><thead><tr><th>Layer</th><th>Dateien</th><th>Kanten</th><th>Anteil Kanten</th></tr></thead><tbody>");
+
+        long totalEdges = metadata.edgeCountByLayer().values().stream().mapToLong(Long::longValue).sum();
+        for (String layer : metadata.allLayers()) {
+            long edgeCount = metadata.edgeCountByLayer().getOrDefault(layer, 0L);
+            long fileCount = metadata.fileCountByLayer().getOrDefault(layer, 0L);
+            String share = totalEdges == 0 ? "0.0%" : String.format(Locale.ROOT, "%.1f%%", (edgeCount * 100.0) / totalEdges);
+            body.append("<tr><td><code>")
+                .append(escapeHtml(layer))
+                .append("</code></td><td>")
+                .append(fileCount)
+                .append("</td><td>")
+                .append(edgeCount)
+                .append("</td><td>")
+                .append(share)
+                .append("</td></tr>");
+        }
+        body.append("</tbody></table></section>")
+            .append("<section><h2>Top-Knoten nach Grad (Sample)</h2><table class=\"layout-table\"><thead><tr><th>Knoten</th><th>Out</th><th>In</th><th>Grad</th></tr></thead><tbody>");
+
+        int topLimit = Math.min(120, topDegreeRows.size());
+        for (int i = 0; i < topLimit; i++) {
+            NodeStatsRow row = topDegreeRows.get(i);
+            body.append("<tr><td><code>")
+                .append(escapeHtml(row.node()))
+                .append("</code></td><td>")
+                .append(row.outDegree())
+                .append("</td><td>")
+                .append(row.inDegree())
+                .append("</td><td>")
+                .append(row.degree())
+                .append("</td></tr>");
+        }
+        if (topDegreeRows.isEmpty()) {
+            body.append("<tr><td colspan=\"4\" class=\"muted\">Keine Knoten im Sample vorhanden.</td></tr>");
+        }
+        body.append("</tbody></table></section>")
+            .append("<section><h2>Struktur-Hinweise (Sample)</h2><div class=\"flow-grid\">")
+            .append(renderNodeBucketCard("Source-only Knoten", sourceOnly))
+            .append(renderNodeBucketCard("Target-only Knoten", targetOnly))
+            .append("</div></section>");
+
+        return renderPage("Stats View", body.toString(), "");
+    }
+
+    private String renderNodeBucketCard(String title, List<NodeStatsRow> rows) {
+        StringBuilder card = new StringBuilder();
+        card.append("<article class=\"flow-step\"><div class=\"title\">")
+            .append(escapeHtml(title))
+            .append("</div><div class=\"muted\">")
+            .append(rows.size())
+            .append(" Knoten</div><div class=\"node-children\">");
+        if (rows.isEmpty()) {
+            card.append("<div class=\"layout-row muted\">Keine Treffer im Sample.</div>");
+        } else {
+            int limit = Math.min(20, rows.size());
+            for (int i = 0; i < limit; i++) {
+                NodeStatsRow row = rows.get(i);
+                card.append("<div class=\"layout-row\"><code>")
+                    .append(escapeHtml(row.node()))
+                    .append("</code></div>");
+            }
+            if (rows.size() > limit) {
+                card.append("<div class=\"layout-row muted\">+")
+                    .append(rows.size() - limit)
+                    .append(" weitere</div>");
+            }
+        }
+        card.append("</div></article>");
+        return card.toString();
     }
 
     private String renderAllocationHtml(LayoutSnapshot layoutSnapshot,
@@ -2831,6 +2946,12 @@ public class TaxonomyVisualizationExporter {
                                  String placeholder,
                                  String field,
                                  String concept) {
+    }
+
+    private record NodeStatsRow(String node,
+                                int outDegree,
+                                int inDegree,
+                                int degree) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,
