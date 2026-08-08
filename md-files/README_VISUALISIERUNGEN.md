@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 15 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 16 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -8,15 +8,16 @@ Diese Doku erklaert alle 15 Visualisierungsansichten aus dem Taxonomy Explorer:
 4. Matrix
 5. Flow
 6. Hypercube
-7. Coverage
-8. Enumeration
-9. Reference
-10. Calculation
-11. Intersection
-12. Validation
-13. Allocation
-14. Stats
-15. Complexity
+7. Hypercube 3D
+8. Coverage
+9. Enumeration
+10. Reference
+11. Calculation
+12. Intersection
+13. Validation
+14. Allocation
+15. Stats
+16. Complexity
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -31,6 +32,7 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-matrix.html
 - taxonomy-visualization-flow.html
 - taxonomy-visualization-hypercube.html
+- taxonomy-visualization-hypercube-3d.html
 - taxonomy-visualization-coverage.html
 - taxonomy-visualization-enumeration.html
 - taxonomy-visualization-reference.html
@@ -235,6 +237,7 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 - Matrix: Wenn du Mapping- und Layout-Abdeckung bewerten willst.
 - Flow: Wenn du Prozess- und Uebergabepunkte analysieren willst.
 - Hypercube: Wenn du Dimensionen, Domains, Members und Kontexte verstehen willst.
+- Hypercube 3D: Wenn du Hypercubes und Dimensionen raeumlich erkunden und interaktiv zoomen willst.
 - Coverage: Wenn du Vollstaendigkeit und Luecken im Mapping/Layout schnell sehen willst.
 - Enumeration: Wenn du erlaubte Werte, Domains und enum2-Hinweise pro Konzept pruefen willst.
 - Reference: Wenn du Normnachweise je Konzept (ESRS/Regulation) nachvollziehen willst.
@@ -247,7 +250,24 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 
 ---
 
-## 7) Coverage View lesen
+## 7) Hypercube 3D View lesen
+
+Was die Ansicht zeigt:
+
+- Interaktive 3D-Szene aus Hypercube-Kernen und Dimension-Punkten.
+- Dimensionen werden je Hypercube als umliegende Knoten mit Domain-/Member-Gewichtung dargestellt.
+
+Wie man sie liest:
+
+1. Zuerst Hypercube anklicken und in der Info-Box Dimensionen, Domains und Members vergleichen.
+2. Dann einzelne Dimensionsknoten anklicken, um Details zu Domains/Defaults zu sehen.
+3. Mit Suche auf Hypercube oder Dimensionsnamen filtern, dann Kamera auf Auswahl fokussieren.
+
+Beispiel:
+
+- Ein Hypercube mit vielen Dimensionsknoten und hoher Member-Zahl ist meist modellseitig komplexer und sollte bei Release-Tests priorisiert geprueft werden.
+
+## 8) Coverage View lesen
 
 Was die Ansicht zeigt:
 
@@ -263,7 +283,7 @@ Beispiel:
 
 - Ein Konzept mit Mapping = ja, Layout = nein ist fachlich vorbereitet, aber im Berichtstemplate noch nicht sichtbar.
 
-## 8) Enumeration View lesen
+## 9) Enumeration View lesen
 
 Was die Ansicht zeigt:
 
@@ -279,7 +299,7 @@ Beispiel:
 
 - Wenn Mapping-Domain gesetzt ist, aber keine Allowed Values gepflegt sind, sollte die Feldvalidierung ergaenzt werden.
 
-## 9) Reference View lesen
+## 10) Reference View lesen
 
 Was die Ansicht zeigt:
 
@@ -296,7 +316,7 @@ Beispiel:
 
 - Wenn ein Konzept mehrere Referenzen traegt, ist es fachlich in mehreren Offenlegungskontexten relevant und sollte bei Scope-Aenderungen priorisiert getestet werden.
 
-## 10) Calculation View lesen
+## 11) Calculation View lesen
 
 Was die Ansicht zeigt:
 
@@ -314,7 +334,7 @@ Beispiel:
 
 - Ein Konzept mit hoher Degree-Zahl und vielen Formula-Mentions ist ein Hotspot. Aenderungen dort koennen sowohl Aggregationen als auch Formellogik beeinflussen.
 
-## 11) Intersection View lesen
+## 12) Intersection View lesen
 
 Was die Ansicht zeigt:
 
@@ -331,7 +351,7 @@ Beispiel:
 
 - Wenn ein Hypercube bei ScopeAxis x GeographyAxis eine hohe Kombinationszahl zeigt, sollte fuer jede relevante Region/Scope-Kombination mindestens ein Plausibilitaetstest vorgesehen werden.
 
-## 12) Validation View lesen
+## 13) Validation View lesen
 
 Was die Ansicht zeigt:
 
@@ -348,7 +368,7 @@ Beispiel:
 
 - Wenn ein Konzept in vielen Formula-Dateien auftaucht, ist es ein starker Validierungs-Hotspot. Aenderungen sollten mit erweiterten Tests gegen mehrere Disclosure-Kontexte abgesichert werden.
 
-## 13) Allocation View lesen
+## 14) Allocation View lesen
 
 Was die Ansicht zeigt:
 
@@ -365,7 +385,7 @@ Beispiel:
 
 - Wenn eine Section viele Placeholders hat, aber mehrere Zeilen ohne Konzept zeigt, ist die Template-Integration dort unvollstaendig und sollte vor dem naechsten Reporting-Lauf nachgezogen werden.
 
-## 14) Stats View lesen
+## 15) Stats View lesen
 
 Was die Ansicht zeigt:
 
@@ -383,7 +403,7 @@ Beispiel:
 
 - Ein sehr hoher Degree bei wenigen Knoten weist auf zentrale Drehscheiben hin. Mapping-Aenderungen an diesen Konzepten sollten priorisiert mit End-to-End-Tests abgesichert werden.
 
-## 15) Complexity View lesen
+## 16) Complexity View lesen
 
 Was die Ansicht zeigt:
 

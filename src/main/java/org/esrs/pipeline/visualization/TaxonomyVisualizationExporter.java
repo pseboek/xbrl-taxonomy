@@ -83,6 +83,7 @@ public class TaxonomyVisualizationExporter {
         Path matrixHtml = outputHtml.resolveSibling(stem + "-matrix.html");
         Path flowHtml = outputHtml.resolveSibling(stem + "-flow.html");
         Path hypercubeHtml = outputHtml.resolveSibling(stem + "-hypercube.html");
+        Path hypercube3dHtml = outputHtml.resolveSibling(stem + "-hypercube-3d.html");
         Path coverageHtml = outputHtml.resolveSibling(stem + "-coverage.html");
         Path enumerationHtml = outputHtml.resolveSibling(stem + "-enumeration.html");
         Path referenceHtml = outputHtml.resolveSibling(stem + "-reference.html");
@@ -99,6 +100,7 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(matrixHtml, renderMatrixHtml(mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(flowHtml, renderFlowHtml(forest, metadata, mappingsByConcept, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(hypercubeHtml, renderHypercubeHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(hypercube3dHtml, renderHypercube3dHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(coverageHtml, renderCoverageHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
         Files.writeString(enumerationHtml, renderEnumerationHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
         Files.writeString(referenceHtml, renderReferenceHtml(mappingsByConcept, placeholdersByField, conceptReferences), StandardCharsets.UTF_8);
@@ -108,7 +110,7 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(allocationHtml, renderAllocationHtml(layoutSnapshot, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(statsHtml, renderStatsHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(complexityHtml, renderComplexityHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -695,6 +697,7 @@ public class TaxonomyVisualizationExporter {
                                       Path matrixHtml,
                                       Path flowHtml,
                                       Path hypercubeHtml,
+                                      Path hypercube3dHtml,
                                       Path coverageHtml,
                                       Path enumerationHtml,
                                       Path referenceHtml,
@@ -722,18 +725,470 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("4. Matrix", fileNameOnly(matrixHtml), "Konzeptindex und Layout-Zuordnung"))
             .append(viewCard("5. Flow", fileNameOnly(flowHtml), "Reporting-Flow von Input bis Disclosure"))
             .append(viewCard("6. Hypercube", fileNameOnly(hypercubeHtml), "Dimensionale Struktur mit Hypercubes, Achsen, Domains und Members"))
-            .append(viewCard("7. Coverage", fileNameOnly(coverageHtml), "Abdeckung: Mapping, Layout, Enumeration und Dimensionen"))
-            .append(viewCard("8. Enumeration", fileNameOnly(enumerationHtml), "Enumeration-Domaenen, Allowed Values und Taxonomie-Hinweise"))
-            .append(viewCard("9. Reference", fileNameOnly(referenceHtml), "Konzept-zu-ESRS-Referenznachweise (Traceability)"))
-            .append(viewCard("10. Calculation", fileNameOnly(calculationHtml), "Calculation- und Formula-Abhaengigkeiten (Sample + Impact)"))
-            .append(viewCard("11. Intersection", fileNameOnly(intersectionHtml), "Kombinationen von Dimensionen je Hypercube"))
-            .append(viewCard("12. Validation", fileNameOnly(validationHtml), "Rule-Abhaengigkeiten: Formula-Dateien und referenzierte Konzepte"))
-            .append(viewCard("13. Allocation", fileNameOnly(allocationHtml), "Section-zu-Placeholder-zu-Konzept Zuordnung"))
-            .append(viewCard("14. Stats", fileNameOnly(statsHtml), "Linkbase Edge Statistics und Struktur-Hinweise"))
-            .append(viewCard("15. Complexity", fileNameOnly(complexityHtml), "Komplexitaetsindikatoren je Konzept"))
+                        .append(viewCard("7. Hypercube 3D", fileNameOnly(hypercube3dHtml), "Raeumliche Navigation durch Cube-, Dimension- und Member-Strukturen"))
+                        .append(viewCard("8. Coverage", fileNameOnly(coverageHtml), "Abdeckung: Mapping, Layout, Enumeration und Dimensionen"))
+                        .append(viewCard("9. Enumeration", fileNameOnly(enumerationHtml), "Enumeration-Domaenen, Allowed Values und Taxonomie-Hinweise"))
+                        .append(viewCard("10. Reference", fileNameOnly(referenceHtml), "Konzept-zu-ESRS-Referenznachweise (Traceability)"))
+                        .append(viewCard("11. Calculation", fileNameOnly(calculationHtml), "Calculation- und Formula-Abhaengigkeiten (Sample + Impact)"))
+                        .append(viewCard("12. Intersection", fileNameOnly(intersectionHtml), "Kombinationen von Dimensionen je Hypercube"))
+                        .append(viewCard("13. Validation", fileNameOnly(validationHtml), "Rule-Abhaengigkeiten: Formula-Dateien und referenzierte Konzepte"))
+                        .append(viewCard("14. Allocation", fileNameOnly(allocationHtml), "Section-zu-Placeholder-zu-Konzept Zuordnung"))
+                        .append(viewCard("15. Stats", fileNameOnly(statsHtml), "Linkbase Edge Statistics und Struktur-Hinweise"))
+                        .append(viewCard("16. Complexity", fileNameOnly(complexityHtml), "Komplexitaetsindikatoren je Konzept"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
     }
+
+        private String renderHypercube3dHtml(TaxonomyMetadata metadata) {
+                HypercubeMetadata hypercubeMetadata = metadata.hypercubeMetadata();
+                List<HypercubeCube> cubes = hypercubeMetadata.cubes();
+
+                StringBuilder cubesJson = new StringBuilder("[");
+                for (int cubeIndex = 0; cubeIndex < cubes.size(); cubeIndex++) {
+                        HypercubeCube cube = cubes.get(cubeIndex);
+                        if (cubeIndex > 0) {
+                                cubesJson.append(',');
+                        }
+
+                        int primaryBindings = cube.primaryItemsAll().size() + cube.primaryItemsNotAll().size();
+                        int totalDefaults = 0;
+                        int totalDomains = 0;
+                        int totalMembers = 0;
+
+                        cubesJson.append("{id:\"")
+                                .append(escapeJs(cube.cube()))
+                                .append("\",primaryBindings:")
+                                .append(primaryBindings)
+                                .append(",dimensions:[");
+
+                        List<String> dimensions = cube.dimensions();
+                        for (int dimensionIndex = 0; dimensionIndex < dimensions.size(); dimensionIndex++) {
+                                String dimension = dimensions.get(dimensionIndex);
+                                if (dimensionIndex > 0) {
+                                        cubesJson.append(',');
+                                }
+
+                                List<String> domains = cube.domainsPerDimension().getOrDefault(dimension, List.of());
+                                List<String> defaults = cube.defaultsPerDimension().getOrDefault(dimension, List.of());
+                                int memberCount = 0;
+                                for (String domain : domains) {
+                                        memberCount += cube.membersPerDomain().getOrDefault(domain, List.of()).size();
+                                }
+
+                                totalDefaults += defaults.size();
+                                totalDomains += domains.size();
+                                totalMembers += memberCount;
+
+                                cubesJson.append("{id:\"")
+                                        .append(escapeJs(dimension))
+                                        .append("\",domains:")
+                                        .append(domains.size())
+                                        .append(",members:")
+                                        .append(memberCount)
+                                        .append(",defaults:")
+                                        .append(defaults.size())
+                                        .append("}");
+                        }
+
+                        cubesJson.append("],totalDomains:")
+                                .append(totalDomains)
+                                .append(",totalMembers:")
+                                .append(totalMembers)
+                                .append(",totalDefaults:")
+                                .append(totalDefaults)
+                                .append("}");
+                }
+                cubesJson.append(']');
+
+                StringBuilder body = new StringBuilder();
+                body.append("<h1>Hypercube 3D View: Raumstruktur der Dimensionen</h1>")
+                        .append("<p class=\"lead\">Interaktive 3D-Ansicht mit Zoom, Pan und Orbit. Die Stage nutzt die volle verfuegbare Breite und eine 1440px-optimierte Hoehe fuer 2560x1440-Monitore.</p>")
+                        .append("<div class=\"summary\">")
+                        .append(summaryCard("Hypercubes", hypercubeMetadata.cubes().size()))
+                        .append(summaryCard("Dimensionen", hypercubeMetadata.cubes().stream().mapToInt(c -> c.dimensions().size()).sum()))
+                        .append(summaryCard("Dimensionale Relationen", hypercubeMetadata.relationCount()))
+                        .append("</div>")
+                        .append("<div class=\"toolbar\">")
+                        .append("<button type=\"button\" onclick=\"resetCamera()\">Kamera reset</button>")
+                        .append("<button type=\"button\" class=\"secondary\" onclick=\"fitToSelection()\">Auswahl fokussieren</button>")
+                        .append("<button type=\"button\" class=\"secondary\" onclick=\"toggleFullscreen()\">Fullscreen</button>")
+                        .append("<input id=\"cubeSearch\" type=\"search\" placeholder=\"Hypercube oder Dimension suchen...\" oninput=\"applyCubeFilter()\">")
+                        .append("</div>")
+                        .append("<section><h2>3D Stage</h2><div id=\"hypercube3dStage\" class=\"hypercube-3d-stage\"><canvas id=\"hypercube3dCanvas\"></canvas><div id=\"hypercube3dTooltip\" class=\"hypercube-3d-tooltip\" hidden></div></div>")
+                        .append("<div id=\"hypercube3dInfo\" class=\"node-info\">Objekt anklicken fuer Details. Maus: Linke Taste orbit, rechte Taste pan, Scroll zoom.</div></section>")
+                        .append("<section><h2>Top Hypercubes nach Member-Anzahl</h2><table class=\"layout-table\"><thead><tr><th>Hypercube</th><th>Dimensionen</th><th>Domains</th><th>Members</th><th>Defaults</th><th>Primary-Bindings</th></tr></thead><tbody id=\"hypercube3dTable\"></tbody></table></section>");
+
+                String scriptTemplate = """
+                        <style>
+                        main{max-width:none;padding:16px 16px 28px;}
+                        .hypercube-3d-stage{position:relative;width:100%;height:min(1440px,calc(100vh - 140px));min-height:740px;background:radial-gradient(circle at 20% 10%,#13263f 0%,#0c1a2c 52%,#050a12 100%);border:1px solid #1b3b5f;border-radius:16px;overflow:hidden;}
+                        #hypercube3dCanvas{width:100%;height:100%;display:block;}
+                        .hypercube-3d-tooltip{position:absolute;pointer-events:none;background:rgba(8,18,30,.94);color:#e8f2ff;border:1px solid #2f5f8f;border-radius:10px;padding:8px 10px;max-width:360px;font-size:.9rem;line-height:1.35;box-shadow:0 8px 20px rgba(0,0,0,.35);z-index:20;}
+                        @media (max-width: 1400px){
+                            .hypercube-3d-stage{height:min(1080px,calc(100vh - 130px));min-height:620px;}
+                        }
+                        </style>
+                        <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+                        <script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+                        <script>
+                        const hypercubeData=__HYPERCUBE_DATA__;
+                        const stage=document.getElementById('hypercube3dStage');
+                        const canvas=document.getElementById('hypercube3dCanvas');
+                        const tooltip=document.getElementById('hypercube3dTooltip');
+                        const info=document.getElementById('hypercube3dInfo');
+                        const tableBody=document.getElementById('hypercube3dTable');
+
+                        let scene,camera,renderer,controls,raycaster;
+                        const pointer=new THREE.Vector2();
+                        const pickables=[];
+                        const cubeGroups=[];
+                        let hovered=null;
+                        let selected=null;
+
+                        function qualityRatio(){
+                            const ratio=window.devicePixelRatio||1;
+                            return Math.min(3,Math.max(1.25,ratio));
+                        }
+
+                        function initScene(){
+                            if(typeof THREE==='undefined' || !THREE.OrbitControls){
+                                info.textContent='Three.js konnte nicht geladen werden. Bitte Internetzugang oder lokales Bundle pruefen.';
+                                return;
+                            }
+
+                            scene=new THREE.Scene();
+                            scene.background=new THREE.Color(0x070f18);
+                            scene.fog=new THREE.Fog(0x070f18,280,1200);
+
+                            const width=stage.clientWidth;
+                            const height=stage.clientHeight;
+                            camera=new THREE.PerspectiveCamera(52,width/Math.max(1,height),0.1,4200);
+                            camera.position.set(210,160,260);
+
+                            renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+                            renderer.setPixelRatio(qualityRatio());
+                            renderer.setSize(width,height,false);
+                            renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+                            controls=new THREE.OrbitControls(camera,renderer.domElement);
+                            controls.enableDamping=true;
+                            controls.dampingFactor=0.045;
+                            controls.target.set(0,0,0);
+                            controls.minDistance=40;
+                            controls.maxDistance=1400;
+
+                            raycaster=new THREE.Raycaster();
+
+                            addLights();
+                            addReferenceGrid();
+                            buildCubeScene(hypercubeData);
+                            fillCubeTable(hypercubeData);
+
+                            renderer.domElement.addEventListener('mousemove',onPointerMove);
+                            renderer.domElement.addEventListener('mouseleave',onPointerLeave);
+                            renderer.domElement.addEventListener('click',onPointerClick);
+                            window.addEventListener('resize',resizeScene);
+
+                            animate();
+                        }
+
+                        function addLights(){
+                            const hemi=new THREE.HemisphereLight(0xc5ddff,0x101820,0.85);
+                            scene.add(hemi);
+
+                            const dirA=new THREE.DirectionalLight(0xffffff,0.8);
+                            dirA.position.set(180,220,140);
+                            scene.add(dirA);
+
+                            const dirB=new THREE.DirectionalLight(0x89b7ff,0.55);
+                            dirB.position.set(-160,120,-180);
+                            scene.add(dirB);
+                        }
+
+                        function addReferenceGrid(){
+                            const grid=new THREE.GridHelper(1200,28,0x2b4f72,0x1c3148);
+                            grid.position.y=-38;
+                            scene.add(grid);
+                        }
+
+                        function buildCubeScene(cubes){
+                            if(!Array.isArray(cubes) || cubes.length===0){
+                                info.textContent='Keine Hypercube-Daten verfuegbar.';
+                                return;
+                            }
+
+                            const columns=Math.max(1,Math.ceil(Math.sqrt(cubes.length)));
+                            const spacing=128;
+                            const startX=-((columns-1)*spacing)/2;
+                            const startZ=-((Math.ceil(cubes.length/columns)-1)*spacing)/2;
+
+                            cubes.forEach((cube,cubeIndex)=>{
+                                const row=Math.floor(cubeIndex/columns);
+                                const col=cubeIndex%columns;
+                                const center=new THREE.Vector3(startX+col*spacing,0,startZ+row*spacing);
+
+                                const group=new THREE.Group();
+                                group.position.copy(center);
+                                scene.add(group);
+
+                                const dimCount=Math.max(1,(cube.dimensions||[]).length);
+                                const size=Math.min(52,20+dimCount*2.8);
+                                const cubeGeometry=new THREE.BoxGeometry(size,size,size);
+                                const cubeMaterial=new THREE.MeshPhysicalMaterial({
+                                    color:0x1d5ea8,
+                                    emissive:0x10233a,
+                                    roughness:0.38,
+                                    metalness:0.18,
+                                    transmission:0.12,
+                                    transparent:true,
+                                    opacity:0.88
+                                });
+                                const cubeMesh=new THREE.Mesh(cubeGeometry,cubeMaterial);
+                                cubeMesh.userData={type:'cube',cube};
+                                group.add(cubeMesh);
+                                pickables.push(cubeMesh);
+
+                                const edgeLine=new THREE.LineSegments(
+                                    new THREE.EdgesGeometry(cubeGeometry),
+                                    new THREE.LineBasicMaterial({color:0x8dc3ff,transparent:true,opacity:0.75})
+                                );
+                                group.add(edgeLine);
+
+                                const axisRadius=Math.max(30,size*1.2);
+                                (cube.dimensions||[]).forEach((dimension,dimIndex)=>{
+                                    const angle=(Math.PI*2*dimIndex)/Math.max(1,dimCount);
+                                      const level=((dimIndex%3)-1)*16;
+                                    const radialBoost=Math.min(34,dimension.members*0.55+dimension.domains*2.2);
+                                    const orbit=axisRadius+radialBoost;
+
+                                    const x=Math.cos(angle)*orbit;
+                                    const y=level;
+                                    const z=Math.sin(angle)*orbit;
+
+                                    const lineGeometry=new THREE.BufferGeometry().setFromPoints([
+                                        new THREE.Vector3(0,0,0),
+                                        new THREE.Vector3(x,y,z)
+                                    ]);
+                                    const lineMaterial=new THREE.LineBasicMaterial({color:0x6fa2d4,transparent:true,opacity:0.58});
+                                    const line=new THREE.Line(lineGeometry,lineMaterial);
+                                    group.add(line);
+
+                                    const sphereSize=Math.max(2.8,Math.min(14,3.2+dimension.domains*0.65+dimension.members*0.09));
+                                    const sphereGeometry=new THREE.SphereGeometry(sphereSize,20,20);
+                                    const sphereMaterial=new THREE.MeshStandardMaterial({
+                                        color:dimension.defaults>0?0xf3c06c:0x6fd1b8,
+                                        emissive:dimension.defaults>0?0x5a2f00:0x0f3e33,
+                                        roughness:0.45,
+                                        metalness:0.12
+                                    });
+                                    const sphere=new THREE.Mesh(sphereGeometry,sphereMaterial);
+                                    sphere.position.set(x,y,z);
+                                    sphere.userData={type:'dimension',cube,dimension};
+                                    group.add(sphere);
+                                    pickables.push(sphere);
+                                });
+
+                                cubeGroups.push({cube,group,cubeMesh});
+                            });
+
+                            resetCamera();
+                        }
+
+                        function fillCubeTable(cubes){
+                            const sorted=[...(cubes||[])].sort((a,b)=>b.totalMembers-a.totalMembers).slice(0,120);
+                            if(sorted.length===0){
+                                tableBody.innerHTML='<tr><td colspan="6" class="muted">Keine Hypercubes gefunden.</td></tr>';
+                                return;
+                            }
+                            tableBody.innerHTML=sorted.map(cube=>{
+                                return '<tr>'
+                                    + '<td><code>'+escapeHtml(cube.id)+'</code></td>'
+                                    + '<td>'+((cube.dimensions||[]).length)+'</td>'
+                                    + '<td>'+cube.totalDomains+'</td>'
+                                    + '<td>'+cube.totalMembers+'</td>'
+                                    + '<td>'+cube.totalDefaults+'</td>'
+                                    + '<td>'+cube.primaryBindings+'</td>'
+                                    + '</tr>';
+                            }).join('');
+                        }
+
+                        function resizeScene(){
+                            if(!renderer||!camera){
+                                return;
+                            }
+                            const width=stage.clientWidth;
+                            const height=stage.clientHeight;
+                            renderer.setPixelRatio(qualityRatio());
+                            renderer.setSize(width,height,false);
+                            camera.aspect=width/Math.max(1,height);
+                            camera.updateProjectionMatrix();
+                        }
+
+                        function animate(){
+                            requestAnimationFrame(animate);
+                            if(controls){
+                                controls.update();
+                            }
+                            if(renderer&&scene&&camera){
+                                renderer.render(scene,camera);
+                            }
+                        }
+
+                        function onPointerMove(event){
+                            if(!renderer||!camera||!raycaster){
+                                return;
+                            }
+                            const rect=renderer.domElement.getBoundingClientRect();
+                            pointer.x=((event.clientX-rect.left)/rect.width)*2-1;
+                            pointer.y=-((event.clientY-rect.top)/rect.height)*2+1;
+
+                            raycaster.setFromCamera(pointer,camera);
+                            const hits=raycaster.intersectObjects(pickables,false);
+                            hovered=hits.length?hits[0].object:null;
+                            if(!hovered){
+                                tooltip.hidden=true;
+                                return;
+                            }
+
+                            tooltip.hidden=false;
+                            tooltip.style.left=Math.min(rect.width-16,event.clientX-rect.left+14)+'px';
+                            tooltip.style.top=Math.min(rect.height-16,event.clientY-rect.top+14)+'px';
+                            tooltip.innerHTML=tooltipText(hovered.userData);
+                        }
+
+                        function onPointerLeave(){
+                            hovered=null;
+                            tooltip.hidden=true;
+                        }
+
+                        function onPointerClick(){
+                            if(!hovered){
+                                return;
+                            }
+                            selected=hovered;
+                            highlightSelection();
+                            const data=hovered.userData||{};
+                            if(data.type==='cube'){
+                                info.innerHTML='<strong>Hypercube:</strong> <code>'+escapeHtml(data.cube.id)+'</code>'
+                                    + '<div class="neighbor-list">'
+                                    + '<div>Dimensionen: '+(data.cube.dimensions||[]).length+'</div>'
+                                    + '<div>Domains: '+data.cube.totalDomains+'</div>'
+                                    + '<div>Members: '+data.cube.totalMembers+'</div>'
+                                    + '<div>Defaults: '+data.cube.totalDefaults+'</div>'
+                                    + '<div>Primary-Bindings: '+data.cube.primaryBindings+'</div>'
+                                    + '</div>';
+                            } else if(data.type==='dimension'){
+                                info.innerHTML='<strong>Dimension:</strong> <code>'+escapeHtml(data.dimension.id)+'</code>'
+                                    + '<div class="neighbor-list">'
+                                    + '<div>Hypercube: <code>'+escapeHtml(data.cube.id)+'</code></div>'
+                                    + '<div>Domains: '+data.dimension.domains+'</div>'
+                                    + '<div>Members: '+data.dimension.members+'</div>'
+                                    + '<div>Defaults: '+data.dimension.defaults+'</div>'
+                                    + '</div>';
+                            }
+                        }
+
+                        function tooltipText(data){
+                            if(!data){
+                                return '';
+                            }
+                            if(data.type==='cube'){
+                                return '<strong>Hypercube</strong><br><code>'+escapeHtml(data.cube.id)+'</code>'
+                                    + '<br>Dimensionen: '+(data.cube.dimensions||[]).length
+                                    + '<br>Members: '+data.cube.totalMembers;
+                            }
+                            if(data.type==='dimension'){
+                                return '<strong>Dimension</strong><br><code>'+escapeHtml(data.dimension.id)+'</code>'
+                                    + '<br>Cube: <code>'+escapeHtml(data.cube.id)+'</code>'
+                                    + '<br>Domains: '+data.dimension.domains
+                                    + '<br>Members: '+data.dimension.members
+                                    + '<br>Defaults: '+data.dimension.defaults;
+                            }
+                            return '';
+                        }
+
+                        function highlightSelection(){
+                            cubeGroups.forEach(item=>{
+                                item.cubeMesh.material.emissive.setHex(0x10233a);
+                                item.cubeMesh.material.opacity=0.82;
+                            });
+                            pickables.forEach(object=>{
+                                if(object.material && object.material.emissive){
+                                    object.material.emissiveIntensity=0.9;
+                                }
+                            });
+
+                            if(!selected || !selected.userData){
+                                return;
+                            }
+
+                            const data=selected.userData;
+                            if(data.type==='cube'){
+                                selected.material.emissive.setHex(0x1f8fff);
+                                selected.material.opacity=1;
+                            }
+                            if(data.type==='dimension'){
+                                selected.material.emissive.setHex(0xff8f1f);
+                                selected.material.emissiveIntensity=1.2;
+                            }
+                        }
+
+                        function resetCamera(){
+                            if(!camera||!controls){
+                                return;
+                            }
+                            camera.position.set(210,160,260);
+                            controls.target.set(0,0,0);
+                            controls.update();
+                        }
+
+                        function fitToSelection(){
+                            if(!selected||!camera||!controls){
+                                return;
+                            }
+                            const worldPos=new THREE.Vector3();
+                            selected.getWorldPosition(worldPos);
+                            controls.target.copy(worldPos);
+                            const offset=selected.userData&&selected.userData.type==='dimension'?46:72;
+                            camera.position.set(worldPos.x+offset,worldPos.y+offset*0.75,worldPos.z+offset);
+                            controls.update();
+                        }
+
+                        function applyCubeFilter(){
+                            const query=(document.getElementById('cubeSearch').value||'').toLowerCase().trim();
+                            cubeGroups.forEach(item=>{
+                                const cubeId=(item.cube.id||'').toLowerCase();
+                                const dimText=(item.cube.dimensions||[]).map(d=>d.id||'').join(' ').toLowerCase();
+                                const visible=!query||cubeId.includes(query)||dimText.includes(query);
+                                item.group.visible=visible;
+                            });
+                        }
+
+                        function toggleFullscreen(){
+                            if(!document.fullscreenElement){
+                                stage.requestFullscreen?.();
+                            } else {
+                                document.exitFullscreen?.();
+                            }
+                        }
+
+                        function escapeHtml(value){
+                            return String(value||'')
+                                .replaceAll('&','&amp;')
+                                .replaceAll('<','&lt;')
+                                .replaceAll('>','&gt;')
+                                .replaceAll('"','&quot;')
+                                .replaceAll("'",'&#39;');
+                        }
+
+                        initScene();
+                        </script>
+                        """;
+
+                    String script = scriptTemplate.replace("__HYPERCUBE_DATA__", cubesJson.toString());
+
+                return renderPage("Hypercube 3D View", body.toString(), script);
+        }
 
     private String renderComplexityHtml(TaxonomyMetadata metadata,
                                         Map<String, List<MappingEntry>> mappingsByConcept) {

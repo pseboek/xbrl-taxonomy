@@ -22,16 +22,17 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 8. `output/taxonomy-visualization-matrix.html` (Matrix View),
 9. `output/taxonomy-visualization-flow.html` (Flow View),
 10. `output/taxonomy-visualization-hypercube.html` (Hypercube View),
-11. `output/taxonomy-visualization-coverage.html` (Coverage View),
-12. `output/taxonomy-visualization-enumeration.html` (Enumeration View),
-13. `output/taxonomy-visualization-reference.html` (Reference View),
-14. `output/taxonomy-visualization-calculation.html` (Calculation View),
-15. `output/taxonomy-visualization-intersection.html` (Intersection View),
-16. `output/taxonomy-visualization-validation.html` (Validation View),
-17. `output/taxonomy-visualization-allocation.html` (Allocation View),
-18. `output/taxonomy-visualization-stats.html` (Stats View),
-19. `output/taxonomy-visualization-complexity.html` (Complexity View),
-20. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+11. `output/taxonomy-visualization-hypercube-3d.html` (Hypercube 3D View),
+12. `output/taxonomy-visualization-coverage.html` (Coverage View),
+13. `output/taxonomy-visualization-enumeration.html` (Enumeration View),
+14. `output/taxonomy-visualization-reference.html` (Reference View),
+15. `output/taxonomy-visualization-calculation.html` (Calculation View),
+16. `output/taxonomy-visualization-intersection.html` (Intersection View),
+17. `output/taxonomy-visualization-validation.html` (Validation View),
+18. `output/taxonomy-visualization-allocation.html` (Allocation View),
+19. `output/taxonomy-visualization-stats.html` (Stats View),
+20. `output/taxonomy-visualization-complexity.html` (Complexity View),
+21. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -86,6 +87,7 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-matrix.html` fuer Konzept- und Mapping-Analyse
 - `taxonomy-visualization-flow.html` fuer die Prozess-/Journey-Sicht
 - `taxonomy-visualization-hypercube.html` fuer dimensionale Analyse (Hypercubes, Achsen, Domains, Member)
+- `taxonomy-visualization-hypercube-3d.html` fuer interaktive 3D-Navigation durch Hypercubes und Dimensionen
 - `taxonomy-visualization-coverage.html` fuer Abdeckungsanalyse (Mapping/Layout/Enumeration/Dimensionen)
 - `taxonomy-visualization-enumeration.html` fuer Enumeration-Domaenen und Allowed Values
 - `taxonomy-visualization-reference.html` fuer Konzept-zu-ESRS-Referenzen (Traceability)
@@ -96,7 +98,7 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-stats.html` fuer Linkbase-Edge-Statistik und Struktur-Hinweise
 - `taxonomy-visualization-complexity.html` fuer gewichtete Komplexitaetsanalyse je Konzept
 
-Der Explorer enthaelt 15 Ansichten:
+Der Explorer enthaelt 16 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -104,15 +106,16 @@ Der Explorer enthaelt 15 Ansichten:
 4. Matrix: Konzeptindex + Layout-Zuordnung
 5. Flow: Reporting-Flow von Datensammlung bis Disclosure
 6. Hypercube: Dimensionale Struktur (all/notAll, Dimensionen, Domains, Member)
-7. Coverage: Abdeckungsanalyse je Konzept (Mapping/Layout/Enumeration/Dimensionen)
-8. Enumeration: Browser fuer Domains, Allowed Values und Taxonomie-Infos (enum2:item/set)
-9. Reference: Traceability von Konzepten zu ESRS-/Regulations-Referenzen
-10. Calculation: Impact-Analyse fuer Calculation-Kanten und Formula-Konzeptverwendungen
-11. Intersection: Dimensionspaar-Analyse pro Hypercube (A x B Kombinationen)
-12. Validation: Regelabhaengigkeiten aus Formula-Dateien und Konzept-Mentions
-13. Allocation: Template-/Placeholder-Zuordnung je Section mit Konzeptbezug
-14. Stats: Struktur- und Qualitaetssicht auf Linkbase-Kanten, Top-Knoten und Randknoten
-15. Complexity: Scoring fuer Konzeptkomplexitaet (Dimensionen, Enumeration, Calculation, Formula)
+7. Hypercube 3D: Raeumliche Navigation mit Zoom/Orbit und Interaktionsdetails
+8. Coverage: Abdeckungsanalyse je Konzept (Mapping/Layout/Enumeration/Dimensionen)
+9. Enumeration: Browser fuer Domains, Allowed Values und Taxonomie-Infos (enum2:item/set)
+10. Reference: Traceability von Konzepten zu ESRS-/Regulations-Referenzen
+11. Calculation: Impact-Analyse fuer Calculation-Kanten und Formula-Konzeptverwendungen
+12. Intersection: Dimensionspaar-Analyse pro Hypercube (A x B Kombinationen)
+13. Validation: Regelabhaengigkeiten aus Formula-Dateien und Konzept-Mentions
+14. Allocation: Template-/Placeholder-Zuordnung je Section mit Konzeptbezug
+15. Stats: Struktur- und Qualitaetssicht auf Linkbase-Kanten, Top-Knoten und Randknoten
+16. Complexity: Scoring fuer Konzeptkomplexitaet (Dimensionen, Enumeration, Calculation, Formula)
 
 ## Visualisierungen lesen und verstehen
 
@@ -170,6 +173,7 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-matrix.html` — analytische Matrixsicht für Konzepte und Mapping.
 - `output/taxonomy-visualization-flow.html` — Prozesssicht entlang des Reporting-Flows.
 - `output/taxonomy-visualization-hypercube.html` — Dimensionensicht mit Hypercubes, Achsen, Domains, Default-Members und Domain-Members.
+- `output/taxonomy-visualization-hypercube-3d.html` — interaktive 3D-Dimensionensicht mit voller Stage-Breite, Orbit und Fokus auf Cube/Dimension.
 - `output/taxonomy-visualization-coverage.html` — Abdeckungssicht je Konzept (Layout/Enumeration/Dimensionen).
 - `output/taxonomy-visualization-enumeration.html` — Enumeration-Sicht mit Domain-/Allowed-Value-Informationen.
 - `output/taxonomy-visualization-reference.html` — Referenzsicht fuer Konzept-zu-Norm-Traceability.

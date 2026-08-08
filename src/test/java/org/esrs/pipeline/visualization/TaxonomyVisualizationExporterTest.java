@@ -21,6 +21,7 @@ class TaxonomyVisualizationExporterTest {
         Path matrixHtml = outputDir.resolve("taxonomy-visualization-matrix.html");
         Path flowHtml = outputDir.resolve("taxonomy-visualization-flow.html");
         Path hypercubeHtml = outputDir.resolve("taxonomy-visualization-hypercube.html");
+        Path hypercube3dHtml = outputDir.resolve("taxonomy-visualization-hypercube-3d.html");
         Path coverageHtml = outputDir.resolve("taxonomy-visualization-coverage.html");
         Path enumerationHtml = outputDir.resolve("taxonomy-visualization-enumeration.html");
         Path referenceHtml = outputDir.resolve("taxonomy-visualization-reference.html");
@@ -46,6 +47,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(Files.exists(matrixHtml));
         assertTrue(Files.exists(flowHtml));
         assertTrue(Files.exists(hypercubeHtml));
+        assertTrue(Files.exists(hypercube3dHtml));
         assertTrue(Files.exists(coverageHtml));
         assertTrue(Files.exists(enumerationHtml));
         assertTrue(Files.exists(referenceHtml));
@@ -64,6 +66,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(html.contains("taxonomy-visualization-matrix.html"));
         assertTrue(html.contains("taxonomy-visualization-flow.html"));
         assertTrue(html.contains("taxonomy-visualization-hypercube.html"));
+        assertTrue(html.contains("taxonomy-visualization-hypercube-3d.html"));
         assertTrue(html.contains("taxonomy-visualization-coverage.html"));
         assertTrue(html.contains("taxonomy-visualization-enumeration.html"));
         assertTrue(html.contains("taxonomy-visualization-reference.html"));
@@ -86,6 +89,10 @@ class TaxonomyVisualizationExporterTest {
 
         String hypercube = Files.readString(hypercubeHtml, StandardCharsets.UTF_8);
         assertTrue(hypercube.contains("Hypercube View"));
+
+        String hypercube3d = Files.readString(hypercube3dHtml, StandardCharsets.UTF_8);
+        assertTrue(hypercube3d.contains("Hypercube 3D View"));
+        assertTrue(hypercube3d.contains("unpkg.com/three"));
 
         String coverage = Files.readString(coverageHtml, StandardCharsets.UTF_8);
         assertTrue(coverage.contains("Coverage View"));
