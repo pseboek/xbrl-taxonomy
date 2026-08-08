@@ -89,6 +89,7 @@ public class TaxonomyVisualizationExporter {
         Path calculationHtml = outputHtml.resolveSibling(stem + "-calculation.html");
         Path intersectionHtml = outputHtml.resolveSibling(stem + "-intersection.html");
         Path validationHtml = outputHtml.resolveSibling(stem + "-validation.html");
+        Path allocationHtml = outputHtml.resolveSibling(stem + "-allocation.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -102,7 +103,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(calculationHtml, renderCalculationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(intersectionHtml, renderIntersectionHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(validationHtml, renderValidationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml), StandardCharsets.UTF_8);
+        Files.writeString(allocationHtml, renderAllocationHtml(layoutSnapshot, mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -694,7 +696,8 @@ public class TaxonomyVisualizationExporter {
                                       Path referenceHtml,
                                       Path calculationHtml,
                                       Path intersectionHtml,
-                                      Path validationHtml) {
+                                      Path validationHtml,
+                                      Path allocationHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -719,8 +722,91 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("10. Calculation", fileNameOnly(calculationHtml), "Calculation- und Formula-Abhaengigkeiten (Sample + Impact)"))
             .append(viewCard("11. Intersection", fileNameOnly(intersectionHtml), "Kombinationen von Dimensionen je Hypercube"))
             .append(viewCard("12. Validation", fileNameOnly(validationHtml), "Rule-Abhaengigkeiten: Formula-Dateien und referenzierte Konzepte"))
+            .append(viewCard("13. Allocation", fileNameOnly(allocationHtml), "Section-zu-Placeholder-zu-Konzept Zuordnung"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderAllocationHtml(LayoutSnapshot layoutSnapshot,
+                                        Map<String, List<MappingEntry>> mappingsByConcept) {
+        List<AllocationRow> rows = new ArrayList<>();
+        for (Map.Entry<String, String> mapping : layoutSnapshot.placeholderMappings().entrySet()) {
+            String placeholder = mapping.getKey();
+            String field = mapping.getValue();
+            List<MappingEntry> entries = entriesForField(mappingsByConcept, field);
+            String concept = entries.isEmpty() ? "-" : entries.get(0).concept();
+            String section = deriveSection(field);
+            rows.add(new AllocationRow(section, placeholder, field, concept));
+        }
+
+        rows.sort(Comparator.comparing(AllocationRow::section)
+            .thenComparing(AllocationRow::placeholder)
+            .thenComparing(AllocationRow::field));
+
+        Map<String, Long> sectionCounts = rows.stream()
+            .collect(Collectors.groupingBy(AllocationRow::section, TreeMap::new, Collectors.counting()));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Allocation View: Template zu Mapping</h1>")
+            .append("<p class=\"lead\">Diese Sicht verbindet Berichtsplatzhalter mit Mapping-Feldern und Zielkonzepten. Die Gruppierung erfolgt nach Feld-Section (Praefix vor dem ersten Punkt).</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Placeholders", rows.size()))
+            .append(summaryCard("Sections", sectionCounts.size()))
+            .append(summaryCard("Mapped Concepts", rows.stream().filter(row -> !"-".equals(row.concept())).count()))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"allocationSearch\" type=\"search\" placeholder=\"Section, Placeholder, Feld oder Konzept suchen...\" oninput=\"applyAllocationFilter()\"></div>")
+            .append("<section><h2>Section Summary</h2><table class=\"layout-table\"><thead><tr><th>Section</th><th>Placeholders</th></tr></thead><tbody>");
+
+        for (Map.Entry<String, Long> sectionCount : sectionCounts.entrySet()) {
+            body.append("<tr><td><code>")
+                .append(escapeHtml(sectionCount.getKey()))
+                .append("</code></td><td>")
+                .append(sectionCount.getValue())
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>")
+            .append("<section><h2>Placeholder Allocation</h2><table class=\"layout-table\"><thead><tr><th>Section</th><th>Placeholder</th><th>Feld</th><th>Konzept</th></tr></thead><tbody>");
+
+        if (rows.isEmpty()) {
+            body.append("<tr><td colspan=\"4\" class=\"muted\">Keine Placeholder-Zuordnung gefunden.</td></tr>");
+        }
+
+        for (AllocationRow row : rows) {
+            String search = normalizeSearch(row.section() + " " + row.placeholder() + " " + row.field() + " " + row.concept());
+            body.append("<tr class=\"allocation-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.section()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.placeholder()))
+                .append("</code></td><td>")
+                .append(escapeHtml(row.field()))
+                .append("</td><td>")
+                .append("-".equals(row.concept()) ? "-" : "<code>" + escapeHtml(row.concept()) + "</code>")
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyAllocationFilter(){const q=normalize(document.getElementById('allocationSearch').value.trim());"
+            + "document.querySelectorAll('.allocation-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+
+        return renderPage("Allocation View", body.toString(), script);
+    }
+
+    private String deriveSection(String field) {
+        if (field == null || field.isBlank()) {
+            return "other";
+        }
+        int dot = field.indexOf('.');
+        if (dot > 0) {
+            return field.substring(0, dot);
+        }
+        return "other";
     }
 
     private String renderValidationHtml(TaxonomyMetadata metadata,
@@ -2739,6 +2825,12 @@ public class TaxonomyVisualizationExporter {
     private record ValidationConceptRow(String concept,
                                         int mentions,
                                         Set<String> fields) {
+    }
+
+    private record AllocationRow(String section,
+                                 String placeholder,
+                                 String field,
+                                 String concept) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,

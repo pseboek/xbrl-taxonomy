@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 12 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 13 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -14,6 +14,7 @@ Diese Doku erklaert alle 12 Visualisierungsansichten aus dem Taxonomy Explorer:
 10. Calculation
 11. Intersection
 12. Validation
+13. Allocation
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -34,6 +35,7 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-calculation.html
 - taxonomy-visualization-intersection.html
 - taxonomy-visualization-validation.html
+- taxonomy-visualization-allocation.html
 
 ## Lesestrategie (allgemein)
 
@@ -235,6 +237,7 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 - Calculation: Wenn du Auswirkungen auf Rollups/Formeln bei Konzeptaenderungen abschaetzen willst.
 - Intersection: Wenn du sinnvolle Dimensionskombinationen je Hypercube abschaetzen willst.
 - Validation: Wenn du Regeldateien und ihre Konzeptabhaengigkeiten gezielt analysieren willst.
+- Allocation: Wenn du Template-Zuordnung und Mapping-Abdeckung je Section analysieren willst.
 
 ---
 
@@ -338,3 +341,20 @@ Wie man sie liest:
 Beispiel:
 
 - Wenn ein Konzept in vielen Formula-Dateien auftaucht, ist es ein starker Validierungs-Hotspot. Aenderungen sollten mit erweiterten Tests gegen mehrere Disclosure-Kontexte abgesichert werden.
+
+## 13) Allocation View lesen
+
+Was die Ansicht zeigt:
+
+- Zuordnung von Section -> Placeholder -> Feld -> Konzept.
+- Section-Summary mit Anzahl der Placeholders je Bereich.
+
+Wie man sie liest:
+
+1. Ueber Section-Summary schnell Schwerpunkte erkennen.
+2. In der Detailtabelle nach fehlendem Konzeptbezug suchen.
+3. Placeholder ohne sinnvolle Feldzuordnung priorisiert bereinigen.
+
+Beispiel:
+
+- Wenn eine Section viele Placeholders hat, aber mehrere Zeilen ohne Konzept zeigt, ist die Template-Integration dort unvollstaendig und sollte vor dem naechsten Reporting-Lauf nachgezogen werden.
