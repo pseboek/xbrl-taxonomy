@@ -21,7 +21,8 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 7. `output/taxonomy-visualization-layer.html` (Layer View),
 8. `output/taxonomy-visualization-matrix.html` (Matrix View),
 9. `output/taxonomy-visualization-flow.html` (Flow View),
-10. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+10. `output/taxonomy-visualization-hypercube.html` (Hypercube View),
+11. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -75,14 +76,47 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-layer.html` fuer Layer-Analyse mit aufklappbaren Unterelementen
 - `taxonomy-visualization-matrix.html` fuer Konzept- und Mapping-Analyse
 - `taxonomy-visualization-flow.html` fuer die Prozess-/Journey-Sicht
+- `taxonomy-visualization-hypercube.html` fuer dimensionale Analyse (Hypercubes, Achsen, Domains, Member)
 
-Der Explorer enthaelt 5 Ansichten:
+Der Explorer enthaelt 6 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
 3. Layer: Linkbase-Layer (Dateien/Kanten) + externe HREF-Samples
 4. Matrix: Konzeptindex + Layout-Zuordnung
 5. Flow: Reporting-Flow von Datensammlung bis Disclosure
+6. Hypercube: Dimensionale Struktur (all/notAll, Dimensionen, Domains, Member)
+
+## Hypercube View lesen und verstehen
+
+Die Hypercube-Ansicht zeigt, fuer welche Primary Items eine dimensionale Struktur gilt und aus welchen Achsen/Domaenen/Members diese Struktur besteht.
+
+Lesereihenfolge (empfohlen):
+
+1. Hypercube-Kopf lesen: Name des Hypercubes und Anzahl der gebundenen Dimensionen.
+2. `PRIMARY (ALL)` und `PRIMARY (NOTALL)` pruefen:
+	- `all`: Das Primary Item wird in diesem Hypercube-Kontext erwartet.
+	- `notAll`: Ausschluss-/Negativbindung fuer spezielle Kontexte.
+3. Pro Dimension die Facet-Karte lesen:
+	- Anzahl Domains,
+	- Default Member,
+	- Domain-Member-Liste.
+4. Bei vielen Members zuerst auf Domain- und Default-Logik konzentrieren, dann in die Member-Details zoomen.
+
+Beispiel 1: Country-Achse mit leerer Country-Domain
+
+- Hypercube: `esrs_AdequateWagesByCountryTable`
+- Dimension: `esrs_CountryAxis`
+- Beobachtung: Domain `country_CountryDomain` hat `0 Member` im Sample.
+- Interpretation: Die Achse ist taxonomisch vorhanden, aber in der aktuell gerenderten Teilmenge wurden keine Country-Members referenziert. Das ist kein Modellfehler, sondern kann aus Sample-Grenzen/Filterung kommen.
+
+Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
+
+- Hypercube: `esrs_AdequateWagesByCountryTable`
+- Dimension: `esrs_EmployeesAndNonemployeesAxis`
+- Default Member: `esrs_EmployeesAndNonemployeesNAMember`
+- Domain-Members (Sample): z. B. `esrs_EmployeesMember`, `esrs_NonemployeesMember`
+- Interpretation: Wenn kein expliziter Member gesetzt ist, greift der Default Member. Fuer fachlich differenzierte Angaben muss ein expliziter Member auf der Achse gewaehlt werden.
 
 Im Graph-View koennen Layer direkt per Checkbox ein-/ausgeblendet werden.
 Zusatzfunktionen im Graph-View:
@@ -142,6 +176,7 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-layer.html` — Layer-Übersicht mit aufklappbaren Unterelementen.
 - `output/taxonomy-visualization-matrix.html` — analytische Matrixsicht für Konzepte und Mapping.
 - `output/taxonomy-visualization-flow.html` — Prozesssicht entlang des Reporting-Flows.
+- `output/taxonomy-visualization-hypercube.html` — Dimensionensicht mit Hypercubes, Achsen, Domains, Default-Members und Domain-Members.
 
 Hinweise:
 

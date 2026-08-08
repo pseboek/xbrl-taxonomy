@@ -20,6 +20,7 @@ class TaxonomyVisualizationExporterTest {
         Path layerHtml = outputDir.resolve("taxonomy-visualization-layer.html");
         Path matrixHtml = outputDir.resolve("taxonomy-visualization-matrix.html");
         Path flowHtml = outputDir.resolve("taxonomy-visualization-flow.html");
+        Path hypercubeHtml = outputDir.resolve("taxonomy-visualization-hypercube.html");
 
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
         assertDoesNotThrow(() -> exporter.export(
@@ -35,6 +36,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(Files.exists(layerHtml));
         assertTrue(Files.exists(matrixHtml));
         assertTrue(Files.exists(flowHtml));
+        assertTrue(Files.exists(hypercubeHtml));
 
         String html = Files.readString(outputHtml, StandardCharsets.UTF_8);
         assertTrue(html.contains("ESRS Taxonomie-Visualisierungen"));
@@ -43,6 +45,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(html.contains("taxonomy-visualization-layer.html"));
         assertTrue(html.contains("taxonomy-visualization-matrix.html"));
         assertTrue(html.contains("taxonomy-visualization-flow.html"));
+        assertTrue(html.contains("taxonomy-visualization-hypercube.html"));
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
         assertTrue(tree.contains("Präsentationshierarchie"));
@@ -53,5 +56,8 @@ class TaxonomyVisualizationExporterTest {
 
         String layer = Files.readString(layerHtml, StandardCharsets.UTF_8);
         assertTrue(layer.contains("Unterelemente einblenden"));
+
+        String hypercube = Files.readString(hypercubeHtml, StandardCharsets.UTF_8);
+        assertTrue(hypercube.contains("Hypercube View"));
     }
 }
