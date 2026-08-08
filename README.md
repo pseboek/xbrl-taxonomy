@@ -87,47 +87,13 @@ Der Explorer enthaelt 6 Ansichten:
 5. Flow: Reporting-Flow von Datensammlung bis Disclosure
 6. Hypercube: Dimensionale Struktur (all/notAll, Dimensionen, Domains, Member)
 
-## Hypercube View lesen und verstehen
+## Visualisierungen lesen und verstehen
 
-Die Hypercube-Ansicht zeigt, fuer welche Primary Items eine dimensionale Struktur gilt und aus welchen Achsen/Domaenen/Members diese Struktur besteht.
+Die ausfuehrliche Leseanleitung fuer Tree, Graph, Layer, Matrix, Flow und Hypercube liegt in:
 
-Lesereihenfolge (empfohlen):
+- `md-files/README_VISUALISIERUNGEN.md`
 
-1. Hypercube-Kopf lesen: Name des Hypercubes und Anzahl der gebundenen Dimensionen.
-2. `PRIMARY (ALL)` und `PRIMARY (NOTALL)` pruefen:
-	- `all`: Das Primary Item wird in diesem Hypercube-Kontext erwartet.
-	- `notAll`: Ausschluss-/Negativbindung fuer spezielle Kontexte.
-3. Pro Dimension die Facet-Karte lesen:
-	- Anzahl Domains,
-	- Default Member,
-	- Domain-Member-Liste.
-4. Bei vielen Members zuerst auf Domain- und Default-Logik konzentrieren, dann in die Member-Details zoomen.
-
-Beispiel 1: Country-Achse mit leerer Country-Domain
-
-- Hypercube: `esrs_AdequateWagesByCountryTable`
-- Dimension: `esrs_CountryAxis`
-- Beobachtung: Domain `country_CountryDomain` hat `0 Member` im Sample.
-- Interpretation: Die Achse ist taxonomisch vorhanden, aber in der aktuell gerenderten Teilmenge wurden keine Country-Members referenziert. Das ist kein Modellfehler, sondern kann aus Sample-Grenzen/Filterung kommen.
-
-Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
-
-- Hypercube: `esrs_AdequateWagesByCountryTable`
-- Dimension: `esrs_EmployeesAndNonemployeesAxis`
-- Default Member: `esrs_EmployeesAndNonemployeesNAMember`
-- Domain-Members (Sample): z. B. `esrs_EmployeesMember`, `esrs_NonemployeesMember`
-- Interpretation: Wenn kein expliziter Member gesetzt ist, greift der Default Member. Fuer fachlich differenzierte Angaben muss ein expliziter Member auf der Achse gewaehlt werden.
-
-Im Graph-View koennen Layer direkt per Checkbox ein-/ausgeblendet werden.
-Zusatzfunktionen im Graph-View:
-
-- Suchfeld mit Fokus auf Treffer inkl. automatischer Zentrierung
-- Themenbasierte Knotengruppierung aus Mapping-Domaenen (nicht nur Name/Praefix)
-- Distinkte, kontraststarke Gruppenfarben
-- Adaptive Label-Dichte je Zoomstufe (optional: alle Labels anzeigen)
-- Klick auf Knoten zeigt Thema, Layer, Grad und Nachbarn (je Nachbar eigene Zeile)
-
-Im Layer-View lassen sich Unterelemente pro Layer bei Bedarf aufklappen.
+Die Doku enthaelt auch Beispiele und Mermaid-Diagramme zur Hypercube-Interpretation.
 
 Wenn du den vollen End-to-End-Lauf mit Tests und Validierung willst, nutze alternativ:
 
@@ -216,6 +182,7 @@ mvn -Dtest=FactBuilderTest#shouldRejectInvalidNumericValue test
 
 Alle Projektleitdokumente liegen in `md-files/`, insbesondere:
 
+- `md-files/README_VISUALISIERUNGEN.md`
 - `md-files/IMPLEMENTIERUNGSLEITFADEN_JAVA_XBRL_ESRS.md`
 - `md-files/CHECKLISTE_STATUS_XBRL_IXBRL_JAVA.md`
 - `md-files/ANLEITUNG_START_MAVEN_TESTS_TEMPLATE.md`
