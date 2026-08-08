@@ -57,6 +57,7 @@ public class TaxonomyVisualizationExporter {
     private static final Pattern XSD_TYPE_ATTR_PATTERN = Pattern.compile("\\btype=\"([^\"]+)\"");
     private static final Pattern XSD_ENUM_DOMAIN_ATTR_PATTERN = Pattern.compile("\\benum2:domain=\"([^\"]+)\"");
     private static final Pattern XSD_ENUM_LINKROLE_ATTR_PATTERN = Pattern.compile("\\benum2:linkrole=\"([^\"]+)\"");
+    private static final Pattern FORMULA_ESRS_QNAME_PATTERN = Pattern.compile("\\besrs:[A-Za-z0-9_]+");
     public VisualizationResult export(MappingRegistry mappingRegistry,
                                       Path taxonomyRoot,
                                       Path layoutMap,
@@ -73,6 +74,7 @@ public class TaxonomyVisualizationExporter {
         TaxonomyMetadata metadata = loadTaxonomyMetadata(taxonomyRoot);
         Map<String, List<MappingEntry>> mappingsByConcept = groupByConcept(entries);
         Map<String, List<String>> placeholdersByField = reverseLayout(layoutSnapshot.placeholderMappings());
+        Map<String, List<String>> conceptReferences = loadConceptReferences(taxonomyRoot);
 
         String stem = outputHtml.getFileName().toString().replaceFirst("\\.html$", "");
         Path treeHtml = outputHtml.resolveSibling(stem + "-tree.html");
@@ -81,6 +83,10 @@ public class TaxonomyVisualizationExporter {
         Path matrixHtml = outputHtml.resolveSibling(stem + "-matrix.html");
         Path flowHtml = outputHtml.resolveSibling(stem + "-flow.html");
         Path hypercubeHtml = outputHtml.resolveSibling(stem + "-hypercube.html");
+        Path coverageHtml = outputHtml.resolveSibling(stem + "-coverage.html");
+        Path enumerationHtml = outputHtml.resolveSibling(stem + "-enumeration.html");
+        Path referenceHtml = outputHtml.resolveSibling(stem + "-reference.html");
+        Path calculationHtml = outputHtml.resolveSibling(stem + "-calculation.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -88,7 +94,11 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(matrixHtml, renderMatrixHtml(mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(flowHtml, renderFlowHtml(forest, metadata, mappingsByConcept, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(hypercubeHtml, renderHypercubeHtml(metadata), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml), StandardCharsets.UTF_8);
+        Files.writeString(coverageHtml, renderCoverageHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
+        Files.writeString(enumerationHtml, renderEnumerationHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
+        Files.writeString(referenceHtml, renderReferenceHtml(mappingsByConcept, placeholdersByField, conceptReferences), StandardCharsets.UTF_8);
+        Files.writeString(calculationHtml, renderCalculationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -108,6 +118,82 @@ public class TaxonomyVisualizationExporter {
             placeholderNode.fields().forEachRemaining(entry -> placeholders.put(entry.getKey(), entry.getValue().asText()));
         }
         return new LayoutSnapshot(placeholders);
+    }
+
+    private Map<String, List<String>> loadConceptReferences(Path taxonomyRoot) throws IOException {
+        Path referenceCsv = taxonomyRoot.resolve("output").resolve("arelle-concept-reference.csv");
+        if (!Files.exists(referenceCsv)) {
+            return Map.of();
+        }
+
+        Map<String, Set<String>> referencesByConcept = new TreeMap<>();
+        String currentConcept = null;
+
+        List<String> lines = Files.readAllLines(referenceCsv, StandardCharsets.UTF_8);
+        for (String line : lines) {
+            if (line == null || line.isBlank()) {
+                continue;
+            }
+
+            List<String> columns = parseCsvLine(line);
+            if (columns.size() < 3) {
+                continue;
+            }
+
+            String conceptCandidate = column(columns, 1);
+            if (conceptCandidate.startsWith("esrs:")) {
+                currentConcept = normalizeConceptKey(conceptCandidate);
+                referencesByConcept.computeIfAbsent(currentConcept, key -> new TreeSet<>());
+                continue;
+            }
+
+            String referenceText = column(columns, 2).trim();
+            String arcrole = column(columns, 3);
+            if (currentConcept != null
+                && !referenceText.isBlank()
+                && arcrole.contains("concept-reference")) {
+                referencesByConcept.computeIfAbsent(currentConcept, key -> new TreeSet<>()).add(referenceText);
+            }
+        }
+
+        Map<String, List<String>> result = new TreeMap<>();
+        for (Map.Entry<String, Set<String>> entry : referencesByConcept.entrySet()) {
+            result.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+        return result;
+    }
+
+    private List<String> parseCsvLine(String line) {
+        List<String> values = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+        for (int i = 0; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if (ch == '"') {
+                if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                    current.append('"');
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
+                continue;
+            }
+            if (ch == ',' && !inQuotes) {
+                values.add(current.toString());
+                current.setLength(0);
+                continue;
+            }
+            current.append(ch);
+        }
+        values.add(current.toString());
+        return values;
+    }
+
+    private String column(List<String> values, int index) {
+        if (values == null || index < 0 || index >= values.size()) {
+            return "";
+        }
+        return values.get(index) == null ? "" : values.get(index);
     }
 
     private Map<String, List<String>> reverseLayout(Map<String, String> placeholderMappings) {
@@ -249,7 +335,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), new HypercubeMetadata(List.of(), 0));
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0));
         }
 
         long xsdElementCount = 0;
@@ -261,6 +347,7 @@ public class TaxonomyVisualizationExporter {
         final int maxSamplePerLayer = 180;
         Set<String> hrefTargets = new TreeSet<>();
         Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept = new TreeMap<>();
+        Map<String, Integer> formulaMentionsByConcept = new TreeMap<>();
         List<DimensionalArc> dimensionalArcs = new ArrayList<>();
 
         try (Stream<Path> stream = Files.walk(taxonomyBase)) {
@@ -281,6 +368,11 @@ public class TaxonomyVisualizationExporter {
 
                 String layer = detectLayer(fileName);
                 fileCountByLayer.merge(layer, 1L, Long::sum);
+
+                if (isFormulaFile(file)) {
+                    String formulaXml = Files.readString(file, StandardCharsets.UTF_8);
+                    collectFormulaConceptMentionsFromText(formulaXml, formulaMentionsByConcept);
+                }
 
                 Document document = parseXml(file);
                 collectHrefTargets(document, hrefTargets);
@@ -371,8 +463,26 @@ public class TaxonomyVisualizationExporter {
             sampleEdges,
             hrefSample,
             taxonomyEnumerationsByConcept,
+            formulaMentionsByConcept,
             hypercubeMetadata
         );
+    }
+
+    private boolean isFormulaFile(Path file) {
+        String normalized = file.toString().replace('\\', '/').toLowerCase(Locale.ROOT);
+        return normalized.contains("/all/formula/") && normalized.endsWith(".xml");
+    }
+
+    private void collectFormulaConceptMentionsFromText(String formulaXml,
+                                                       Map<String, Integer> formulaMentionsByConcept) {
+        if (formulaXml == null || formulaXml.isBlank()) {
+            return;
+        }
+        Matcher matcher = FORMULA_ESRS_QNAME_PATTERN.matcher(formulaXml);
+        while (matcher.find()) {
+            String qname = matcher.group();
+            formulaMentionsByConcept.merge(normalizeConceptKey(qname), 1, Integer::sum);
+        }
     }
 
     private boolean isDimensionalArcrole(String arcrole) {
@@ -552,7 +662,11 @@ public class TaxonomyVisualizationExporter {
                                       Path layerHtml,
                                       Path matrixHtml,
                                       Path flowHtml,
-                                      Path hypercubeHtml) {
+                                      Path hypercubeHtml,
+                                      Path coverageHtml,
+                                      Path enumerationHtml,
+                                      Path referenceHtml,
+                                      Path calculationHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -571,8 +685,351 @@ public class TaxonomyVisualizationExporter {
             .append(viewCard("4. Matrix", fileNameOnly(matrixHtml), "Konzeptindex und Layout-Zuordnung"))
             .append(viewCard("5. Flow", fileNameOnly(flowHtml), "Reporting-Flow von Input bis Disclosure"))
             .append(viewCard("6. Hypercube", fileNameOnly(hypercubeHtml), "Dimensionale Struktur mit Hypercubes, Achsen, Domains und Members"))
+            .append(viewCard("7. Coverage", fileNameOnly(coverageHtml), "Abdeckung: Mapping, Layout, Enumeration und Dimensionen"))
+            .append(viewCard("8. Enumeration", fileNameOnly(enumerationHtml), "Enumeration-Domaenen, Allowed Values und Taxonomie-Hinweise"))
+            .append(viewCard("9. Reference", fileNameOnly(referenceHtml), "Konzept-zu-ESRS-Referenznachweise (Traceability)"))
+            .append(viewCard("10. Calculation", fileNameOnly(calculationHtml), "Calculation- und Formula-Abhaengigkeiten (Sample + Impact)"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderCalculationHtml(TaxonomyMetadata metadata,
+                                         Map<String, List<MappingEntry>> mappingsByConcept) {
+        List<LinkEdge> calcEdges = metadata.sampleEdges().stream()
+            .filter(edge -> "calculation".equals(edge.layer()))
+            .toList();
+
+        Map<String, Integer> calcDegree = new TreeMap<>();
+        for (LinkEdge edge : calcEdges) {
+            calcDegree.merge(normalizeConceptKey(edge.source()), 1, Integer::sum);
+            calcDegree.merge(normalizeConceptKey(edge.target()), 1, Integer::sum);
+        }
+
+        Set<String> conceptKeys = new TreeSet<>();
+        conceptKeys.addAll(calcDegree.keySet());
+        conceptKeys.addAll(metadata.formulaMentionsByConcept().keySet());
+
+        List<CalculationImpactRow> rows = new ArrayList<>();
+        for (String conceptKey : conceptKeys) {
+            List<MappingEntry> mappedEntries = mappingsByConcept.getOrDefault(conceptKey, List.of());
+            String concept = mappedEntries.isEmpty() ? conceptKey : mappedEntries.get(0).concept();
+            Set<String> fields = mappedEntries.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+            rows.add(new CalculationImpactRow(
+                concept,
+                calcDegree.getOrDefault(conceptKey, 0),
+                metadata.formulaMentionsByConcept().getOrDefault(conceptKey, 0),
+                fields
+            ));
+        }
+
+        rows.sort(Comparator
+            .comparingInt(CalculationImpactRow::calcDegree).reversed()
+            .thenComparingInt(CalculationImpactRow::formulaMentions).reversed()
+            .thenComparing(CalculationImpactRow::concept));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Calculation View: Dependency und Formula-Impact</h1>")
+            .append("<p class=\"lead\">Analytische Sicht auf Calculation-Kanten (Sample) und Konzeptverwendungen in Formula-Dateien. Nutze sie fuer Impact-Analysen bei Mapping-Aenderungen.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Calculation-Kanten (Sample)", calcEdges.size()))
+            .append(summaryCard("Calculation-Konzepte", calcDegree.size()))
+            .append(summaryCard("Formula-Konzepte", metadata.formulaMentionsByConcept().size()))
+            .append(summaryCard("Impact-Kandidaten", rows.stream().filter(r -> r.calcDegree() > 0 || r.formulaMentions() > 0).count()))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"calcSearch\" type=\"search\" placeholder=\"Konzept, Feld oder Metrik suchen...\" oninput=\"applyCalcFilter()\"></div>")
+            .append("<section><h2>Konzept-Impact</h2><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Calc-Degree</th><th>Formula-Mentions</th><th>Gemappte Felder</th></tr></thead><tbody>");
+
+        int rowLimit = Math.min(500, rows.size());
+        for (int i = 0; i < rowLimit; i++) {
+            CalculationImpactRow row = rows.get(i);
+            String search = normalizeSearch(row.concept() + " " + row.calcDegree() + " " + row.formulaMentions() + " " + String.join(" ", row.fields()));
+            body.append("<tr class=\"calc-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(row.calcDegree())
+                .append("</td><td>")
+                .append(row.formulaMentions())
+                .append("</td><td>")
+                .append(row.fields().isEmpty() ? "-" : escapeHtml(limitJoined(row.fields(), 6)))
+                .append("</td></tr>");
+        }
+        if (rows.size() > rowLimit) {
+            body.append("<tr><td colspan=\"4\" class=\"muted\">Nur die ersten ")
+                .append(rowLimit)
+                .append(" Konzepte werden angezeigt. Bitte Suche nutzen, um weiter einzuschraenken.</td></tr>");
+        }
+
+        body.append("</tbody></table></section>")
+            .append("<section><h2>Calculation-Kanten (Sample)</h2><div class=\"node-children\">");
+
+        if (calcEdges.isEmpty()) {
+            body.append("<div class=\"layout-row muted\">Keine Calculation-Kanten im Sample gefunden.</div>");
+        } else {
+            int edgeLimit = Math.min(220, calcEdges.size());
+            for (int i = 0; i < edgeLimit; i++) {
+                LinkEdge edge = calcEdges.get(i);
+                body.append("<div class=\"layout-row\"><code>")
+                    .append(escapeHtml(edge.source()))
+                    .append("</code> -> <code>")
+                    .append(escapeHtml(edge.target()))
+                    .append("</code></div>");
+            }
+            if (calcEdges.size() > edgeLimit) {
+                body.append("<div class=\"layout-row muted\">+ ")
+                    .append(calcEdges.size() - edgeLimit)
+                    .append(" weitere Calculation-Kanten im Sample.</div>");
+            }
+        }
+        body.append("</div></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyCalcFilter(){const q=normalize(document.getElementById('calcSearch').value.trim());"
+            + "document.querySelectorAll('.calc-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+
+        return renderPage("Calculation View", body.toString(), script);
+    }
+
+    private String renderReferenceHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                       Map<String, List<String>> placeholdersByField,
+                                       Map<String, List<String>> conceptReferences) {
+        Set<String> concepts = new TreeSet<>(mappingsByConcept.keySet());
+        concepts.addAll(conceptReferences.keySet());
+
+        List<ReferenceRow> rows = new ArrayList<>();
+        for (String conceptKey : concepts) {
+            List<MappingEntry> entries = mappingsByConcept.getOrDefault(conceptKey, List.of());
+            String concept = entries.isEmpty() ? conceptKey : entries.get(0).concept();
+            List<String> references = conceptReferences.getOrDefault(conceptKey, List.of());
+
+            if (references.isEmpty()) {
+                continue;
+            }
+
+            Set<String> fields = entries.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+            Set<String> placeholders = new TreeSet<>();
+            for (String field : fields) {
+                List<String> values = placeholdersByField.get(field);
+                if (values != null) {
+                    placeholders.addAll(values);
+                }
+            }
+            rows.add(new ReferenceRow(concept, references, fields, placeholders));
+        }
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Reference View: ESRS Traceability</h1>")
+            .append("<p class=\"lead\">Nachvollziehbarkeit von Konzepten zur Normgrundlage: pro Konzept werden die verknuepften ESRS-/Regulations-Referenzen angezeigt.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Konzepte mit Referenzen", rows.size()))
+            .append(summaryCard("Referenzzeilen gesamt", rows.stream().mapToLong(row -> row.references().size()).sum()))
+            .append(summaryCard("Mit Mapping-Feldern", rows.stream().filter(row -> !row.fields().isEmpty()).count()))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"referenceSearch\" type=\"search\" placeholder=\"Konzept, ESRS Referenz, Feld oder Placeholder suchen...\" oninput=\"applyReferenceFilter()\"></div>")
+            .append("<section><h2>Konzept -> Referenzen</h2><div class=\"concept-list\">\n");
+
+        if (rows.isEmpty()) {
+            body.append("<div class=\"layout-row muted\">Keine Konzept-Referenzen gefunden. Erzeuge ggf. zuerst output/arelle-concept-reference.csv.</div>");
+        }
+
+        for (ReferenceRow row : rows) {
+            String search = normalizeSearch(
+                row.concept() + " "
+                    + String.join(" ", row.references()) + " "
+                    + String.join(" ", row.fields()) + " "
+                    + String.join(" ", row.placeholders())
+            );
+
+            body.append("<article class=\"concept-item reference-card\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><h3><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></h3><div class=\"node-meta\">")
+                .append(metaCell("Referenzen", limitJoined(new TreeSet<>(row.references()), 10)))
+                .append(metaCell("Felder", row.fields().isEmpty() ? "-" : limitJoined(row.fields(), 6)))
+                .append(metaCell("Placeholders", row.placeholders().isEmpty() ? "-" : limitJoined(row.placeholders(), 6)))
+                .append("</div></article>");
+        }
+
+        body.append("</div></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyReferenceFilter(){const q=normalize(document.getElementById('referenceSearch').value.trim());"
+            + "document.querySelectorAll('.reference-card').forEach(c=>{const s=c.dataset.search||'';c.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+        return renderPage("Reference View", body.toString(), script);
+    }
+
+    private String renderCoverageHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                      Map<String, List<String>> placeholdersByField,
+                                      TaxonomyMetadata metadata) {
+        List<CoverageRow> rows = new ArrayList<>();
+        for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
+            List<MappingEntry> entries = conceptEntry.getValue();
+            String concept = entries.isEmpty() ? conceptEntry.getKey() : entries.get(0).concept();
+            boolean hasLayout = entries.stream().anyMatch(entry -> {
+                List<String> placeholders = placeholdersByField.get(entry.field());
+                return placeholders != null && !placeholders.isEmpty();
+            });
+            boolean hasDimensions = entries.stream().anyMatch(TaxonomyVisualizationExporter::hasDimensions);
+            boolean hasEnumeration = entries.stream().anyMatch(TaxonomyVisualizationExporter::hasEnumeration)
+                || taxonomyEnumerationForConcept(metadata, concept) != null;
+
+            Set<String> fields = entries.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+            Set<String> placeholders = new TreeSet<>();
+            for (String field : fields) {
+                List<String> values = placeholdersByField.get(field);
+                if (values != null) {
+                    placeholders.addAll(values);
+                }
+            }
+
+            rows.add(new CoverageRow(concept, fields, placeholders, hasLayout, hasDimensions, hasEnumeration));
+        }
+
+        long total = rows.size();
+        long withLayout = rows.stream().filter(CoverageRow::hasLayout).count();
+        long withDimensions = rows.stream().filter(CoverageRow::hasDimensions).count();
+        long withEnumeration = rows.stream().filter(CoverageRow::hasEnumeration).count();
+        long withoutLayout = total - withLayout;
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Coverage View: Mapping-Abdeckung</h1>")
+            .append("<p class=\"lead\">Schnelle Vollstaendigkeitspruefung je Konzept: Ist es gemappt, im Layout platziert und mit Enumeration/Dimension angereichert?</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Gemappte Konzepte", total))
+            .append(summaryCard("Mit Layout", withLayout))
+            .append(summaryCard("Ohne Layout", withoutLayout))
+            .append(summaryCard("Mit Enumeration", withEnumeration))
+            .append(summaryCard("Mit Dimensionen", withDimensions))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"coverageSearch\" type=\"search\" placeholder=\"Konzept, Feld oder Placeholder suchen...\" oninput=\"applyCoverageFilter()\"></div>")
+            .append("<section><h2>Konzeptabdeckung</h2><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Mapping</th><th>Layout</th><th>Enumeration</th><th>Dimensionen</th><th>Felder</th><th>Placeholders</th></tr></thead><tbody>");
+
+        for (CoverageRow row : rows) {
+            String search = normalizeSearch(row.concept() + " " + String.join(" ", row.fields()) + " " + String.join(" ", row.placeholders()));
+            body.append("<tr class=\"coverage-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(statusPill(true, "ja"))
+                .append("</td><td>")
+                .append(statusPill(row.hasLayout(), row.hasLayout() ? "ja" : "nein"))
+                .append("</td><td>")
+                .append(statusPill(row.hasEnumeration(), row.hasEnumeration() ? "ja" : "nein"))
+                .append("</td><td>")
+                .append(statusPill(row.hasDimensions(), row.hasDimensions() ? "ja" : "nein"))
+                .append("</td><td>")
+                .append(escapeHtml(limitJoined(row.fields(), 6)))
+                .append("</td><td>")
+                .append(escapeHtml(row.placeholders().isEmpty() ? "-" : limitJoined(row.placeholders(), 6)))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyCoverageFilter(){const q=normalize(document.getElementById('coverageSearch').value.trim());"
+            + "document.querySelectorAll('.coverage-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+        return renderPage("Coverage View", body.toString(), script);
+    }
+
+    private String renderEnumerationHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                         Map<String, List<String>> placeholdersByField,
+                                         TaxonomyMetadata metadata) {
+        Set<String> concepts = new TreeSet<>(mappingsByConcept.keySet());
+        concepts.addAll(metadata.taxonomyEnumerationsByConcept().keySet());
+
+        List<EnumerationRow> rows = new ArrayList<>();
+        for (String conceptKey : concepts) {
+            List<MappingEntry> entries = mappingsByConcept.getOrDefault(conceptKey, List.of());
+            String concept = entries.isEmpty() ? conceptKey : entries.get(0).concept();
+            TaxonomyEnumeration taxonomyEnumeration = taxonomyEnumerationForConcept(metadata, concept);
+
+            Set<String> mappingDomains = entries.stream()
+                .map(MappingEntry::enumerationDomain)
+                .filter(value -> value != null && !value.isBlank())
+                .collect(Collectors.toCollection(TreeSet::new));
+
+            Set<String> allowedValues = new TreeSet<>();
+            for (MappingEntry entry : entries) {
+                if (entry.allowedValues() != null) {
+                    allowedValues.addAll(entry.allowedValues());
+                }
+            }
+
+            if (taxonomyEnumeration == null && mappingDomains.isEmpty() && allowedValues.isEmpty()) {
+                continue;
+            }
+
+            Set<String> fields = entries.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+            Set<String> placeholders = new TreeSet<>();
+            for (String field : fields) {
+                List<String> values = placeholdersByField.get(field);
+                if (values != null) {
+                    placeholders.addAll(values);
+                }
+            }
+
+            rows.add(new EnumerationRow(
+                concept,
+                taxonomyEnumeration,
+                mappingDomains,
+                allowedValues,
+                fields,
+                placeholders
+            ));
+        }
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Enumeration View: Domains und Allowed Values</h1>")
+            .append("<p class=\"lead\">Diese Ansicht kombiniert Mapping-Enumerationen mit Taxonomie-Hinweisen (enum2:item/set, domain, linkrole).</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Enumerations-Konzepte", rows.size()))
+            .append(summaryCard("Mit Taxonomie-Hinweis", rows.stream().filter(row -> row.taxonomyEnumeration() != null).count()))
+            .append(summaryCard("Mit Allowed Values", rows.stream().filter(row -> !row.allowedValues().isEmpty()).count()))
+            .append("</div>")
+            .append("<div class=\"toolbar\"><input id=\"enumSearch\" type=\"search\" placeholder=\"Konzept, Domain, Value oder Feld suchen...\" oninput=\"applyEnumFilter()\"></div>")
+            .append("<section><h2>Enumeration-Browser</h2><div class=\"concept-list\">\n");
+
+        for (EnumerationRow row : rows) {
+            String taxonomyText = taxonomyText(row.taxonomyEnumeration());
+            String search = normalizeSearch(
+                row.concept() + " "
+                    + String.join(" ", row.mappingDomains()) + " "
+                    + String.join(" ", row.allowedValues()) + " "
+                    + String.join(" ", row.fields()) + " "
+                    + taxonomyText
+            );
+
+            body.append("<article class=\"concept-item enum-card\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><h3><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></h3><div class=\"node-meta\">")
+                .append(metaCell("Taxonomie", taxonomyText))
+                .append(metaCell("Mapping-Domain(s)", row.mappingDomains().isEmpty() ? "-" : limitJoined(row.mappingDomains(), 6)))
+                .append(metaCell("Allowed Values", row.allowedValues().isEmpty() ? "-" : limitJoined(row.allowedValues(), 8)))
+                .append(metaCell("Felder", row.fields().isEmpty() ? "-" : limitJoined(row.fields(), 6)))
+                .append(metaCell("Placeholders", row.placeholders().isEmpty() ? "-" : limitJoined(row.placeholders(), 6)))
+                .append("</div></article>");
+        }
+
+        body.append("</div></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyEnumFilter(){const q=normalize(document.getElementById('enumSearch').value.trim());"
+            + "document.querySelectorAll('.enum-card').forEach(c=>{const s=c.dataset.search||'';c.hidden=q&&!s.includes(q);});}"
+            + "</script>";
+        return renderPage("Enumeration View", body.toString(), script);
     }
 
     private String renderHypercubeHtml(TaxonomyMetadata metadata) {
@@ -1903,6 +2360,39 @@ public class TaxonomyVisualizationExporter {
         return "<div class=\"card\"><span class=\"value\">" + value + "</span><span class=\"muted\">" + escapeHtml(label) + "</span></div>";
     }
 
+    private String statusPill(boolean ok, String label) {
+        String cssClass = ok ? "binding-all" : "binding-not-all";
+        return "<span class=\"legend-pill " + cssClass + "\">" + escapeHtml(label) + "</span>";
+    }
+
+    private String limitJoined(Set<String> values, int maxItems) {
+        if (values == null || values.isEmpty()) {
+            return "-";
+        }
+        List<String> sorted = new ArrayList<>(values);
+        int limit = Math.min(maxItems, sorted.size());
+        String joined = String.join(", ", sorted.subList(0, limit));
+        if (sorted.size() > limit) {
+            return joined + " +" + (sorted.size() - limit) + " weitere";
+        }
+        return joined;
+    }
+
+    private String taxonomyText(TaxonomyEnumeration taxonomyEnumeration) {
+        if (taxonomyEnumeration == null) {
+            return "-";
+        }
+        StringBuilder text = new StringBuilder();
+        text.append(taxonomyEnumeration.multiValued() ? "enum2:set" : "enum2:item");
+        if (taxonomyEnumeration.domain() != null && !taxonomyEnumeration.domain().isBlank()) {
+            text.append(" | domain=").append(taxonomyEnumeration.domain());
+        }
+        if (taxonomyEnumeration.linkrole() != null && !taxonomyEnumeration.linkrole().isBlank()) {
+            text.append(" | linkrole=").append(taxonomyEnumeration.linkrole());
+        }
+        return text.toString();
+    }
+
     private String metaCell(String label, String value) {
         String display = value == null || value.isBlank() ? "-" : escapeHtml(value);
         return "<div><strong>" + escapeHtml(label) + "</strong>" + display + "</div>";
@@ -1992,6 +2482,34 @@ public class TaxonomyVisualizationExporter {
                                  String domains) {
     }
 
+    private record CoverageRow(String concept,
+                               Set<String> fields,
+                               Set<String> placeholders,
+                               boolean hasLayout,
+                               boolean hasDimensions,
+                               boolean hasEnumeration) {
+    }
+
+    private record EnumerationRow(String concept,
+                                  TaxonomyEnumeration taxonomyEnumeration,
+                                  Set<String> mappingDomains,
+                                  Set<String> allowedValues,
+                                  Set<String> fields,
+                                  Set<String> placeholders) {
+    }
+
+    private record ReferenceRow(String concept,
+                                List<String> references,
+                                Set<String> fields,
+                                Set<String> placeholders) {
+    }
+
+    private record CalculationImpactRow(String concept,
+                                        int calcDegree,
+                                        int formulaMentions,
+                                        Set<String> fields) {
+    }
+
     private record TaxonomyMetadata(long xsdElementCount,
                                     long xsdImportCount,
                                     Map<String, Long> fileCountByLayer,
@@ -1999,6 +2517,7 @@ public class TaxonomyVisualizationExporter {
                                     List<LinkEdge> sampleEdges,
                                     List<String> hrefTargets,
                                     Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept,
+                                    Map<String, Integer> formulaMentionsByConcept,
                                     HypercubeMetadata hypercubeMetadata) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();

@@ -22,7 +22,11 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 8. `output/taxonomy-visualization-matrix.html` (Matrix View),
 9. `output/taxonomy-visualization-flow.html` (Flow View),
 10. `output/taxonomy-visualization-hypercube.html` (Hypercube View),
-11. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+11. `output/taxonomy-visualization-coverage.html` (Coverage View),
+12. `output/taxonomy-visualization-enumeration.html` (Enumeration View),
+13. `output/taxonomy-visualization-reference.html` (Reference View),
+14. `output/taxonomy-visualization-calculation.html` (Calculation View),
+15. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -77,8 +81,12 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-matrix.html` fuer Konzept- und Mapping-Analyse
 - `taxonomy-visualization-flow.html` fuer die Prozess-/Journey-Sicht
 - `taxonomy-visualization-hypercube.html` fuer dimensionale Analyse (Hypercubes, Achsen, Domains, Member)
+- `taxonomy-visualization-coverage.html` fuer Abdeckungsanalyse (Mapping/Layout/Enumeration/Dimensionen)
+- `taxonomy-visualization-enumeration.html` fuer Enumeration-Domaenen und Allowed Values
+- `taxonomy-visualization-reference.html` fuer Konzept-zu-ESRS-Referenzen (Traceability)
+- `taxonomy-visualization-calculation.html` fuer Calculation- und Formula-Dependency-Analyse
 
-Der Explorer enthaelt 6 Ansichten:
+Der Explorer enthaelt 10 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -86,6 +94,10 @@ Der Explorer enthaelt 6 Ansichten:
 4. Matrix: Konzeptindex + Layout-Zuordnung
 5. Flow: Reporting-Flow von Datensammlung bis Disclosure
 6. Hypercube: Dimensionale Struktur (all/notAll, Dimensionen, Domains, Member)
+7. Coverage: Abdeckungsanalyse je Konzept (Mapping/Layout/Enumeration/Dimensionen)
+8. Enumeration: Browser fuer Domains, Allowed Values und Taxonomie-Infos (enum2:item/set)
+9. Reference: Traceability von Konzepten zu ESRS-/Regulations-Referenzen
+10. Calculation: Impact-Analyse fuer Calculation-Kanten und Formula-Konzeptverwendungen
 
 ## Visualisierungen lesen und verstehen
 
@@ -143,6 +155,10 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-matrix.html` — analytische Matrixsicht für Konzepte und Mapping.
 - `output/taxonomy-visualization-flow.html` — Prozesssicht entlang des Reporting-Flows.
 - `output/taxonomy-visualization-hypercube.html` — Dimensionensicht mit Hypercubes, Achsen, Domains, Default-Members und Domain-Members.
+- `output/taxonomy-visualization-coverage.html` — Abdeckungssicht je Konzept (Layout/Enumeration/Dimensionen).
+- `output/taxonomy-visualization-enumeration.html` — Enumeration-Sicht mit Domain-/Allowed-Value-Informationen.
+- `output/taxonomy-visualization-reference.html` — Referenzsicht fuer Konzept-zu-Norm-Traceability.
+- `output/taxonomy-visualization-calculation.html` — Dependency-Sicht fuer Calculation-Kanten und Formula-Mentions.
 
 Hinweise:
 

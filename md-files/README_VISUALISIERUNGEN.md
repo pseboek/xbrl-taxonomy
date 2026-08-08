@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 6 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 10 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -8,6 +8,10 @@ Diese Doku erklaert alle 6 Visualisierungsansichten aus dem Taxonomy Explorer:
 4. Matrix
 5. Flow
 6. Hypercube
+7. Coverage
+8. Enumeration
+9. Reference
+10. Calculation
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -22,6 +26,10 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-matrix.html
 - taxonomy-visualization-flow.html
 - taxonomy-visualization-hypercube.html
+- taxonomy-visualization-coverage.html
+- taxonomy-visualization-enumeration.html
+- taxonomy-visualization-reference.html
+- taxonomy-visualization-calculation.html
 
 ## Lesestrategie (allgemein)
 
@@ -217,3 +225,76 @@ Beispiel 2: Employee-/NonEmployee-Achse mit aktivem Default
 - Matrix: Wenn du Mapping- und Layout-Abdeckung bewerten willst.
 - Flow: Wenn du Prozess- und Uebergabepunkte analysieren willst.
 - Hypercube: Wenn du Dimensionen, Domains, Members und Kontexte verstehen willst.
+- Coverage: Wenn du Vollstaendigkeit und Luecken im Mapping/Layout schnell sehen willst.
+- Enumeration: Wenn du erlaubte Werte, Domains und enum2-Hinweise pro Konzept pruefen willst.
+- Reference: Wenn du Normnachweise je Konzept (ESRS/Regulation) nachvollziehen willst.
+- Calculation: Wenn du Auswirkungen auf Rollups/Formeln bei Konzeptaenderungen abschaetzen willst.
+
+---
+
+## 7) Coverage View lesen
+
+Was die Ansicht zeigt:
+
+- Abdeckung je Konzept ueber vier Achsen: Mapping, Layout, Enumeration, Dimensionen.
+
+Wie man sie liest:
+
+1. Zuerst Summary-Karten betrachten (gesamt vs. ohne Layout).
+2. Dann in der Tabelle auf Konzepte mit Layout = nein fokussieren.
+3. Bei kritischen Konzepten Felder/Placeholders gegenpruefen.
+
+Beispiel:
+
+- Ein Konzept mit Mapping = ja, Layout = nein ist fachlich vorbereitet, aber im Berichtstemplate noch nicht sichtbar.
+
+## 8) Enumeration View lesen
+
+Was die Ansicht zeigt:
+
+- Enumeration-relevante Konzepte mit Mapping-Domain, Allowed Values und Taxonomie-Hinweisen (enum2:item/set, domain, linkrole).
+
+Wie man sie liest:
+
+1. Nach Konzept oder Domain suchen.
+2. Mapping-Domain mit Taxonomie-Domain vergleichen.
+3. Allowed Values als Eingabekontrakt fuer Datenquelle/Validierung nutzen.
+
+Beispiel:
+
+- Wenn Mapping-Domain gesetzt ist, aber keine Allowed Values gepflegt sind, sollte die Feldvalidierung ergaenzt werden.
+
+## 9) Reference View lesen
+
+Was die Ansicht zeigt:
+
+- Konzept-zu-Referenz-Nachweise aus output/arelle-concept-reference.csv.
+- Verknuepfung zu Mapping-Feldern und Placeholders (falls vorhanden).
+
+Wie man sie liest:
+
+1. Konzept oder ESRS-Referenz im Suchfeld eingeben.
+2. Referenzliste pro Konzept pruefen (z. B. ESRS E1-6, S1-1 AR 12).
+3. Bei gemappten Konzepten Feld/Placeholder als Implementierungsanker nutzen.
+
+Beispiel:
+
+- Wenn ein Konzept mehrere Referenzen traegt, ist es fachlich in mehreren Offenlegungskontexten relevant und sollte bei Scope-Aenderungen priorisiert getestet werden.
+
+## 10) Calculation View lesen
+
+Was die Ansicht zeigt:
+
+- Sample der Calculation-Kanten (Konzept -> Konzept).
+- Formula-Mentions je Konzept aus den Formula-XML-Dateien.
+- Impact-Tabelle mit Calc-Degree und Formula-Mentions.
+
+Wie man sie liest:
+
+1. In der Impact-Tabelle Konzepte mit hohem Calc-Degree identifizieren.
+2. Danach Formula-Mentions pruefen, um Validierungsfolgen abzuschaetzen.
+3. Bei gemappten Feldern gezielt Regressionstests fuer diese Felder ausfuehren.
+
+Beispiel:
+
+- Ein Konzept mit hoher Degree-Zahl und vielen Formula-Mentions ist ein Hotspot. Aenderungen dort koennen sowohl Aggregationen als auch Formellogik beeinflussen.
