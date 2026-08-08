@@ -824,7 +824,7 @@ public class TaxonomyVisualizationExporter {
                         .append("<button type=\"button\" class=\"secondary\" onclick=\"toggleFullscreen()\">Fullscreen</button>")
                         .append("<input id=\"cubeSearch\" type=\"search\" placeholder=\"Hypercube oder Dimension suchen...\" oninput=\"applyCubeFilter()\">")
                         .append("</div>")
-                        .append("<section><h2>3D Stage</h2><div id=\"hypercube3dStage\" class=\"hypercube-3d-stage\"><canvas id=\"hypercube3dCanvas\"></canvas><div id=\"hypercube3dTooltip\" class=\"hypercube-3d-tooltip\" hidden></div></div>")
+                        .append("<section><h2>3D Stage</h2><div id=\"hypercube3dStage\" class=\"hypercube-3d-stage\"><canvas id=\"hypercube3dCanvas\"></canvas><div id=\"hypercube3dTooltip\" class=\"hypercube-3d-tooltip\" hidden></div><aside id=\"hypercube3dOverlay\" class=\"hypercube-3d-overlay\"><div class=\"overlay-title\">Auswahl</div><div class=\"overlay-body\">Objekt anklicken, um Details zu sehen.</div></aside></div>")
                         .append("<div id=\"hypercube3dInfo\" class=\"node-info\">Objekt anklicken fuer Details. Maus: Linke Taste orbit, Shift+Linksklick oder rechte Taste pan, Scroll zoom. Tastatur: W/A/S/D fuer Vor/Zurueck/Seitwaerts, Q/E fuer Hoch/Runter.</div></section>")
                         .append("<section><h2>Top Hypercubes nach Member-Anzahl</h2><table class=\"layout-table\"><thead><tr><th>Hypercube</th><th>Dimensionen</th><th>Domains</th><th>Members</th><th>Defaults</th><th>Primary-Bindings</th></tr></thead><tbody id=\"hypercube3dTable\"></tbody></table></section>");
 
@@ -834,6 +834,11 @@ public class TaxonomyVisualizationExporter {
                         .hypercube-3d-stage{position:relative;width:100%;height:min(1440px,calc(100vh - 140px));min-height:740px;background:radial-gradient(circle at 20% 10%,#13263f 0%,#0c1a2c 52%,#050a12 100%);border:1px solid #1b3b5f;border-radius:16px;overflow:hidden;}
                         #hypercube3dCanvas{width:100%;height:100%;display:block;}
                         .hypercube-3d-tooltip{position:absolute;pointer-events:none;background:rgba(8,18,30,.94);color:#e8f2ff;border:1px solid #2f5f8f;border-radius:10px;padding:8px 10px;max-width:360px;font-size:.9rem;line-height:1.35;box-shadow:0 8px 20px rgba(0,0,0,.35);z-index:20;}
+                        .hypercube-3d-overlay{display:none;position:absolute;top:16px;right:16px;width:min(460px,42vw);max-height:calc(100% - 32px);overflow:auto;background:rgba(7,15,24,.82);backdrop-filter:blur(6px);border:1px solid #3f5c7c;border-radius:12px;color:#e9f2ff;padding:10px 12px;z-index:22;box-shadow:0 8px 24px rgba(0,0,0,.35);}
+                        .hypercube-3d-overlay .overlay-title{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:#8fc3ff;margin-bottom:6px;font-weight:700;}
+                        .hypercube-3d-overlay .overlay-body{font-size:.9rem;line-height:1.45;}
+                        .hypercube-3d-overlay code{background:rgba(23,55,88,.72);color:#d8ecff;}
+                        .hypercube-3d-stage:fullscreen .hypercube-3d-overlay,.hypercube-3d-stage.is-fullscreen .hypercube-3d-overlay{display:block;}
                         @media (max-width: 1400px){
                             .hypercube-3d-stage{height:min(1080px,calc(100vh - 130px));min-height:620px;}
                         }
@@ -845,6 +850,7 @@ public class TaxonomyVisualizationExporter {
                         const canvas=document.getElementById('hypercube3dCanvas');
                         const tooltip=document.getElementById('hypercube3dTooltip');
                         const info=document.getElementById('hypercube3dInfo');
+                        const overlay=document.getElementById('hypercube3dOverlay');
                         const tableBody=document.getElementById('hypercube3dTable');
 
                         let scene,camera,renderer,controls,raycaster;
@@ -896,6 +902,8 @@ public class TaxonomyVisualizationExporter {
                             renderer.domElement.addEventListener('mouseleave',onPointerLeave);
                             renderer.domElement.addEventListener('click',onPointerClick);
                             window.addEventListener('resize',resizeScene);
+                            document.addEventListener('fullscreenchange',syncFullscreenUi);
+                            syncFullscreenUi();
 
                             animate();
                         }
@@ -1244,8 +1252,14 @@ public class TaxonomyVisualizationExporter {
                             selected=hovered;
                             highlightSelection();
                             const data=hovered.userData||{};
+                            const detailsHtml=selectionDetailsHtml(data);
+                            info.innerHTML=detailsHtml;
+                            renderOverlay(detailsHtml);
+                        }
+
+                        function selectionDetailsHtml(data){
                             if(data.type==='cube'){
-                                info.innerHTML='<strong>Hypercube:</strong> <code>'+escapeHtml(data.cube.id)+'</code>'
+                                return '<strong>Hypercube:</strong> <code>'+escapeHtml(data.cube.id)+'</code>'
                                     + '<div class="neighbor-list">'
                                     + '<div>Dimensionen: '+(data.cube.dimensions||[]).length+'</div>'
                                     + '<div>Domains: '+data.cube.totalDomains+'</div>'
@@ -1253,8 +1267,9 @@ public class TaxonomyVisualizationExporter {
                                     + '<div>Defaults: '+data.cube.totalDefaults+'</div>'
                                     + '<div>Primary-Bindings: '+data.cube.primaryBindings+'</div>'
                                     + '</div>';
-                            } else if(data.type==='dimension'){
-                                info.innerHTML='<strong>Dimension:</strong> <code>'+escapeHtml(data.dimension.id)+'</code>'
+                            }
+                            if(data.type==='dimension'){
+                                return '<strong>Dimension:</strong> <code>'+escapeHtml(data.dimension.id)+'</code>'
                                     + '<div class="neighbor-list">'
                                     + '<div>Hypercube: <code>'+escapeHtml(data.cube.id)+'</code></div>'
                                     + '<div>Domains: '+data.dimension.domains+'</div>'
@@ -1262,6 +1277,25 @@ public class TaxonomyVisualizationExporter {
                                     + '<div>Defaults: '+data.dimension.defaults+'</div>'
                                     + '</div>';
                             }
+                            return 'Objekt anklicken, um Details zu sehen.';
+                        }
+
+                        function renderOverlay(detailsHtml){
+                            if(!overlay){
+                                return;
+                            }
+                            const body=overlay.querySelector('.overlay-body');
+                            if(body){
+                                body.innerHTML=detailsHtml;
+                            }
+                        }
+
+                        function syncFullscreenUi(){
+                            if(!stage||!overlay){
+                                return;
+                            }
+                            const isFullscreen=document.fullscreenElement===stage;
+                            stage.classList.toggle('is-fullscreen',isFullscreen);
                         }
 
                         function tooltipText(data){
