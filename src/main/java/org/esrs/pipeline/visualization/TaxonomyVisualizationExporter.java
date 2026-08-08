@@ -825,7 +825,7 @@ public class TaxonomyVisualizationExporter {
                         .append("<input id=\"cubeSearch\" type=\"search\" placeholder=\"Hypercube oder Dimension suchen...\" oninput=\"applyCubeFilter()\">")
                         .append("</div>")
                         .append("<section><h2>3D Stage</h2><div id=\"hypercube3dStage\" class=\"hypercube-3d-stage\"><canvas id=\"hypercube3dCanvas\"></canvas><div id=\"hypercube3dTooltip\" class=\"hypercube-3d-tooltip\" hidden></div></div>")
-                        .append("<div id=\"hypercube3dInfo\" class=\"node-info\">Objekt anklicken fuer Details. Maus: Linke Taste orbit, rechte Taste pan, Scroll zoom.</div></section>")
+                        .append("<div id=\"hypercube3dInfo\" class=\"node-info\">Objekt anklicken fuer Details. Maus: Linke Taste orbit, Shift+Linksklick oder rechte Taste pan, Scroll zoom. Tastatur: W/A/S/D fuer Vor/Zurueck/Seitwaerts, Q/E fuer Hoch/Runter.</div></section>")
                         .append("<section><h2>Top Hypercubes nach Member-Anzahl</h2><table class=\"layout-table\"><thead><tr><th>Hypercube</th><th>Dimensionen</th><th>Domains</th><th>Members</th><th>Defaults</th><th>Primary-Bindings</th></tr></thead><tbody id=\"hypercube3dTable\"></tbody></table></section>");
 
                 String scriptTemplate = """
@@ -869,7 +869,6 @@ public class TaxonomyVisualizationExporter {
 
                             scene=new THREE.Scene();
                             scene.background=new THREE.Color(0x070f18);
-                            scene.fog=new THREE.Fog(0x070f18,280,1200);
 
                             const width=stage.clientWidth;
                             const height=stage.clientHeight;
@@ -902,20 +901,27 @@ public class TaxonomyVisualizationExporter {
                         }
 
                         function addLights(){
-                            const hemi=new THREE.HemisphereLight(0xc5ddff,0x101820,0.85);
+                            const hemi=new THREE.HemisphereLight(0xd7e8ff,0x243a54,1.05);
                             scene.add(hemi);
 
-                            const dirA=new THREE.DirectionalLight(0xffffff,0.8);
+                            const ambient=new THREE.AmbientLight(0x8fb2d6,0.42);
+                            scene.add(ambient);
+
+                            const dirA=new THREE.DirectionalLight(0xffffff,0.9);
                             dirA.position.set(180,220,140);
                             scene.add(dirA);
 
-                            const dirB=new THREE.DirectionalLight(0x89b7ff,0.55);
+                            const dirB=new THREE.DirectionalLight(0x89b7ff,0.72);
                             dirB.position.set(-160,120,-180);
                             scene.add(dirB);
+
+                            const dirC=new THREE.DirectionalLight(0xa7d6ff,0.48);
+                            dirC.position.set(0,80,260);
+                            scene.add(dirC);
                         }
 
                         function addReferenceGrid(){
-                            const grid=new THREE.GridHelper(1200,28,0x2b4f72,0x1c3148);
+                            const grid=new THREE.GridHelper(1200,28,0x3d648d,0x284763);
                             grid.position.y=-38;
                             scene.add(grid);
                         }
@@ -930,8 +936,10 @@ public class TaxonomyVisualizationExporter {
                                 maxDistance:1400,
                                 rotating:false,
                                 panning:false,
+                                moving:false,
                                 lastX:0,
-                                lastY:0
+                                lastY:0,
+                                keyState:Object.create(null)
                             };
 
                             const tmpDir=new THREE.Vector3();
@@ -960,8 +968,9 @@ public class TaxonomyVisualizationExporter {
                             function onPointerDown(event){
                                 state.lastX=event.clientX;
                                 state.lastY=event.clientY;
-                                state.rotating=event.button===0;
-                                state.panning=event.button===2;
+                                state.rotating=event.button===0 && !event.shiftKey;
+                                state.panning=event.button===2 || event.button===1 || (event.button===0 && event.shiftKey);
+                                state.moving=state.rotating||state.panning;
                                 if(state.rotating||state.panning){
                                     domElement.setPointerCapture?.(event.pointerId);
                                 }
@@ -993,6 +1002,7 @@ public class TaxonomyVisualizationExporter {
                             function onPointerUp(event){
                                 state.rotating=false;
                                 state.panning=false;
+                                state.moving=false;
                                 domElement.releasePointerCapture?.(event.pointerId);
                             }
 
@@ -1003,12 +1013,66 @@ public class TaxonomyVisualizationExporter {
                                 apply();
                             }
 
+                            function onKeyDown(event){
+                                state.keyState[event.code]=true;
+                            }
+
+                            function onKeyUp(event){
+                                delete state.keyState[event.code];
+                            }
+
+                            function moveByKeys(){
+                                if(!camera){
+                                    return;
+                                }
+                                const keys=state.keyState;
+                                if(!keys || Object.keys(keys).length===0){
+                                    return;
+                                }
+
+                                const speedBase=Math.max(0.8,state.distance*0.008);
+                                const fast=(keys.ShiftLeft||keys.ShiftRight)?2.2:1.0;
+                                const speed=speedBase*fast;
+
+                                camera.getWorldDirection(tmpDir);
+                                tmpDir.normalize();
+                                tmpRight.crossVectors(tmpDir,camera.up).normalize();
+                                tmpUp.copy(camera.up).normalize();
+
+                                const delta=new THREE.Vector3();
+                                if(keys.KeyW||keys.ArrowUp){
+                                    delta.addScaledVector(tmpDir,speed);
+                                }
+                                if(keys.KeyS||keys.ArrowDown){
+                                    delta.addScaledVector(tmpDir,-speed);
+                                }
+                                if(keys.KeyA||keys.ArrowLeft){
+                                    delta.addScaledVector(tmpRight,-speed);
+                                }
+                                if(keys.KeyD||keys.ArrowRight){
+                                    delta.addScaledVector(tmpRight,speed);
+                                }
+                                if(keys.KeyQ){
+                                    delta.addScaledVector(tmpUp,speed);
+                                }
+                                if(keys.KeyE){
+                                    delta.addScaledVector(tmpUp,-speed);
+                                }
+
+                                if(delta.lengthSq()>0){
+                                    state.target.add(delta);
+                                    apply();
+                                }
+                            }
+
                             domElement.addEventListener('contextmenu',event=>event.preventDefault());
                             domElement.addEventListener('pointerdown',onPointerDown);
                             domElement.addEventListener('pointermove',onPointerMove);
                             domElement.addEventListener('pointerup',onPointerUp);
                             domElement.addEventListener('pointercancel',onPointerUp);
                             domElement.addEventListener('wheel',onWheel,{passive:false});
+                            window.addEventListener('keydown',onKeyDown);
+                            window.addEventListener('keyup',onKeyUp);
 
                             return {
                                 target:state.target,
@@ -1017,6 +1081,7 @@ public class TaxonomyVisualizationExporter {
                                 update(){
                                     state.minDistance=this.minDistance;
                                     state.maxDistance=this.maxDistance;
+                                    moveByKeys();
                                     apply();
                                 }
                             };
