@@ -105,6 +105,7 @@ public class TaxonomyVisualizationExporter {
         Path dimensionCooccurrenceHtml = outputHtml.resolveSibling(stem + "-dimension-cooccurrence.html");
         Path defaultMemberQualityHtml = outputHtml.resolveSibling(stem + "-default-member-quality.html");
         Path enumDomainValidityHtml = outputHtml.resolveSibling(stem + "-enum-domain-validity.html");
+        Path dashboardHtml = outputHtml.resolveSibling(stem + "-dashboard.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -134,7 +135,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(dimensionCooccurrenceHtml, renderDimensionCooccurrenceHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(defaultMemberQualityHtml, renderDefaultMemberQualityHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(enumDomainValidityHtml, renderEnumDomainValidityHtml(mappingsByConcept), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml), StandardCharsets.UTF_8);
+        Files.writeString(dashboardHtml, renderDashboardHtml(treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, dashboardHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -749,11 +751,15 @@ public class TaxonomyVisualizationExporter {
                                       Path traceabilityMatrixHtml,
                                       Path dimensionCooccurrenceHtml,
                                       Path defaultMemberQualityHtml,
-                                      Path enumDomainValidityHtml) {
+                                      Path enumDomainValidityHtml,
+                                      Path dashboardHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
             .append("<div class=\"summary\">")
+            .append("<a href=\"")
+            .append(escapeHtml(fileNameOnly(dashboardHtml)))
+            .append("\" class=\"theme-chip\"><span class=\"dot\" style=\"background:#1e5f99\"></span>Master Dashboard oeffnen</a>")
             .append(summaryCard("Präsentationsrollen", forest.roleCount()))
             .append(summaryCard("Knoten", forest.nodeCount()))
             .append(summaryCard("Konzepte", mappingsByConcept.size()))
@@ -791,6 +797,83 @@ public class TaxonomyVisualizationExporter {
                         .append(viewCard("27. Enum Domain Validity", fileNameOnly(enumDomainValidityHtml), "Uebersicht je Enumeration-Domain mit Nutzungs- und Value-Signalen"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
+    }
+
+    private String renderDashboardHtml(Path treeHtml,
+                                       Path graphHtml,
+                                       Path layerHtml,
+                                       Path matrixHtml,
+                                       Path flowHtml,
+                                       Path hypercubeHtml,
+                                       Path hypercube3dHtml,
+                                       Path coverageHtml,
+                                       Path enumerationHtml,
+                                       Path referenceHtml,
+                                       Path calculationHtml,
+                                       Path intersectionHtml,
+                                       Path validationHtml,
+                                       Path allocationHtml,
+                                       Path statsHtml,
+                                       Path complexityHtml,
+                                       Path impactHeatmapHtml,
+                                       Path hypercubeDimensionInventoryHtml,
+                                       Path mappingFlowHtml,
+                                       Path conceptBacklogHtml,
+                                       Path scopePeriodHtml,
+                                       Path ruleCoverageMatrixHtml,
+                                       Path intersectionRiskHtml,
+                                       Path traceabilityMatrixHtml,
+                                       Path dimensionCooccurrenceHtml,
+                                       Path defaultMemberQualityHtml,
+                                       Path enumDomainValidityHtml) {
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Master Dashboard: Visual Analytics Hub</h1>")
+            .append("<p class=\"lead\">Ein zentraler Einstieg mit globaler Suche und Themenfiltern fuer alle Visualisierungsansichten.</p>")
+            .append("<div class=\"toolbar\">")
+            .append("<input id=\"dashSearch\" type=\"search\" placeholder=\"Ansicht, Thema oder Stichwort suchen...\" oninput=\"applyDashFilter()\">")
+            .append("<label class=\"filter\"><input type=\"checkbox\" id=\"dashFocusStructure\" onchange=\"applyDashFilter()\"> Struktur</label>")
+            .append("<label class=\"filter\"><input type=\"checkbox\" id=\"dashFocusQuality\" onchange=\"applyDashFilter()\"> Qualitaet</label>")
+            .append("<label class=\"filter\"><input type=\"checkbox\" id=\"dashFocusCoverage\" onchange=\"applyDashFilter()\"> Coverage</label>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"saveDashFilters()\">Filter speichern</button>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"loadDashFilters()\">Filter laden</button>")
+            .append("</div>")
+            .append("<section><h2>Ansichten im Kontext</h2><div class=\"flow-grid\" id=\"dashCards\">")
+            .append(dashboardCard("Tree", fileNameOnly(treeHtml), "struktur navigation hierarchy drilldown", "Struktur"))
+            .append(dashboardCard("Graph", fileNameOnly(graphHtml), "dependency relation network", "Struktur"))
+            .append(dashboardCard("Layer", fileNameOnly(layerHtml), "layer technical source", "Struktur"))
+            .append(dashboardCard("Matrix", fileNameOnly(matrixHtml), "mapping placeholder index", "Coverage"))
+            .append(dashboardCard("Flow", fileNameOnly(flowHtml), "process journey disclosure", "Struktur"))
+            .append(dashboardCard("Hypercube", fileNameOnly(hypercubeHtml), "dimension domain member", "Struktur"))
+            .append(dashboardCard("Hypercube 3D", fileNameOnly(hypercube3dHtml), "3d cube dimension", "Struktur"))
+            .append(dashboardCard("Coverage", fileNameOnly(coverageHtml), "layout mapping completeness", "Coverage"))
+            .append(dashboardCard("Enumeration", fileNameOnly(enumerationHtml), "enum domain allowed values", "Quality"))
+            .append(dashboardCard("Reference", fileNameOnly(referenceHtml), "traceability esrs references", "Coverage"))
+            .append(dashboardCard("Calculation", fileNameOnly(calculationHtml), "formula dependency impact", "Quality"))
+            .append(dashboardCard("Intersection", fileNameOnly(intersectionHtml), "dimension pairs combinations", "Struktur"))
+            .append(dashboardCard("Validation", fileNameOnly(validationHtml), "rules formulas checks", "Quality"))
+            .append(dashboardCard("Allocation", fileNameOnly(allocationHtml), "section placeholder concept", "Coverage"))
+            .append(dashboardCard("Stats", fileNameOnly(statsHtml), "edges nodes degrees", "Struktur"))
+            .append(dashboardCard("Complexity", fileNameOnly(complexityHtml), "risk score concept", "Quality"))
+            .append(dashboardCard("Impact Heatmap", fileNameOnly(impactHeatmapHtml), "section impact score", "Coverage"))
+            .append(dashboardCard("Hypercube Dimension Inventar", fileNameOnly(hypercubeDimensionInventoryHtml), "dimension inventory defaults members", "Quality"))
+            .append(dashboardCard("Mapping Flow", fileNameOnly(mappingFlowHtml), "field concept hypercube flow", "Coverage"))
+            .append(dashboardCard("Concept Backlog", fileNameOnly(conceptBacklogHtml), "priority backlog risk", "Quality"))
+            .append(dashboardCard("Scope & Period", fileNameOnly(scopePeriodHtml), "period unit section", "Coverage"))
+            .append(dashboardCard("Rule Coverage Matrix", fileNameOnly(ruleCoverageMatrixHtml), "formula concept matrix", "Coverage"))
+            .append(dashboardCard("Intersection Risk", fileNameOnly(intersectionRiskHtml), "dimension risk combinations", "Quality"))
+            .append(dashboardCard("Traceability Matrix", fileNameOnly(traceabilityMatrixHtml), "reference field placeholder", "Coverage"))
+            .append(dashboardCard("Dimension Co-Occurrence", fileNameOnly(dimensionCooccurrenceHtml), "dimension frequency pairs", "Struktur"))
+            .append(dashboardCard("Default Member Quality", fileNameOnly(defaultMemberQualityHtml), "defaults consistency", "Quality"))
+            .append(dashboardCard("Enum Domain Validity", fileNameOnly(enumDomainValidityHtml), "enum domain validity", "Quality"))
+            .append("</div></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyDashFilter(){const q=normalize(document.getElementById('dashSearch').value.trim());const fStruct=document.getElementById('dashFocusStructure').checked;const fQuality=document.getElementById('dashFocusQuality').checked;const fCoverage=document.getElementById('dashFocusCoverage').checked;document.querySelectorAll('.dash-card').forEach(c=>{const s=(c.dataset.search||'');const g=(c.dataset.group||'');const textOk=!q||s.includes(q);const groupWanted=(!fStruct&&!fQuality&&!fCoverage)||(fStruct&&g==='struktur')||(fQuality&&g==='quality')||(fCoverage&&g==='coverage');c.hidden=!(textOk&&groupWanted);});}"
+            + "function saveDashFilters(){localStorage.setItem('dashFilters',JSON.stringify({q:document.getElementById('dashSearch').value,structure:document.getElementById('dashFocusStructure').checked,quality:document.getElementById('dashFocusQuality').checked,coverage:document.getElementById('dashFocusCoverage').checked}));}"
+            + "function loadDashFilters(){try{const v=JSON.parse(localStorage.getItem('dashFilters')||'{}');document.getElementById('dashSearch').value=v.q||'';document.getElementById('dashFocusStructure').checked=!!v.structure;document.getElementById('dashFocusQuality').checked=!!v.quality;document.getElementById('dashFocusCoverage').checked=!!v.coverage;}catch(e){}applyDashFilter();}"
+            + "</script>";
+        return renderPage("Master Dashboard", body.toString(), script);
     }
 
         private String renderHypercube3dHtml(TaxonomyMetadata metadata) {
@@ -3818,6 +3901,16 @@ public class TaxonomyVisualizationExporter {
     private String viewCard(String title, String href, String description) {
         return "<article class=\"flow-step\"><div class=\"title\">" + escapeHtml(title)
             + "</div><div class=\"muted\">" + escapeHtml(description)
+            + "</div><div><a href=\"" + escapeHtml(href) + "\">Öffnen</a></div></article>";
+    }
+
+    private String dashboardCard(String title, String href, String searchTags, String group) {
+        String normalizedGroup = group == null ? "other" : group.toLowerCase(Locale.ROOT);
+        String normalizedSearch = normalizeSearch(title + " " + searchTags + " " + group);
+        return "<article class=\"flow-step dash-card\" data-group=\"" + escapeHtml(normalizedGroup)
+            + "\" data-search=\"" + escapeHtml(normalizedSearch)
+            + "\"><div class=\"title\">" + escapeHtml(title)
+            + "</div><div class=\"muted\">" + escapeHtml(group)
             + "</div><div><a href=\"" + escapeHtml(href) + "\">Öffnen</a></div></article>";
     }
 
