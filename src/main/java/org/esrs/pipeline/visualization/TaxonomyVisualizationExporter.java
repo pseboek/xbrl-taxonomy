@@ -381,7 +381,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0));
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0), Map.of());
         }
 
         long xsdElementCount = 0;
@@ -503,6 +503,7 @@ public class TaxonomyVisualizationExporter {
 
         List<String> hrefSample = hrefTargets.stream().limit(80).toList();
         HypercubeMetadata hypercubeMetadata = buildHypercubeMetadata(dimensionalArcs);
+        Map<String, List<String>> domainMembersByDomain = buildDomainMembersByDomain(dimensionalArcs);
         Map<String, List<String>> formulaConceptsByFile = new TreeMap<>();
         for (Map.Entry<String, Set<String>> entry : formulaConceptsByFileRaw.entrySet()) {
             formulaConceptsByFile.put(entry.getKey(), new ArrayList<>(entry.getValue()));
@@ -517,7 +518,8 @@ public class TaxonomyVisualizationExporter {
             taxonomyEnumerationsByConcept,
             formulaMentionsByConcept,
             formulaConceptsByFile,
-            hypercubeMetadata
+            hypercubeMetadata,
+            domainMembersByDomain
         );
     }
 
@@ -621,6 +623,41 @@ public class TaxonomyVisualizationExporter {
         }
 
         return new HypercubeMetadata(cubes, relationCount);
+    }
+
+    private Map<String, List<String>> buildDomainMembersByDomain(List<DimensionalArc> dimensionalArcs) {
+        if (dimensionalArcs == null || dimensionalArcs.isEmpty()) {
+            return Map.of();
+        }
+
+        Map<String, Set<String>> directMembers = new TreeMap<>();
+        for (DimensionalArc arc : dimensionalArcs) {
+            if (!DIM_ARCROLE_DOMAIN_MEMBER.equals(arc.arcrole())) {
+                continue;
+            }
+            if (arc.source() == null || arc.source().isBlank() || arc.target() == null || arc.target().isBlank()) {
+                continue;
+            }
+            directMembers.computeIfAbsent(arc.source(), key -> new TreeSet<>()).add(arc.target());
+        }
+
+        Map<String, List<String>> domainMembersByDomain = new TreeMap<>();
+        for (String domain : directMembers.keySet()) {
+            Set<String> visited = new TreeSet<>();
+            List<String> stack = new ArrayList<>(directMembers.getOrDefault(domain, Set.of()));
+            while (!stack.isEmpty()) {
+                String member = stack.remove(stack.size() - 1);
+                if (!visited.add(member)) {
+                    continue;
+                }
+                Set<String> nestedMembers = directMembers.get(member);
+                if (nestedMembers != null && !nestedMembers.isEmpty()) {
+                    stack.addAll(nestedMembers);
+                }
+            }
+            domainMembersByDomain.put(domain, new ArrayList<>(visited));
+        }
+        return domainMembersByDomain;
     }
 
     private void collectEnumerationConceptsFromText(String xsdText,
@@ -2748,6 +2785,7 @@ public class TaxonomyVisualizationExporter {
     private String renderEnumDomainValidityHtml(Map<String, List<MappingEntry>> mappingsByConcept,
                                                 TaxonomyMetadata metadata) {
         Map<String, EnumDomainValidityRow> rowsByDomain = new TreeMap<>();
+        Map<String, Set<String>> taxonomyAllowedValuesByDomain = new TreeMap<>();
         for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
             for (MappingEntry entry : conceptEntry.getValue()) {
                 if (entry.enumerationDomain() == null || entry.enumerationDomain().isBlank()) {
@@ -2781,6 +2819,27 @@ public class TaxonomyVisualizationExporter {
             }
         }
 
+        if (metadata != null && metadata.domainMembersByDomain() != null) {
+            for (Map.Entry<String, List<String>> memberEntry : metadata.domainMembersByDomain().entrySet()) {
+                String domain = memberEntry.getKey();
+                if (domain == null || domain.isBlank()) {
+                    continue;
+                }
+                String normalizedDomainKey = normalizeConceptKey(domain.trim());
+                Set<String> values = taxonomyAllowedValuesByDomain.computeIfAbsent(normalizedDomainKey, key -> new TreeSet<>());
+                for (String member : memberEntry.getValue()) {
+                    if (member != null && !member.isBlank()) {
+                        values.add(toDisplayQName(member));
+                    }
+                }
+            }
+        }
+
+        for (Map.Entry<String, EnumDomainValidityRow> rowEntry : rowsByDomain.entrySet()) {
+            Set<String> taxonomyValues = taxonomyAllowedValuesByDomain.getOrDefault(normalizeConceptKey(rowEntry.getKey()), Set.of());
+            rowEntry.getValue().allowedValues().addAll(taxonomyValues);
+        }
+
         List<EnumDomainValidityRow> rows = new ArrayList<>(rowsByDomain.values());
         rows.sort(Comparator.comparingInt((EnumDomainValidityRow row) -> row.concepts().size()).reversed().thenComparing(EnumDomainValidityRow::domain));
 
@@ -2790,7 +2849,7 @@ public class TaxonomyVisualizationExporter {
             .append("<section><table class=\"layout-table\"><thead><tr><th>Domain</th><th>Konzepte</th><th>Felder</th><th>Allowed Values</th></tr></thead><tbody>");
 
         for (EnumDomainValidityRow row : rows) {
-            String search = normalizeSearch(row.domain() + " " + String.join(" ", row.concepts()) + " " + String.join(" ", row.fields()));
+            String search = normalizeSearch(row.domain() + " " + String.join(" ", row.concepts()) + " " + String.join(" ", row.fields()) + " " + String.join(" ", row.allowedValues()));
             body.append("<tr class=\"enum-domain-row\" data-search=\"")
                 .append(escapeHtml(search))
                 .append("\"><td><code>")
@@ -4623,6 +4682,20 @@ public class TaxonomyVisualizationExporter {
         return value.replace(':', '_');
     }
 
+    private static String toDisplayQName(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        if (value.contains(":")) {
+            return value;
+        }
+        int underscore = value.indexOf('_');
+        if (underscore <= 0 || underscore >= value.length() - 1) {
+            return value;
+        }
+        return value.substring(0, underscore) + ":" + value.substring(underscore + 1);
+    }
+
     private record LayoutSnapshot(Map<String, String> placeholderMappings) {
     }
 
@@ -4798,7 +4871,8 @@ public class TaxonomyVisualizationExporter {
                                     Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept,
                                     Map<String, Integer> formulaMentionsByConcept,
                                     Map<String, List<String>> formulaConceptsByFile,
-                                    HypercubeMetadata hypercubeMetadata) {
+                                    HypercubeMetadata hypercubeMetadata,
+                                    Map<String, List<String>> domainMembersByDomain) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();
             layers.addAll(fileCountByLayer.keySet());
