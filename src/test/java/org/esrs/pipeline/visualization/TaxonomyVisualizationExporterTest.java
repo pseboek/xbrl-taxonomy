@@ -45,6 +45,7 @@ class TaxonomyVisualizationExporterTest {
         Path dimensionCooccurrenceHtml = outputDir.resolve("taxonomy-visualization-dimension-cooccurrence.html");
         Path defaultMemberQualityHtml = outputDir.resolve("taxonomy-visualization-default-member-quality.html");
         Path enumDomainValidityHtml = outputDir.resolve("taxonomy-visualization-enum-domain-validity.html");
+        Path dashboardHtml = outputDir.resolve("taxonomy-visualization-dashboard.html");
 
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
         assertDoesNotThrow(() -> exporter.export(
@@ -82,6 +83,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(Files.exists(dimensionCooccurrenceHtml));
         assertTrue(Files.exists(defaultMemberQualityHtml));
         assertTrue(Files.exists(enumDomainValidityHtml));
+        assertTrue(Files.exists(dashboardHtml));
 
         String html = Files.readString(outputHtml, StandardCharsets.UTF_8);
         assertTrue(html.contains("ESRS Taxonomie-Visualisierungen"));
@@ -112,6 +114,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(html.contains("taxonomy-visualization-dimension-cooccurrence.html"));
         assertTrue(html.contains("taxonomy-visualization-default-member-quality.html"));
         assertTrue(html.contains("taxonomy-visualization-enum-domain-validity.html"));
+        assertTrue(html.contains("taxonomy-visualization-dashboard.html"));
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
         assertTrue(tree.contains("Präsentationshierarchie"));
@@ -189,5 +192,8 @@ class TaxonomyVisualizationExporterTest {
 
         String enumDomainValidity = Files.readString(enumDomainValidityHtml, StandardCharsets.UTF_8);
         assertTrue(enumDomainValidity.contains("Enum Domain Validity View"));
+
+        String dashboard = Files.readString(dashboardHtml, StandardCharsets.UTF_8);
+        assertTrue(dashboard.contains("Master Dashboard"));
     }
 }
