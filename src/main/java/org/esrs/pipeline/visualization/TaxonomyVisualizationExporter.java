@@ -134,7 +134,7 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(traceabilityMatrixHtml, renderTraceabilityMatrixHtml(mappingsByConcept, placeholdersByField, conceptReferences, metadata), StandardCharsets.UTF_8);
         Files.writeString(dimensionCooccurrenceHtml, renderDimensionCooccurrenceHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(defaultMemberQualityHtml, renderDefaultMemberQualityHtml(metadata), StandardCharsets.UTF_8);
-        Files.writeString(enumDomainValidityHtml, renderEnumDomainValidityHtml(mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(enumDomainValidityHtml, renderEnumDomainValidityHtml(mappingsByConcept, metadata), StandardCharsets.UTF_8);
         Files.writeString(dashboardHtml, renderDashboardHtml(treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml), StandardCharsets.UTF_8);
         Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, dashboardHtml), StandardCharsets.UTF_8);
 
@@ -2745,7 +2745,8 @@ public class TaxonomyVisualizationExporter {
         return renderPage("Default Member Quality View", body.toString(), script);
     }
 
-    private String renderEnumDomainValidityHtml(Map<String, List<MappingEntry>> mappingsByConcept) {
+    private String renderEnumDomainValidityHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                                TaxonomyMetadata metadata) {
         Map<String, EnumDomainValidityRow> rowsByDomain = new TreeMap<>();
         for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
             for (MappingEntry entry : conceptEntry.getValue()) {
@@ -2757,6 +2758,25 @@ public class TaxonomyVisualizationExporter {
                 row.fields().add(entry.field());
                 if (entry.allowedValues() != null) {
                     row.allowedValues().addAll(entry.allowedValues());
+                }
+            }
+        }
+
+        if (metadata != null && metadata.taxonomyEnumerationsByConcept() != null) {
+            for (Map.Entry<String, TaxonomyEnumeration> enumEntry : metadata.taxonomyEnumerationsByConcept().entrySet()) {
+                TaxonomyEnumeration taxonomyEnumeration = enumEntry.getValue();
+                if (taxonomyEnumeration == null || taxonomyEnumeration.domain() == null || taxonomyEnumeration.domain().isBlank()) {
+                    continue;
+                }
+                String domain = taxonomyEnumeration.domain().trim();
+                EnumDomainValidityRow row = rowsByDomain.computeIfAbsent(domain, key -> new EnumDomainValidityRow(key, new TreeSet<>(), new TreeSet<>(), new TreeSet<>()));
+                String concept = enumEntry.getKey();
+                row.concepts().add(concept);
+                for (MappingEntry mapping : mappingsByConcept.getOrDefault(concept, List.of())) {
+                    row.fields().add(mapping.field());
+                    if (mapping.allowedValues() != null) {
+                        row.allowedValues().addAll(mapping.allowedValues());
+                    }
                 }
             }
         }
