@@ -35,7 +35,12 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 21. `output/taxonomy-visualization-impact-heatmap.html` (Impact Heatmap View),
 22. `output/taxonomy-visualization-hypercube-dimension-inventory.html` (Hypercube Dimension Inventar),
 23. `output/taxonomy-visualization-mapping-flow.html` (Mapping Flow View),
-24. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+24. `output/taxonomy-visualization-concept-backlog.html` (Concept Backlog View),
+25. `output/taxonomy-visualization-scope-period-analysis.html` (Scope & Period Analysis),
+26. `output/taxonomy-visualization-rule-coverage-matrix.html` (Rule Coverage Matrix),
+27. `output/taxonomy-visualization-intersection-risk.html` (Intersection Risk View),
+28. `output/taxonomy-visualization-traceability-matrix.html` (Traceability Matrix View),
+29. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -103,8 +108,13 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-impact-heatmap.html` fuer Konzept-x-Section-Impactanalyse mit filterbarer Heatmap-Tabelle
 - `taxonomy-visualization-hypercube-dimension-inventory.html` fuer filterbare Inventarsicht je Hypercube-Achse (Domains, Members, Defaults)
 - `taxonomy-visualization-mapping-flow.html` fuer Feld-zu-Konzept-zu-Hypercube-Flowanalyse mit Filtern
+- `taxonomy-visualization-concept-backlog.html` fuer priorisierte Konzept-Backlog-Analyse
+- `taxonomy-visualization-scope-period-analysis.html` fuer Sicht auf Section/Periode/Einheit
+- `taxonomy-visualization-rule-coverage-matrix.html` fuer Formula-Datei-zu-Konzept-Abdeckung
+- `taxonomy-visualization-intersection-risk.html` fuer Risiko-Ranking von Dimensionspaaren
+- `taxonomy-visualization-traceability-matrix.html` fuer Referenz/Feld/Placeholder-Traceability
 
-Der Explorer enthaelt 19 Ansichten:
+Der Explorer enthaelt 24 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -125,6 +135,11 @@ Der Explorer enthaelt 19 Ansichten:
 17. Impact Heatmap: Priorisierung von Konzept-Section-Paaren nach Impact-Score (Mappings, Dimensionen, Enumeration, Placeholder)
 18. Hypercube Dimension Inventar: Filterbare Achseninventarliste fuer Hypercubes mit Domain/Member/Default-Kennzahlen
 19. Mapping Flow: Sankey-orientierte Flows Feld -> Konzept -> Hypercube als filterbare Tabelle
+20. Concept Backlog: Priorisierte Konzeptliste nach Risiko- und Abdeckungsindikatoren
+21. Scope & Period: Analyse je Section, Periode und Einheit mit Mapping-Signalen
+22. Rule Coverage Matrix: Formula-Datei x Konzept mit Mapping-Abdeckung
+23. Intersection Risk: Risiko-Ranking fuer dimensionsbasierte Kombinationsraume
+24. Traceability Matrix: Konzept-zu-Referenz-zu-Feld-Zuordnung in Tabellenform
 
 ## Visualisierungen lesen und verstehen
 
@@ -195,6 +210,11 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-impact-heatmap.html` — Heatmap-Sicht fuer Konzept-Section-Impact mit Filterung nach Section und Mindestscore.
 - `output/taxonomy-visualization-hypercube-dimension-inventory.html` — Inventarsicht pro Hypercube-Dimension mit Filtern fuer Members, Defaults und typed-axis-Indikator.
 - `output/taxonomy-visualization-mapping-flow.html` — Flow-Sicht fuer Feld-zu-Konzept-zu-Hypercube-Pfade mit Section- und Dimensionsfiltern.
+- `output/taxonomy-visualization-concept-backlog.html` — priorisierte Backlog-Sicht je Konzept mit Risikoindikatoren.
+- `output/taxonomy-visualization-scope-period-analysis.html` — Analyse von Periode und Einheit je Reporting-Section.
+- `output/taxonomy-visualization-rule-coverage-matrix.html` — Matrixsicht Formula-Dateien zu referenzierten Konzepten.
+- `output/taxonomy-visualization-intersection-risk.html` — Risikoanalyse fuer Dimensionspaar-Kombinationen.
+- `output/taxonomy-visualization-traceability-matrix.html` — Matrix fuer Referenzen, Felder und Placeholders je Konzept.
 
 Hinweise:
 

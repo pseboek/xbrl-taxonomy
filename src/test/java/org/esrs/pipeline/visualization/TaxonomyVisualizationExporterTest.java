@@ -37,6 +37,11 @@ class TaxonomyVisualizationExporterTest {
         Path impactHeatmapHtml = outputDir.resolve("taxonomy-visualization-impact-heatmap.html");
         Path hypercubeDimensionInventoryHtml = outputDir.resolve("taxonomy-visualization-hypercube-dimension-inventory.html");
         Path mappingFlowHtml = outputDir.resolve("taxonomy-visualization-mapping-flow.html");
+        Path conceptBacklogHtml = outputDir.resolve("taxonomy-visualization-concept-backlog.html");
+        Path scopePeriodHtml = outputDir.resolve("taxonomy-visualization-scope-period-analysis.html");
+        Path ruleCoverageMatrixHtml = outputDir.resolve("taxonomy-visualization-rule-coverage-matrix.html");
+        Path intersectionRiskHtml = outputDir.resolve("taxonomy-visualization-intersection-risk.html");
+        Path traceabilityMatrixHtml = outputDir.resolve("taxonomy-visualization-traceability-matrix.html");
 
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
         assertDoesNotThrow(() -> exporter.export(
@@ -66,6 +71,11 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(Files.exists(impactHeatmapHtml));
         assertTrue(Files.exists(hypercubeDimensionInventoryHtml));
         assertTrue(Files.exists(mappingFlowHtml));
+        assertTrue(Files.exists(conceptBacklogHtml));
+        assertTrue(Files.exists(scopePeriodHtml));
+        assertTrue(Files.exists(ruleCoverageMatrixHtml));
+        assertTrue(Files.exists(intersectionRiskHtml));
+        assertTrue(Files.exists(traceabilityMatrixHtml));
 
         String html = Files.readString(outputHtml, StandardCharsets.UTF_8);
         assertTrue(html.contains("ESRS Taxonomie-Visualisierungen"));
@@ -88,6 +98,11 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(html.contains("taxonomy-visualization-impact-heatmap.html"));
         assertTrue(html.contains("taxonomy-visualization-hypercube-dimension-inventory.html"));
         assertTrue(html.contains("taxonomy-visualization-mapping-flow.html"));
+        assertTrue(html.contains("taxonomy-visualization-concept-backlog.html"));
+        assertTrue(html.contains("taxonomy-visualization-scope-period-analysis.html"));
+        assertTrue(html.contains("taxonomy-visualization-rule-coverage-matrix.html"));
+        assertTrue(html.contains("taxonomy-visualization-intersection-risk.html"));
+        assertTrue(html.contains("taxonomy-visualization-traceability-matrix.html"));
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
         assertTrue(tree.contains("Präsentationshierarchie"));
@@ -141,5 +156,20 @@ class TaxonomyVisualizationExporterTest {
 
         String mappingFlow = Files.readString(mappingFlowHtml, StandardCharsets.UTF_8);
         assertTrue(mappingFlow.contains("Mapping Flow View"));
+
+        String conceptBacklog = Files.readString(conceptBacklogHtml, StandardCharsets.UTF_8);
+        assertTrue(conceptBacklog.contains("Concept Backlog View"));
+
+        String scopePeriod = Files.readString(scopePeriodHtml, StandardCharsets.UTF_8);
+        assertTrue(scopePeriod.contains("Scope & Period Analysis"));
+
+        String ruleCoverageMatrix = Files.readString(ruleCoverageMatrixHtml, StandardCharsets.UTF_8);
+        assertTrue(ruleCoverageMatrix.contains("Rule Coverage Matrix"));
+
+        String intersectionRisk = Files.readString(intersectionRiskHtml, StandardCharsets.UTF_8);
+        assertTrue(intersectionRisk.contains("Intersection Risk View"));
+
+        String traceabilityMatrix = Files.readString(traceabilityMatrixHtml, StandardCharsets.UTF_8);
+        assertTrue(traceabilityMatrix.contains("Traceability Matrix View"));
     }
 }

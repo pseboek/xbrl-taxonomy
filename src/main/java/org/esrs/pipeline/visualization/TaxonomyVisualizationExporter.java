@@ -97,6 +97,11 @@ public class TaxonomyVisualizationExporter {
         Path impactHeatmapHtml = outputHtml.resolveSibling(stem + "-impact-heatmap.html");
         Path hypercubeDimensionInventoryHtml = outputHtml.resolveSibling(stem + "-hypercube-dimension-inventory.html");
         Path mappingFlowHtml = outputHtml.resolveSibling(stem + "-mapping-flow.html");
+        Path conceptBacklogHtml = outputHtml.resolveSibling(stem + "-concept-backlog.html");
+        Path scopePeriodHtml = outputHtml.resolveSibling(stem + "-scope-period-analysis.html");
+        Path ruleCoverageMatrixHtml = outputHtml.resolveSibling(stem + "-rule-coverage-matrix.html");
+        Path intersectionRiskHtml = outputHtml.resolveSibling(stem + "-intersection-risk.html");
+        Path traceabilityMatrixHtml = outputHtml.resolveSibling(stem + "-traceability-matrix.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -118,7 +123,12 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(impactHeatmapHtml, renderImpactHeatmapHtml(mappingsByConcept, placeholdersByField), StandardCharsets.UTF_8);
         Files.writeString(hypercubeDimensionInventoryHtml, renderHypercubeDimensionInventoryHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(mappingFlowHtml, renderMappingFlowHtml(mappingsByConcept, metadata), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml), StandardCharsets.UTF_8);
+        Files.writeString(conceptBacklogHtml, renderConceptBacklogHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
+        Files.writeString(scopePeriodHtml, renderScopePeriodAnalysisHtml(mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(ruleCoverageMatrixHtml, renderRuleCoverageMatrixHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(intersectionRiskHtml, renderIntersectionRiskHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(traceabilityMatrixHtml, renderTraceabilityMatrixHtml(mappingsByConcept, placeholdersByField, conceptReferences, metadata), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -725,7 +735,12 @@ public class TaxonomyVisualizationExporter {
                                       Path complexityHtml,
                                       Path impactHeatmapHtml,
                                       Path hypercubeDimensionInventoryHtml,
-                                      Path mappingFlowHtml) {
+                                      Path mappingFlowHtml,
+                                      Path conceptBacklogHtml,
+                                      Path scopePeriodHtml,
+                                      Path ruleCoverageMatrixHtml,
+                                      Path intersectionRiskHtml,
+                                      Path traceabilityMatrixHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -757,6 +772,11 @@ public class TaxonomyVisualizationExporter {
                         .append(viewCard("17. Impact Heatmap", fileNameOnly(impactHeatmapHtml), "Konzept x Section Impact-Analyse mit filterbarer Heatmap-Tabelle"))
                         .append(viewCard("18. Hypercube Dimension Inventar", fileNameOnly(hypercubeDimensionInventoryHtml), "Filterbare Inventarliste fuer Cube-Achsen mit Domain/Member/Default-Kennzahlen"))
                         .append(viewCard("19. Mapping Flow", fileNameOnly(mappingFlowHtml), "Sankey-orientierte Feld->Konzept->Hypercube Flows als filterbare Tabelle"))
+                        .append(viewCard("20. Concept Backlog", fileNameOnly(conceptBacklogHtml), "Priorisierte Backlog-Tabelle fuer Mapping-/Layout-/Dimensionsluecken"))
+                        .append(viewCard("21. Scope & Period", fileNameOnly(scopePeriodHtml), "Analyse nach Reporting-Section, Periodentyp und Einheit"))
+                        .append(viewCard("22. Rule Coverage Matrix", fileNameOnly(ruleCoverageMatrixHtml), "Matrix Formula-Datei x Konzept mit Mapping-Hinweisen"))
+                        .append(viewCard("23. Intersection Risk", fileNameOnly(intersectionRiskHtml), "Risikoanalyse fuer Dimensionspaar-Kombinationen je Hypercube"))
+                        .append(viewCard("24. Traceability Matrix", fileNameOnly(traceabilityMatrixHtml), "Konzept-zu-Referenz-zu-Feld Matrix mit Filterung"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
     }
@@ -2279,6 +2299,248 @@ public class TaxonomyVisualizationExporter {
             + "</script>";
 
         return renderPage("Mapping Flow View", body.toString(), script);
+    }
+
+    private String renderConceptBacklogHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                            Map<String, List<String>> placeholdersByField,
+                                            TaxonomyMetadata metadata) {
+        List<ConceptBacklogRow> rows = new ArrayList<>();
+        for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
+            List<MappingEntry> entries = conceptEntry.getValue();
+            String concept = entries.isEmpty() ? conceptEntry.getKey() : entries.get(0).concept();
+            Set<String> fields = entries.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+            Set<String> placeholders = new TreeSet<>();
+            for (String field : fields) {
+                List<String> values = placeholdersByField.get(field);
+                if (values != null) {
+                    placeholders.addAll(values);
+                }
+            }
+            boolean hasLayout = !placeholders.isEmpty();
+            int dimSignals = (int) entries.stream().filter(TaxonomyVisualizationExporter::hasDimensions).count();
+            int enumSignals = (int) entries.stream().filter(TaxonomyVisualizationExporter::hasEnumeration).count()
+                + (taxonomyEnumerationForConcept(metadata, concept) == null ? 0 : 1);
+            int calc = metadata.formulaMentionsByConcept().getOrDefault(normalizeConceptKey(concept), 0);
+            int riskScore = fields.size() + dimSignals * 2 + enumSignals + calc;
+            rows.add(new ConceptBacklogRow(concept, fields.size(), hasLayout, dimSignals, enumSignals, calc, riskScore, fields, placeholders));
+        }
+
+        rows.sort(Comparator.comparingInt(ConceptBacklogRow::riskScore).reversed().thenComparing(ConceptBacklogRow::concept));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Concept Backlog View</h1>")
+            .append("<p class=\"lead\">Priorisierte Arbeitsliste je Konzept mit Risikoscore, Layoutabdeckung und Dimensions-/Enumerationssignalen.</p>")
+            .append("<div class=\"toolbar\"><input id=\"backlogSearch\" type=\"search\" placeholder=\"Konzept oder Feld suchen...\" oninput=\"applyBacklogFilter()\"><label class=\"filter\"><input id=\"backlogNoLayout\" type=\"checkbox\" onchange=\"applyBacklogFilter()\"> Nur ohne Layout</label></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Risk</th><th>Layout</th><th>Dim</th><th>Enum</th><th>Formula</th><th>Felder</th></tr></thead><tbody>");
+
+        for (ConceptBacklogRow row : rows) {
+            String search = normalizeSearch(row.concept() + " " + String.join(" ", row.fields()));
+            body.append("<tr class=\"backlog-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\" data-layout=\"")
+                .append(row.hasLayout())
+                .append("\"><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(row.riskScore())
+                .append("</td><td>")
+                .append(statusPill(row.hasLayout(), row.hasLayout() ? "ja" : "nein"))
+                .append("</td><td>")
+                .append(row.dimensionSignals())
+                .append("</td><td>")
+                .append(row.enumerationSignals())
+                .append("</td><td>")
+                .append(row.formulaMentions())
+                .append("</td><td>")
+                .append(escapeHtml(limitJoined(row.fields(), 5)))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyBacklogFilter(){const q=normalize(document.getElementById('backlogSearch').value.trim());const noLayout=document.getElementById('backlogNoLayout').checked;document.querySelectorAll('.backlog-row').forEach(r=>{const s=r.dataset.search||'';const layout=(r.dataset.layout||'false')==='true';r.hidden=!((!q||s.includes(q))&&(!noLayout||!layout));});}</script>";
+        return renderPage("Concept Backlog View", body.toString(), script);
+    }
+
+    private String renderScopePeriodAnalysisHtml(Map<String, List<MappingEntry>> mappingsByConcept) {
+        List<ScopePeriodRow> rows = new ArrayList<>();
+        for (List<MappingEntry> entries : mappingsByConcept.values()) {
+            for (MappingEntry entry : entries) {
+                rows.add(new ScopePeriodRow(
+                    deriveSection(entry.field()),
+                    entry.field(),
+                    entry.concept(),
+                    entry.period() == null || entry.period().isBlank() ? "-" : entry.period(),
+                    entry.unit() == null || entry.unit().isBlank() ? "-" : entry.unit(),
+                    hasDimensions(entry),
+                    hasEnumeration(entry)
+                ));
+            }
+        }
+
+        rows.sort(Comparator.comparing(ScopePeriodRow::section).thenComparing(ScopePeriodRow::period).thenComparing(ScopePeriodRow::field));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Scope & Period Analysis</h1>")
+            .append("<div class=\"toolbar\"><input id=\"scopeSearch\" type=\"search\" placeholder=\"Section, Feld, Konzept, Periode suchen...\" oninput=\"applyScopeFilter()\"></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Section</th><th>Feld</th><th>Konzept</th><th>Periode</th><th>Einheit</th><th>Dim</th><th>Enum</th></tr></thead><tbody>");
+
+        for (ScopePeriodRow row : rows) {
+            String search = normalizeSearch(row.section() + " " + row.field() + " " + row.concept() + " " + row.period() + " " + row.unit());
+            body.append("<tr class=\"scope-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.section()))
+                .append("</code></td><td>")
+                .append(escapeHtml(row.field()))
+                .append("</td><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(escapeHtml(row.period()))
+                .append("</td><td>")
+                .append(escapeHtml(row.unit()))
+                .append("</td><td>")
+                .append(statusPill(row.hasDimensions(), row.hasDimensions() ? "ja" : "nein"))
+                .append("</td><td>")
+                .append(statusPill(row.hasEnumeration(), row.hasEnumeration() ? "ja" : "nein"))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyScopeFilter(){const q=normalize(document.getElementById('scopeSearch').value.trim());document.querySelectorAll('.scope-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}</script>";
+        return renderPage("Scope & Period Analysis", body.toString(), script);
+    }
+
+    private String renderRuleCoverageMatrixHtml(TaxonomyMetadata metadata,
+                                                Map<String, List<MappingEntry>> mappingsByConcept) {
+        List<RuleCoverageRow> rows = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : metadata.formulaConceptsByFile().entrySet()) {
+            for (String concept : entry.getValue()) {
+                List<MappingEntry> mapped = mappingsByConcept.getOrDefault(normalizeConceptKey(concept), List.of());
+                Set<String> fields = mapped.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+                rows.add(new RuleCoverageRow(entry.getKey(), concept, !fields.isEmpty(), fields));
+            }
+        }
+
+        rows.sort(Comparator.comparing(RuleCoverageRow::formulaFile).thenComparing(RuleCoverageRow::concept));
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Rule Coverage Matrix</h1>")
+            .append("<div class=\"toolbar\"><input id=\"ruleSearch\" type=\"search\" placeholder=\"Formula-Datei oder Konzept suchen...\" oninput=\"applyRuleFilter()\"></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Formula</th><th>Konzept</th><th>Mapped</th><th>Felder</th></tr></thead><tbody>");
+
+        for (RuleCoverageRow row : rows) {
+            String search = normalizeSearch(row.formulaFile() + " " + row.concept() + " " + String.join(" ", row.fields()));
+            body.append("<tr class=\"rule-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.formulaFile()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(statusPill(row.mapped(), row.mapped() ? "ja" : "nein"))
+                .append("</td><td>")
+                .append(escapeHtml(row.fields().isEmpty() ? "-" : limitJoined(row.fields(), 5)))
+                .append("</td></tr>");
+        }
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyRuleFilter(){const q=normalize(document.getElementById('ruleSearch').value.trim());document.querySelectorAll('.rule-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}</script>";
+        return renderPage("Rule Coverage Matrix", body.toString(), script);
+    }
+
+    private String renderIntersectionRiskHtml(TaxonomyMetadata metadata) {
+        HypercubeMetadata hypercubeMetadata = metadata.hypercubeMetadata();
+        List<IntersectionRiskRow> rows = new ArrayList<>();
+        for (HypercubeCube cube : hypercubeMetadata.cubes()) {
+            List<String> dimensions = cube.dimensions();
+            for (int i = 0; i < dimensions.size(); i++) {
+                for (int j = i + 1; j < dimensions.size(); j++) {
+                    String a = dimensions.get(i);
+                    String b = dimensions.get(j);
+                    int membersA = memberCountForDimension(cube, a);
+                    int membersB = memberCountForDimension(cube, b);
+                    long combos = (long) membersA * membersB;
+                    long risk = combos + (long) Math.max(0, membersA - 1) + Math.max(0, membersB - 1);
+                    rows.add(new IntersectionRiskRow(cube.cube(), a, b, combos, risk));
+                }
+            }
+        }
+        rows.sort(Comparator.comparingLong(IntersectionRiskRow::riskScore).reversed());
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Intersection Risk View</h1>")
+            .append("<div class=\"toolbar\"><input id=\"riskSearch\" type=\"search\" placeholder=\"Hypercube oder Dimension suchen...\" oninput=\"applyRiskFilter()\"></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Hypercube</th><th>Dimension A</th><th>Dimension B</th><th>Kombinationen</th><th>Risk Score</th></tr></thead><tbody>");
+
+        for (IntersectionRiskRow row : rows) {
+            String search = normalizeSearch(row.cube() + " " + row.dimensionA() + " " + row.dimensionB());
+            body.append("<tr class=\"risk-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.cube()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.dimensionA()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.dimensionB()))
+                .append("</code></td><td>")
+                .append(row.combinations())
+                .append("</td><td>")
+                .append(row.riskScore())
+                .append("</td></tr>");
+        }
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyRiskFilter(){const q=normalize(document.getElementById('riskSearch').value.trim());document.querySelectorAll('.risk-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}</script>";
+        return renderPage("Intersection Risk View", body.toString(), script);
+    }
+
+    private String renderTraceabilityMatrixHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                                Map<String, List<String>> placeholdersByField,
+                                                Map<String, List<String>> conceptReferences,
+                                                TaxonomyMetadata metadata) {
+        Set<String> conceptKeys = new TreeSet<>(mappingsByConcept.keySet());
+        conceptKeys.addAll(conceptReferences.keySet());
+
+        List<TraceabilityMatrixRow> rows = new ArrayList<>();
+        for (String conceptKey : conceptKeys) {
+            List<MappingEntry> entries = mappingsByConcept.getOrDefault(conceptKey, List.of());
+            String concept = entries.isEmpty() ? conceptKey : entries.get(0).concept();
+            Set<String> fields = entries.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
+            Set<String> placeholders = new TreeSet<>();
+            for (String field : fields) {
+                List<String> values = placeholdersByField.get(field);
+                if (values != null) {
+                    placeholders.addAll(values);
+                }
+            }
+            List<String> refs = conceptReferences.getOrDefault(conceptKey, List.of());
+            boolean taxonomyEnum = taxonomyEnumerationForConcept(metadata, concept) != null;
+            rows.add(new TraceabilityMatrixRow(concept, refs, fields, placeholders, taxonomyEnum));
+        }
+
+        rows.sort(Comparator.comparing((TraceabilityMatrixRow row) -> row.references().size()).reversed().thenComparing(TraceabilityMatrixRow::concept));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Traceability Matrix View</h1>")
+            .append("<div class=\"toolbar\"><input id=\"traceSearch\" type=\"search\" placeholder=\"Konzept, Referenz, Feld oder Placeholder suchen...\" oninput=\"applyTraceFilter()\"></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Referenzen</th><th>Felder</th><th>Placeholders</th><th>Taxonomie Enum</th></tr></thead><tbody>");
+
+        for (TraceabilityMatrixRow row : rows) {
+            String search = normalizeSearch(row.concept() + " " + String.join(" ", row.references()) + " " + String.join(" ", row.fields()) + " " + String.join(" ", row.placeholders()));
+            body.append("<tr class=\"trace-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(escapeHtml(row.references().isEmpty() ? "-" : limitJoined(new TreeSet<>(row.references()), 6)))
+                .append("</td><td>")
+                .append(escapeHtml(row.fields().isEmpty() ? "-" : limitJoined(row.fields(), 5)))
+                .append("</td><td>")
+                .append(escapeHtml(row.placeholders().isEmpty() ? "-" : limitJoined(row.placeholders(), 5)))
+                .append("</td><td>")
+                .append(statusPill(row.taxonomyEnumeration(), row.taxonomyEnumeration() ? "ja" : "nein"))
+                .append("</td></tr>");
+        }
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyTraceFilter(){const q=normalize(document.getElementById('traceSearch').value.trim());document.querySelectorAll('.trace-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}</script>";
+        return renderPage("Traceability Matrix View", body.toString(), script);
     }
 
     private int memberCountForDimension(HypercubeCube cube, String dimension) {
@@ -4177,6 +4439,46 @@ public class TaxonomyVisualizationExporter {
                                   Set<String> dimensions,
                                   Set<String> cubes,
                                   boolean enumeration) {
+    }
+
+    private record ConceptBacklogRow(String concept,
+                                     int mappingCount,
+                                     boolean hasLayout,
+                                     int dimensionSignals,
+                                     int enumerationSignals,
+                                     int formulaMentions,
+                                     int riskScore,
+                                     Set<String> fields,
+                                     Set<String> placeholders) {
+    }
+
+    private record ScopePeriodRow(String section,
+                                  String field,
+                                  String concept,
+                                  String period,
+                                  String unit,
+                                  boolean hasDimensions,
+                                  boolean hasEnumeration) {
+    }
+
+    private record RuleCoverageRow(String formulaFile,
+                                   String concept,
+                                   boolean mapped,
+                                   Set<String> fields) {
+    }
+
+    private record IntersectionRiskRow(String cube,
+                                       String dimensionA,
+                                       String dimensionB,
+                                       long combinations,
+                                       long riskScore) {
+    }
+
+    private record TraceabilityMatrixRow(String concept,
+                                         List<String> references,
+                                         Set<String> fields,
+                                         Set<String> placeholders,
+                                         boolean taxonomyEnumeration) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,

@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 19 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 24 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -21,6 +21,11 @@ Diese Doku erklaert alle 19 Visualisierungsansichten aus dem Taxonomy Explorer:
 17. Impact Heatmap
 18. Hypercube Dimension Inventar
 19. Mapping Flow
+20. Concept Backlog
+21. Scope & Period
+22. Rule Coverage Matrix
+23. Intersection Risk
+24. Traceability Matrix
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -48,6 +53,11 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-impact-heatmap.html
 - taxonomy-visualization-hypercube-dimension-inventory.html
 - taxonomy-visualization-mapping-flow.html
+- taxonomy-visualization-concept-backlog.html
+- taxonomy-visualization-scope-period-analysis.html
+- taxonomy-visualization-rule-coverage-matrix.html
+- taxonomy-visualization-intersection-risk.html
+- taxonomy-visualization-traceability-matrix.html
 
 ## Lesestrategie (allgemein)
 
