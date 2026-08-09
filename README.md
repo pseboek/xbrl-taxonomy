@@ -40,7 +40,10 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 26. `output/taxonomy-visualization-rule-coverage-matrix.html` (Rule Coverage Matrix),
 27. `output/taxonomy-visualization-intersection-risk.html` (Intersection Risk View),
 28. `output/taxonomy-visualization-traceability-matrix.html` (Traceability Matrix View),
-29. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+29. `output/taxonomy-visualization-dimension-cooccurrence.html` (Dimension Co-Occurrence View),
+30. `output/taxonomy-visualization-default-member-quality.html` (Default Member Quality View),
+31. `output/taxonomy-visualization-enum-domain-validity.html` (Enum Domain Validity View),
+32. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -113,8 +116,11 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-rule-coverage-matrix.html` fuer Formula-Datei-zu-Konzept-Abdeckung
 - `taxonomy-visualization-intersection-risk.html` fuer Risiko-Ranking von Dimensionspaaren
 - `taxonomy-visualization-traceability-matrix.html` fuer Referenz/Feld/Placeholder-Traceability
+- `taxonomy-visualization-dimension-cooccurrence.html` fuer Analyse haeufiger Dimensionspaarungen
+- `taxonomy-visualization-default-member-quality.html` fuer Default-Member-Qualitaetschecks
+- `taxonomy-visualization-enum-domain-validity.html` fuer Domain- und Allowed-Value-Uebersicht
 
-Der Explorer enthaelt 24 Ansichten:
+Der Explorer enthaelt 27 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -140,6 +146,9 @@ Der Explorer enthaelt 24 Ansichten:
 22. Rule Coverage Matrix: Formula-Datei x Konzept mit Mapping-Abdeckung
 23. Intersection Risk: Risiko-Ranking fuer dimensionsbasierte Kombinationsraume
 24. Traceability Matrix: Konzept-zu-Referenz-zu-Feld-Zuordnung in Tabellenform
+25. Dimension Co-Occurrence: Haeufigkeitsanalyse von Dimensionspaaren ueber Hypercubes
+26. Default Member Quality: Status je Dimension fuer fehlende/mehrfache Defaults
+27. Enum Domain Validity: Enumeration-Domain-Konsistenz und Value-Transparenz
 
 ## Visualisierungen lesen und verstehen
 
@@ -215,6 +224,9 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-rule-coverage-matrix.html` — Matrixsicht Formula-Dateien zu referenzierten Konzepten.
 - `output/taxonomy-visualization-intersection-risk.html` — Risikoanalyse fuer Dimensionspaar-Kombinationen.
 - `output/taxonomy-visualization-traceability-matrix.html` — Matrix fuer Referenzen, Felder und Placeholders je Konzept.
+- `output/taxonomy-visualization-dimension-cooccurrence.html` — Sicht auf haeufig gemeinsam auftretende Dimensionen.
+- `output/taxonomy-visualization-default-member-quality.html` — Qualitaetsansicht fuer Default-Member pro Dimension.
+- `output/taxonomy-visualization-enum-domain-validity.html` — Enumerations-Domain-Validitaet mit Allowed-Value-Signalen.
 
 Hinweise:
 

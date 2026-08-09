@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 24 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 27 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -26,6 +26,9 @@ Diese Doku erklaert alle 24 Visualisierungsansichten aus dem Taxonomy Explorer:
 22. Rule Coverage Matrix
 23. Intersection Risk
 24. Traceability Matrix
+25. Dimension Co-Occurrence
+26. Default Member Quality
+27. Enum Domain Validity
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -58,6 +61,9 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-rule-coverage-matrix.html
 - taxonomy-visualization-intersection-risk.html
 - taxonomy-visualization-traceability-matrix.html
+- taxonomy-visualization-dimension-cooccurrence.html
+- taxonomy-visualization-default-member-quality.html
+- taxonomy-visualization-enum-domain-validity.html
 
 ## Lesestrategie (allgemein)
 
