@@ -33,7 +33,8 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 19. `output/taxonomy-visualization-stats.html` (Stats View),
 20. `output/taxonomy-visualization-complexity.html` (Complexity View),
 21. `output/taxonomy-visualization-impact-heatmap.html` (Impact Heatmap View),
-22. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+22. `output/taxonomy-visualization-hypercube-dimension-inventory.html` (Hypercube Dimension Inventar),
+23. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -99,8 +100,9 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-stats.html` fuer Linkbase-Edge-Statistik und Struktur-Hinweise
 - `taxonomy-visualization-complexity.html` fuer gewichtete Komplexitaetsanalyse je Konzept
 - `taxonomy-visualization-impact-heatmap.html` fuer Konzept-x-Section-Impactanalyse mit filterbarer Heatmap-Tabelle
+- `taxonomy-visualization-hypercube-dimension-inventory.html` fuer filterbare Inventarsicht je Hypercube-Achse (Domains, Members, Defaults)
 
-Der Explorer enthaelt 17 Ansichten:
+Der Explorer enthaelt 18 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -119,6 +121,7 @@ Der Explorer enthaelt 17 Ansichten:
 15. Stats: Struktur- und Qualitaetssicht auf Linkbase-Kanten, Top-Knoten und Randknoten
 16. Complexity: Scoring fuer Konzeptkomplexitaet (Dimensionen, Enumeration, Calculation, Formula)
 17. Impact Heatmap: Priorisierung von Konzept-Section-Paaren nach Impact-Score (Mappings, Dimensionen, Enumeration, Placeholder)
+18. Hypercube Dimension Inventar: Filterbare Achseninventarliste fuer Hypercubes mit Domain/Member/Default-Kennzahlen
 
 ## Visualisierungen lesen und verstehen
 
@@ -187,6 +190,7 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-stats.html` — Statistiksicht auf Layer, Kantenanteile und Knotengrade.
 - `output/taxonomy-visualization-complexity.html` — Komplexitaetssicht mit Risiko-Score je Konzept.
 - `output/taxonomy-visualization-impact-heatmap.html` — Heatmap-Sicht fuer Konzept-Section-Impact mit Filterung nach Section und Mindestscore.
+- `output/taxonomy-visualization-hypercube-dimension-inventory.html` — Inventarsicht pro Hypercube-Dimension mit Filtern fuer Members, Defaults und typed-axis-Indikator.
 
 Hinweise:
 
