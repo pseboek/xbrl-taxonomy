@@ -94,6 +94,7 @@ public class TaxonomyVisualizationExporter {
         Path allocationHtml = outputHtml.resolveSibling(stem + "-allocation.html");
         Path statsHtml = outputHtml.resolveSibling(stem + "-stats.html");
         Path complexityHtml = outputHtml.resolveSibling(stem + "-complexity.html");
+        Path impactHeatmapHtml = outputHtml.resolveSibling(stem + "-impact-heatmap.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -112,7 +113,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(allocationHtml, renderAllocationHtml(layoutSnapshot, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(statsHtml, renderStatsHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(complexityHtml, renderComplexityHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml), StandardCharsets.UTF_8);
+        Files.writeString(impactHeatmapHtml, renderImpactHeatmapHtml(mappingsByConcept, placeholdersByField), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -716,7 +718,8 @@ public class TaxonomyVisualizationExporter {
                                       Path validationHtml,
                                       Path allocationHtml,
                                       Path statsHtml,
-                                      Path complexityHtml) {
+                                      Path complexityHtml,
+                                      Path impactHeatmapHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -745,6 +748,7 @@ public class TaxonomyVisualizationExporter {
                         .append(viewCard("14. Allocation", fileNameOnly(allocationHtml), "Section-zu-Placeholder-zu-Konzept Zuordnung"))
                         .append(viewCard("15. Stats", fileNameOnly(statsHtml), "Linkbase Edge Statistics und Struktur-Hinweise"))
                         .append(viewCard("16. Complexity", fileNameOnly(complexityHtml), "Komplexitaetsindikatoren je Konzept"))
+                        .append(viewCard("17. Impact Heatmap", fileNameOnly(impactHeatmapHtml), "Konzept x Section Impact-Analyse mit filterbarer Heatmap-Tabelle"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
     }
@@ -1499,6 +1503,153 @@ public class TaxonomyVisualizationExporter {
             + "</script>";
 
         return renderPage("Complexity View", body.toString(), script);
+    }
+
+    private String renderImpactHeatmapHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                           Map<String, List<String>> placeholdersByField) {
+        List<ImpactHeatmapRow> rows = new ArrayList<>();
+        Map<String, Long> sections = new TreeMap<>();
+
+        for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
+            Map<String, List<MappingEntry>> entriesBySection = conceptEntry.getValue().stream()
+                .collect(Collectors.groupingBy(entry -> deriveSection(entry.field()), TreeMap::new, Collectors.toList()));
+
+            for (Map.Entry<String, List<MappingEntry>> sectionEntry : entriesBySection.entrySet()) {
+                String section = sectionEntry.getKey();
+                List<MappingEntry> sectionMappings = sectionEntry.getValue();
+
+                Set<String> fields = sectionMappings.stream()
+                    .map(MappingEntry::field)
+                    .filter(value -> value != null && !value.isBlank())
+                    .collect(Collectors.toCollection(TreeSet::new));
+
+                Set<String> placeholders = new TreeSet<>();
+                for (String field : fields) {
+                    List<String> values = placeholdersByField.get(field);
+                    if (values != null) {
+                        placeholders.addAll(values);
+                    }
+                }
+
+                int mappingCount = sectionMappings.size();
+                int dimensionSignals = (int) sectionMappings.stream().filter(TaxonomyVisualizationExporter::hasDimensions).count();
+                int enumerationSignals = (int) sectionMappings.stream().filter(TaxonomyVisualizationExporter::hasEnumeration).count();
+                int placeholderCount = placeholders.size();
+                int score = mappingCount + (dimensionSignals * 2) + (enumerationSignals * 2) + placeholderCount;
+
+                rows.add(new ImpactHeatmapRow(
+                    conceptEntry.getKey(),
+                    section,
+                    mappingCount,
+                    dimensionSignals,
+                    enumerationSignals,
+                    placeholderCount,
+                    score,
+                    fields,
+                    placeholders
+                ));
+                sections.merge(section, 1L, Long::sum);
+            }
+        }
+
+        rows.sort(Comparator.comparingInt(ImpactHeatmapRow::score).reversed()
+            .thenComparing(ImpactHeatmapRow::section)
+            .thenComparing(ImpactHeatmapRow::concept));
+
+        int maxScore = rows.stream().mapToInt(ImpactHeatmapRow::score).max().orElse(1);
+        long maxMappedConcepts = sections.values().stream().mapToLong(Long::longValue).max().orElse(0);
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Impact Heatmap View: Konzept x Section</h1>")
+            .append("<p class=\"lead\">Diese Sicht priorisiert Konzepte je Berichts-Section anhand von Mapping-Dichte, Dimensions-/Enumeration-Signalen und Placeholder-Abdeckung.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Concept-Section Paare", rows.size()))
+            .append(summaryCard("Sections", sections.size()))
+            .append(summaryCard("Max Impact Score", maxScore))
+            .append(summaryCard("Max Concepts je Section", maxMappedConcepts))
+            .append("</div>")
+            .append("<div class=\"toolbar\">")
+            .append("<input id=\"impactSearch\" type=\"search\" placeholder=\"Section, Konzept, Feld oder Placeholder suchen...\" oninput=\"applyImpactFilter()\">")
+            .append("<label class=\"filter\">Section <select id=\"impactSection\" onchange=\"applyImpactFilter()\"><option value=\"\">Alle</option>");
+
+        for (String section : sections.keySet()) {
+            body.append("<option value=\"")
+                .append(escapeHtml(section))
+                .append("\">")
+                .append(escapeHtml(section))
+                .append("</option>");
+        }
+
+        body.append("</select></label>")
+            .append("<label class=\"filter\">Min Score <input id=\"impactMinScore\" type=\"range\" min=\"0\" max=\"")
+            .append(maxScore)
+            .append("\" value=\"0\" oninput=\"applyImpactFilter()\"><span id=\"impactMinScoreValue\">0</span></label>")
+            .append("</div>")
+            .append("<section><h2>Heatmap Tabelle</h2><table class=\"layout-table\"><thead><tr><th>Section</th><th>Konzept</th><th>Mappings</th><th>Dimensions</th><th>Enumeration</th><th>Placeholders</th><th>Impact</th><th>Felder</th></tr></thead><tbody>");
+
+        if (rows.isEmpty()) {
+            body.append("<tr><td colspan=\"8\" class=\"muted\">Keine Daten fuer die Impact-Heatmap verfuegbar.</td></tr>");
+        }
+
+        for (ImpactHeatmapRow row : rows) {
+            String search = normalizeSearch(
+                row.section() + " " + row.concept() + " " + String.join(" ", row.fields()) + " " + String.join(" ", row.placeholders())
+            );
+            int percent = maxScore <= 0 ? 0 : (int) Math.round((row.score() * 100.0) / maxScore);
+
+            body.append("<tr class=\"impact-row\" data-section=\"")
+                .append(escapeHtml(row.section()))
+                .append("\" data-score=\"")
+                .append(row.score())
+                .append("\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.section()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(row.mappingCount())
+                .append("</td><td>")
+                .append(row.dimensionSignals())
+                .append("</td><td>")
+                .append(row.enumerationSignals())
+                .append("</td><td>")
+                .append(row.placeholderCount())
+                .append("</td><td><div class=\"impact-bar\"><span style=\"width:")
+                .append(percent)
+                .append("%\"></span></div><div class=\"muted\">score ")
+                .append(row.score())
+                .append("</div></td><td>")
+                .append(escapeHtml(limitJoined(row.fields(), 5)))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<style>"
+            + ".impact-bar{height:10px;background:#eaf0f7;border-radius:999px;overflow:hidden;min-width:120px;}"
+            + ".impact-bar span{display:block;height:100%;background:linear-gradient(90deg,#5cb85c 0%,#f0ad4e 55%,#d9534f 100%);border-radius:999px;}"
+            + "#impactMinScore{accent-color:#17324d;}"
+            + "</style><script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyImpactFilter(){"
+            + "const q=normalize(document.getElementById('impactSearch').value.trim());"
+            + "const section=document.getElementById('impactSection').value;"
+            + "const minScore=Number(document.getElementById('impactMinScore').value||0);"
+            + "document.getElementById('impactMinScoreValue').textContent=String(minScore);"
+            + "document.querySelectorAll('.impact-row').forEach(r=>{"
+            + "const s=r.dataset.search||'';"
+            + "const rowSection=r.dataset.section||'';"
+            + "const score=Number(r.dataset.score||0);"
+            + "const textOk=!q||s.includes(q);"
+            + "const sectionOk=!section||section===rowSection;"
+            + "const scoreOk=score>=minScore;"
+            + "r.hidden=!(textOk&&sectionOk&&scoreOk);"
+            + "});"
+            + "}"
+            + "</script>";
+
+        return renderPage("Impact Heatmap View", body.toString(), script);
     }
 
     private String renderStatsHtml(TaxonomyMetadata metadata) {
@@ -3731,6 +3882,17 @@ public class TaxonomyVisualizationExporter {
                                  int calcDegree,
                                  int formulaMentions,
                                  Set<String> fields) {
+    }
+
+    private record ImpactHeatmapRow(String concept,
+                                    String section,
+                                    int mappingCount,
+                                    int dimensionSignals,
+                                    int enumerationSignals,
+                                    int placeholderCount,
+                                    int score,
+                                    Set<String> fields,
+                                    Set<String> placeholders) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,
