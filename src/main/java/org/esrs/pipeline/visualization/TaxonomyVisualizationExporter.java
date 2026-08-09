@@ -102,6 +102,9 @@ public class TaxonomyVisualizationExporter {
         Path ruleCoverageMatrixHtml = outputHtml.resolveSibling(stem + "-rule-coverage-matrix.html");
         Path intersectionRiskHtml = outputHtml.resolveSibling(stem + "-intersection-risk.html");
         Path traceabilityMatrixHtml = outputHtml.resolveSibling(stem + "-traceability-matrix.html");
+        Path dimensionCooccurrenceHtml = outputHtml.resolveSibling(stem + "-dimension-cooccurrence.html");
+        Path defaultMemberQualityHtml = outputHtml.resolveSibling(stem + "-default-member-quality.html");
+        Path enumDomainValidityHtml = outputHtml.resolveSibling(stem + "-enum-domain-validity.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -128,7 +131,10 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(ruleCoverageMatrixHtml, renderRuleCoverageMatrixHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(intersectionRiskHtml, renderIntersectionRiskHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(traceabilityMatrixHtml, renderTraceabilityMatrixHtml(mappingsByConcept, placeholdersByField, conceptReferences, metadata), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml), StandardCharsets.UTF_8);
+        Files.writeString(dimensionCooccurrenceHtml, renderDimensionCooccurrenceHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(defaultMemberQualityHtml, renderDefaultMemberQualityHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(enumDomainValidityHtml, renderEnumDomainValidityHtml(mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -740,7 +746,10 @@ public class TaxonomyVisualizationExporter {
                                       Path scopePeriodHtml,
                                       Path ruleCoverageMatrixHtml,
                                       Path intersectionRiskHtml,
-                                      Path traceabilityMatrixHtml) {
+                                      Path traceabilityMatrixHtml,
+                                      Path dimensionCooccurrenceHtml,
+                                      Path defaultMemberQualityHtml,
+                                      Path enumDomainValidityHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -777,6 +786,9 @@ public class TaxonomyVisualizationExporter {
                         .append(viewCard("22. Rule Coverage Matrix", fileNameOnly(ruleCoverageMatrixHtml), "Matrix Formula-Datei x Konzept mit Mapping-Hinweisen"))
                         .append(viewCard("23. Intersection Risk", fileNameOnly(intersectionRiskHtml), "Risikoanalyse fuer Dimensionspaar-Kombinationen je Hypercube"))
                         .append(viewCard("24. Traceability Matrix", fileNameOnly(traceabilityMatrixHtml), "Konzept-zu-Referenz-zu-Feld Matrix mit Filterung"))
+                        .append(viewCard("25. Dimension Co-Occurrence", fileNameOnly(dimensionCooccurrenceHtml), "Haeufigkeiten von Dimensionspaaren ueber alle Hypercubes"))
+                        .append(viewCard("26. Default Member Quality", fileNameOnly(defaultMemberQualityHtml), "Qualitaetscheck fuer Default-Member je Dimension"))
+                        .append(viewCard("27. Enum Domain Validity", fileNameOnly(enumDomainValidityHtml), "Uebersicht je Enumeration-Domain mit Nutzungs- und Value-Signalen"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
     }
@@ -2541,6 +2553,136 @@ public class TaxonomyVisualizationExporter {
         body.append("</tbody></table></section>");
         String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyTraceFilter(){const q=normalize(document.getElementById('traceSearch').value.trim());document.querySelectorAll('.trace-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}</script>";
         return renderPage("Traceability Matrix View", body.toString(), script);
+    }
+
+    private String renderDimensionCooccurrenceHtml(TaxonomyMetadata metadata) {
+        Map<String, Integer> pairCount = new TreeMap<>();
+        for (HypercubeCube cube : metadata.hypercubeMetadata().cubes()) {
+            List<String> dims = cube.dimensions();
+            for (int i = 0; i < dims.size(); i++) {
+                for (int j = i + 1; j < dims.size(); j++) {
+                    String a = dims.get(i);
+                    String b = dims.get(j);
+                    String key = a.compareTo(b) <= 0 ? a + "|" + b : b + "|" + a;
+                    pairCount.merge(key, 1, Integer::sum);
+                }
+            }
+        }
+
+        List<DimensionCooccurrenceRow> rows = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : pairCount.entrySet()) {
+            int split = entry.getKey().indexOf('|');
+            rows.add(new DimensionCooccurrenceRow(entry.getKey().substring(0, split), entry.getKey().substring(split + 1), entry.getValue()));
+        }
+        rows.sort(Comparator.comparingInt(DimensionCooccurrenceRow::count).reversed().thenComparing(DimensionCooccurrenceRow::dimensionA));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Dimension Co-Occurrence View</h1>")
+            .append("<div class=\"toolbar\"><input id=\"coSearch\" type=\"search\" placeholder=\"Dimension suchen...\" oninput=\"applyCoFilter()\"></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Dimension A</th><th>Dimension B</th><th>Haeufigkeit</th></tr></thead><tbody>");
+
+        for (DimensionCooccurrenceRow row : rows) {
+            String search = normalizeSearch(row.dimensionA() + " " + row.dimensionB());
+            body.append("<tr class=\"co-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.dimensionA()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.dimensionB()))
+                .append("</code></td><td>")
+                .append(row.count())
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyCoFilter(){const q=normalize(document.getElementById('coSearch').value.trim());document.querySelectorAll('.co-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}</script>";
+        return renderPage("Dimension Co-Occurrence View", body.toString(), script);
+    }
+
+    private String renderDefaultMemberQualityHtml(TaxonomyMetadata metadata) {
+        List<DefaultMemberQualityRow> rows = new ArrayList<>();
+        for (HypercubeCube cube : metadata.hypercubeMetadata().cubes()) {
+            for (String dimension : cube.dimensions()) {
+                int defaults = cube.defaultsPerDimension().getOrDefault(dimension, List.of()).size();
+                int domains = cube.domainsPerDimension().getOrDefault(dimension, List.of()).size();
+                String status = defaults == 0 ? "missing" : (defaults == 1 ? "ok" : "conflict");
+                rows.add(new DefaultMemberQualityRow(cube.cube(), dimension, domains, defaults, status));
+            }
+        }
+        rows.sort(Comparator.comparing(DefaultMemberQualityRow::status).thenComparing(DefaultMemberQualityRow::cube).thenComparing(DefaultMemberQualityRow::dimension));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Default Member Quality View</h1>")
+            .append("<div class=\"toolbar\"><input id=\"defSearch\" type=\"search\" placeholder=\"Hypercube oder Dimension suchen...\" oninput=\"applyDefaultFilter()\"><label class=\"filter\"><input id=\"defIssues\" type=\"checkbox\" onchange=\"applyDefaultFilter()\"> Nur Issues</label></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Hypercube</th><th>Dimension</th><th>Domains</th><th>Defaults</th><th>Status</th></tr></thead><tbody>");
+
+        for (DefaultMemberQualityRow row : rows) {
+            String search = normalizeSearch(row.cube() + " " + row.dimension() + " " + row.status());
+            boolean issue = !"ok".equals(row.status());
+            body.append("<tr class=\"def-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\" data-issue=\"")
+                .append(issue)
+                .append("\"><td><code>")
+                .append(escapeHtml(row.cube()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.dimension()))
+                .append("</code></td><td>")
+                .append(row.domains())
+                .append("</td><td>")
+                .append(row.defaults())
+                .append("</td><td>")
+                .append(statusPill(!issue, row.status()))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyDefaultFilter(){const q=normalize(document.getElementById('defSearch').value.trim());const issues=document.getElementById('defIssues').checked;document.querySelectorAll('.def-row').forEach(r=>{const s=r.dataset.search||'';const issue=(r.dataset.issue||'false')==='true';r.hidden=!((!q||s.includes(q))&&(!issues||issue));});}</script>";
+        return renderPage("Default Member Quality View", body.toString(), script);
+    }
+
+    private String renderEnumDomainValidityHtml(Map<String, List<MappingEntry>> mappingsByConcept) {
+        Map<String, EnumDomainValidityRow> rowsByDomain = new TreeMap<>();
+        for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
+            for (MappingEntry entry : conceptEntry.getValue()) {
+                if (entry.enumerationDomain() == null || entry.enumerationDomain().isBlank()) {
+                    continue;
+                }
+                EnumDomainValidityRow row = rowsByDomain.computeIfAbsent(entry.enumerationDomain(), key -> new EnumDomainValidityRow(key, new TreeSet<>(), new TreeSet<>(), new TreeSet<>()));
+                row.concepts().add(conceptEntry.getKey());
+                row.fields().add(entry.field());
+                if (entry.allowedValues() != null) {
+                    row.allowedValues().addAll(entry.allowedValues());
+                }
+            }
+        }
+
+        List<EnumDomainValidityRow> rows = new ArrayList<>(rowsByDomain.values());
+        rows.sort(Comparator.comparingInt((EnumDomainValidityRow row) -> row.concepts().size()).reversed().thenComparing(EnumDomainValidityRow::domain));
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Enum Domain Validity View</h1>")
+            .append("<div class=\"toolbar\"><input id=\"enumDomainSearch\" type=\"search\" placeholder=\"Domain, Konzept oder Feld suchen...\" oninput=\"applyEnumDomainFilter()\"></div>")
+            .append("<section><table class=\"layout-table\"><thead><tr><th>Domain</th><th>Konzepte</th><th>Felder</th><th>Allowed Values</th></tr></thead><tbody>");
+
+        for (EnumDomainValidityRow row : rows) {
+            String search = normalizeSearch(row.domain() + " " + String.join(" ", row.concepts()) + " " + String.join(" ", row.fields()));
+            body.append("<tr class=\"enum-domain-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\"><td><code>")
+                .append(escapeHtml(row.domain()))
+                .append("</code></td><td>")
+                .append(row.concepts().size())
+                .append("</td><td>")
+                .append(row.fields().size())
+                .append("</td><td>")
+                .append(escapeHtml(row.allowedValues().isEmpty() ? "-" : limitJoined(row.allowedValues(), 6)))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyEnumDomainFilter(){const q=normalize(document.getElementById('enumDomainSearch').value.trim());document.querySelectorAll('.enum-domain-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}</script>";
+        return renderPage("Enum Domain Validity View", body.toString(), script);
     }
 
     private int memberCountForDimension(HypercubeCube cube, String dimension) {
@@ -4479,6 +4621,24 @@ public class TaxonomyVisualizationExporter {
                                          Set<String> fields,
                                          Set<String> placeholders,
                                          boolean taxonomyEnumeration) {
+    }
+
+    private record DimensionCooccurrenceRow(String dimensionA,
+                                            String dimensionB,
+                                            int count) {
+    }
+
+    private record DefaultMemberQualityRow(String cube,
+                                           String dimension,
+                                           int domains,
+                                           int defaults,
+                                           String status) {
+    }
+
+    private record EnumDomainValidityRow(String domain,
+                                         Set<String> concepts,
+                                         Set<String> fields,
+                                         Set<String> allowedValues) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,
