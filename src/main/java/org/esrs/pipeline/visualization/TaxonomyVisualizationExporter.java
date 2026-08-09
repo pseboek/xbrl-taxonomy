@@ -96,6 +96,7 @@ public class TaxonomyVisualizationExporter {
         Path complexityHtml = outputHtml.resolveSibling(stem + "-complexity.html");
         Path impactHeatmapHtml = outputHtml.resolveSibling(stem + "-impact-heatmap.html");
         Path hypercubeDimensionInventoryHtml = outputHtml.resolveSibling(stem + "-hypercube-dimension-inventory.html");
+        Path mappingFlowHtml = outputHtml.resolveSibling(stem + "-mapping-flow.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -116,7 +117,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(complexityHtml, renderComplexityHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(impactHeatmapHtml, renderImpactHeatmapHtml(mappingsByConcept, placeholdersByField), StandardCharsets.UTF_8);
         Files.writeString(hypercubeDimensionInventoryHtml, renderHypercubeDimensionInventoryHtml(metadata), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml), StandardCharsets.UTF_8);
+        Files.writeString(mappingFlowHtml, renderMappingFlowHtml(mappingsByConcept, metadata), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -722,7 +724,8 @@ public class TaxonomyVisualizationExporter {
                                       Path statsHtml,
                                       Path complexityHtml,
                                       Path impactHeatmapHtml,
-                                      Path hypercubeDimensionInventoryHtml) {
+                                      Path hypercubeDimensionInventoryHtml,
+                                      Path mappingFlowHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -753,6 +756,7 @@ public class TaxonomyVisualizationExporter {
                         .append(viewCard("16. Complexity", fileNameOnly(complexityHtml), "Komplexitaetsindikatoren je Konzept"))
                         .append(viewCard("17. Impact Heatmap", fileNameOnly(impactHeatmapHtml), "Konzept x Section Impact-Analyse mit filterbarer Heatmap-Tabelle"))
                         .append(viewCard("18. Hypercube Dimension Inventar", fileNameOnly(hypercubeDimensionInventoryHtml), "Filterbare Inventarliste fuer Cube-Achsen mit Domain/Member/Default-Kennzahlen"))
+                        .append(viewCard("19. Mapping Flow", fileNameOnly(mappingFlowHtml), "Sankey-orientierte Feld->Konzept->Hypercube Flows als filterbare Tabelle"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
     }
@@ -2133,6 +2137,148 @@ public class TaxonomyVisualizationExporter {
             + "</script>";
 
         return renderPage("Hypercube Dimension Inventar", body.toString(), script);
+    }
+
+    private String renderMappingFlowHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+                                         TaxonomyMetadata metadata) {
+        Map<String, Set<String>> cubesByDimension = new TreeMap<>();
+        for (HypercubeCube cube : metadata.hypercubeMetadata().cubes()) {
+            for (String dimension : cube.dimensions()) {
+                cubesByDimension.computeIfAbsent(dimension, key -> new TreeSet<>()).add(cube.cube());
+            }
+        }
+
+        List<MappingFlowRow> rows = new ArrayList<>();
+        Set<String> sections = new TreeSet<>();
+        for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
+            for (MappingEntry mapping : conceptEntry.getValue()) {
+                String section = deriveSection(mapping.field());
+                sections.add(section);
+
+                Set<String> dimensions = new TreeSet<>();
+                Set<String> cubes = new TreeSet<>();
+                if (mapping.dimensions() != null) {
+                    for (DimensionSelection dimension : mapping.dimensions()) {
+                        if (dimension.axisQname() == null || dimension.axisQname().isBlank()) {
+                            continue;
+                        }
+                        String axis = dimension.axisQname();
+                        dimensions.add(axis);
+                        Set<String> owningCubes = cubesByDimension.get(axis);
+                        if (owningCubes != null) {
+                            cubes.addAll(owningCubes);
+                        }
+                    }
+                }
+
+                rows.add(new MappingFlowRow(
+                    section,
+                    mapping.field(),
+                    mapping.concept(),
+                    mapping.period(),
+                    mapping.unit(),
+                    dimensions,
+                    cubes,
+                    hasEnumeration(mapping)
+                ));
+            }
+        }
+
+        rows.sort(Comparator.comparing((MappingFlowRow row) -> row.cubes().size()).reversed()
+            .thenComparing((MappingFlowRow row) -> row.dimensions().size()).reversed()
+            .thenComparing(MappingFlowRow::section)
+            .thenComparing(MappingFlowRow::field));
+
+        long withCubeMatch = rows.stream().filter(row -> !row.cubes().isEmpty()).count();
+        long withDimensions = rows.stream().filter(row -> !row.dimensions().isEmpty()).count();
+        long withEnumeration = rows.stream().filter(MappingFlowRow::enumeration).count();
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Mapping Flow View: Feld -> Konzept -> Hypercube</h1>")
+            .append("<p class=\"lead\">Sankey-orientierte Flows als Tabelle: Welche Felder auf welche Konzepte und weiter auf welche Hypercubes/Achsen wirken.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Flow-Zeilen", rows.size()))
+            .append(summaryCard("Mit Hypercube-Match", withCubeMatch))
+            .append(summaryCard("Mit Dimensionen", withDimensions))
+            .append(summaryCard("Mit Enumeration", withEnumeration))
+            .append("</div>")
+            .append("<div class=\"toolbar\">")
+            .append("<input id=\"flowSearch\" type=\"search\" placeholder=\"Section, Feld, Konzept, Dimension oder Hypercube suchen...\" oninput=\"applyMappingFlowFilter()\">")
+            .append("<label class=\"filter\">Section <select id=\"flowSection\" onchange=\"applyMappingFlowFilter()\"><option value=\"\">Alle</option>");
+
+        for (String section : sections) {
+            body.append("<option value=\"")
+                .append(escapeHtml(section))
+                .append("\">")
+                .append(escapeHtml(section))
+                .append("</option>");
+        }
+
+        body.append("</select></label>")
+            .append("<label class=\"filter\"><input id=\"flowDimOnly\" type=\"checkbox\" onchange=\"applyMappingFlowFilter()\"> Nur mit Dimensionen</label>")
+            .append("<label class=\"filter\"><input id=\"flowCubeOnly\" type=\"checkbox\" onchange=\"applyMappingFlowFilter()\"> Nur mit Hypercube-Match</label>")
+            .append("</div>")
+            .append("<section><h2>Flow-Tabelle</h2><table class=\"layout-table\"><thead><tr><th>Section</th><th>Feld</th><th>Konzept</th><th>Periode</th><th>Einheit</th><th>Dimensionen</th><th>Hypercubes</th><th>Enumeration</th></tr></thead><tbody>");
+
+        if (rows.isEmpty()) {
+            body.append("<tr><td colspan=\"8\" class=\"muted\">Keine Mapping-Flow-Daten gefunden.</td></tr>");
+        }
+
+        for (MappingFlowRow row : rows) {
+            String search = normalizeSearch(
+                row.section() + " " + row.field() + " " + row.concept() + " " + String.join(" ", row.dimensions()) + " " + String.join(" ", row.cubes())
+            );
+            body.append("<tr class=\"mapping-flow-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\" data-section=\"")
+                .append(escapeHtml(row.section()))
+                .append("\" data-has-dim=\"")
+                .append(!row.dimensions().isEmpty())
+                .append("\" data-has-cube=\"")
+                .append(!row.cubes().isEmpty())
+                .append("\"><td><code>")
+                .append(escapeHtml(row.section()))
+                .append("</code></td><td>")
+                .append(escapeHtml(row.field()))
+                .append("</td><td><code>")
+                .append(escapeHtml(row.concept()))
+                .append("</code></td><td>")
+                .append(escapeHtml(row.period() == null || row.period().isBlank() ? "-" : row.period()))
+                .append("</td><td>")
+                .append(escapeHtml(row.unit() == null || row.unit().isBlank() ? "-" : row.unit()))
+                .append("</td><td>")
+                .append(escapeHtml(row.dimensions().isEmpty() ? "-" : limitJoined(row.dimensions(), 4)))
+                .append("</td><td>")
+                .append(escapeHtml(row.cubes().isEmpty() ? "-" : limitJoined(row.cubes(), 3)))
+                .append("</td><td>")
+                .append(statusPill(row.enumeration(), row.enumeration() ? "ja" : "nein"))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyMappingFlowFilter(){"
+            + "const q=normalize(document.getElementById('flowSearch').value.trim());"
+            + "const section=document.getElementById('flowSection').value;"
+            + "const dimOnly=document.getElementById('flowDimOnly').checked;"
+            + "const cubeOnly=document.getElementById('flowCubeOnly').checked;"
+            + "document.querySelectorAll('.mapping-flow-row').forEach(r=>{"
+            + "const s=r.dataset.search||'';"
+            + "const rowSection=r.dataset.section||'';"
+            + "const hasDim=(r.dataset.hasDim||'false')==='true';"
+            + "const hasCube=(r.dataset.hasCube||'false')==='true';"
+            + "const textOk=!q||s.includes(q);"
+            + "const sectionOk=!section||section===rowSection;"
+            + "const dimOk=!dimOnly||hasDim;"
+            + "const cubeOk=!cubeOnly||hasCube;"
+            + "r.hidden=!(textOk&&sectionOk&&dimOk&&cubeOk);"
+            + "});"
+            + "}"
+            + "</script>";
+
+        return renderPage("Mapping Flow View", body.toString(), script);
     }
 
     private int memberCountForDimension(HypercubeCube cube, String dimension) {
@@ -4021,6 +4167,16 @@ public class TaxonomyVisualizationExporter {
                                                   int defaults,
                                                   int primaryBindings,
                                                   boolean maybeTypedAxis) {
+    }
+
+    private record MappingFlowRow(String section,
+                                  String field,
+                                  String concept,
+                                  String period,
+                                  String unit,
+                                  Set<String> dimensions,
+                                  Set<String> cubes,
+                                  boolean enumeration) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,
