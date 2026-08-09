@@ -1,6 +1,6 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 16 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 17 Visualisierungsansichten aus dem Taxonomy Explorer:
 
 1. Tree
 2. Graph
@@ -18,6 +18,7 @@ Diese Doku erklaert alle 16 Visualisierungsansichten aus dem Taxonomy Explorer:
 14. Allocation
 15. Stats
 16. Complexity
+17. Impact Heatmap
 
 Sie dient als Leseanleitung mit Beispielen, damit du schneller von der Ansicht zur fachlichen Aussage kommst.
 
@@ -42,6 +43,7 @@ Nach einem Pipeline-Lauf liegen die Artefakte in output/:
 - taxonomy-visualization-allocation.html
 - taxonomy-visualization-stats.html
 - taxonomy-visualization-complexity.html
+- taxonomy-visualization-impact-heatmap.html
 
 ## Lesestrategie (allgemein)
 

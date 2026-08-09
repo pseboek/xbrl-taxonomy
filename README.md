@@ -32,7 +32,8 @@ Die Pipeline erzeugt aus strukturierten Eingabedaten:
 18. `output/taxonomy-visualization-allocation.html` (Allocation View),
 19. `output/taxonomy-visualization-stats.html` (Stats View),
 20. `output/taxonomy-visualization-complexity.html` (Complexity View),
-21. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
+21. `output/taxonomy-visualization-impact-heatmap.html` (Impact Heatmap View),
+22. `output/arelle-xbrl.log` und `output/arelle-ixbrl.log` (Validierungslogs).
 
 ## Voraussetzungen
 
@@ -97,8 +98,9 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-allocation.html` fuer Section-zu-Placeholder-zu-Konzept-Zuordnung
 - `taxonomy-visualization-stats.html` fuer Linkbase-Edge-Statistik und Struktur-Hinweise
 - `taxonomy-visualization-complexity.html` fuer gewichtete Komplexitaetsanalyse je Konzept
+- `taxonomy-visualization-impact-heatmap.html` fuer Konzept-x-Section-Impactanalyse mit filterbarer Heatmap-Tabelle
 
-Der Explorer enthaelt 16 Ansichten:
+Der Explorer enthaelt 17 Ansichten:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -116,6 +118,7 @@ Der Explorer enthaelt 16 Ansichten:
 14. Allocation: Template-/Placeholder-Zuordnung je Section mit Konzeptbezug
 15. Stats: Struktur- und Qualitaetssicht auf Linkbase-Kanten, Top-Knoten und Randknoten
 16. Complexity: Scoring fuer Konzeptkomplexitaet (Dimensionen, Enumeration, Calculation, Formula)
+17. Impact Heatmap: Priorisierung von Konzept-Section-Paaren nach Impact-Score (Mappings, Dimensionen, Enumeration, Placeholder)
 
 ## Visualisierungen lesen und verstehen
 
@@ -183,6 +186,7 @@ Zentrale Projektdateien:
 - `output/taxonomy-visualization-allocation.html` — Zuordnungssicht Section -> Placeholder -> Feld -> Konzept.
 - `output/taxonomy-visualization-stats.html` — Statistiksicht auf Layer, Kantenanteile und Knotengrade.
 - `output/taxonomy-visualization-complexity.html` — Komplexitaetssicht mit Risiko-Score je Konzept.
+- `output/taxonomy-visualization-impact-heatmap.html` — Heatmap-Sicht fuer Konzept-Section-Impact mit Filterung nach Section und Mindestscore.
 
 Hinweise:
 
