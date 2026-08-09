@@ -834,10 +834,11 @@ public class TaxonomyVisualizationExporter {
                         .hypercube-3d-stage{position:relative;width:100%;height:min(1440px,calc(100vh - 140px));min-height:740px;background:radial-gradient(circle at 20% 10%,#13263f 0%,#0c1a2c 52%,#050a12 100%);border:1px solid #1b3b5f;border-radius:16px;overflow:hidden;}
                         #hypercube3dCanvas{width:100%;height:100%;display:block;}
                         .hypercube-3d-tooltip{position:absolute;pointer-events:none;background:rgba(8,18,30,.94);color:#e8f2ff;border:1px solid #2f5f8f;border-radius:10px;padding:8px 10px;max-width:360px;font-size:.9rem;line-height:1.35;box-shadow:0 8px 20px rgba(0,0,0,.35);z-index:20;}
+                        .hypercube-3d-tooltip code{display:inline-block;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word;background:rgba(40,86,130,.45);color:#d9ecff;padding:2px 6px;border-radius:6px;}
                         .hypercube-3d-overlay{display:none;position:absolute;top:16px;right:16px;width:min(460px,42vw);max-height:calc(100% - 32px);overflow:auto;background:rgba(7,15,24,.82);backdrop-filter:blur(6px);border:1px solid #3f5c7c;border-radius:12px;color:#e9f2ff;padding:10px 12px;z-index:22;box-shadow:0 8px 24px rgba(0,0,0,.35);}
                         .hypercube-3d-overlay .overlay-title{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:#8fc3ff;margin-bottom:6px;font-weight:700;}
                         .hypercube-3d-overlay .overlay-body{font-size:.9rem;line-height:1.45;}
-                        .hypercube-3d-overlay code{background:rgba(23,55,88,.72);color:#d8ecff;}
+                        .hypercube-3d-overlay code{display:inline-block;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word;background:rgba(23,55,88,.72);color:#d8ecff;}
                         .hypercube-3d-stage:fullscreen .hypercube-3d-overlay,.hypercube-3d-stage.is-fullscreen .hypercube-3d-overlay{display:block;}
                         @media (max-width: 1400px){
                             .hypercube-3d-stage{height:min(1080px,calc(100vh - 130px));min-height:620px;}
@@ -1303,13 +1304,13 @@ public class TaxonomyVisualizationExporter {
                                 return '';
                             }
                             if(data.type==='cube'){
-                                return '<strong>Hypercube</strong><br><code>'+escapeHtml(data.cube.id)+'</code>'
+                                return '<strong>Hypercube</strong><br><span class="muted">Cube-ID:</span><br><code>'+escapeHtml(data.cube.id)+'</code>'
                                     + '<br>Dimensionen: '+(data.cube.dimensions||[]).length
                                     + '<br>Members: '+data.cube.totalMembers;
                             }
                             if(data.type==='dimension'){
-                                return '<strong>Dimension</strong><br><code>'+escapeHtml(data.dimension.id)+'</code>'
-                                    + '<br>Cube: <code>'+escapeHtml(data.cube.id)+'</code>'
+                                return '<strong>Dimension</strong><br><span class="muted">Dimension-ID:</span><br><code>'+escapeHtml(data.dimension.id)+'</code>'
+                                    + '<br><span class="muted">Cube-ID:</span><br><code>'+escapeHtml(data.cube.id)+'</code>'
                                     + '<br>Domains: '+data.dimension.domains
                                     + '<br>Members: '+data.dimension.members
                                     + '<br>Defaults: '+data.dimension.defaults;
