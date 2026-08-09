@@ -1624,6 +1624,11 @@ public class TaxonomyVisualizationExporter {
             .append("<label class=\"filter\">Min Score <input id=\"impactMinScore\" type=\"range\" min=\"0\" max=\"")
             .append(maxScore)
             .append("\" value=\"0\" oninput=\"applyImpactFilter()\"><span id=\"impactMinScoreValue\">0</span></label>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"applyImpactPreset('gaps')\">Preset: Gaps</button>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"applyImpactPreset('high')\">Preset: High Risk</button>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"saveImpactFilters()\">Filter speichern</button>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"loadImpactFilters()\">Filter laden</button>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"exportImpactCsv()\">CSV Export</button>")
             .append("</div>")
             .append("<section><h2>Heatmap Tabelle</h2><table class=\"layout-table\"><thead><tr><th>Section</th><th>Konzept</th><th>Mappings</th><th>Dimensions</th><th>Enumeration</th><th>Placeholders</th><th>Impact</th><th>Felder</th></tr></thead><tbody>");
 
@@ -1661,7 +1666,11 @@ public class TaxonomyVisualizationExporter {
                 .append(row.score())
                 .append("</div></td><td>")
                 .append(escapeHtml(limitJoined(row.fields(), 5)))
-                .append("</td></tr>");
+                .append("<div class=\"muted\"><a href=\"taxonomy-visualization-coverage.html#")
+                .append(escapeHtml(urlFragment(row.concept())))
+                .append("\">Coverage</a> | <a href=\"taxonomy-visualization-reference.html#")
+                .append(escapeHtml(urlFragment(row.concept())))
+                .append("\">Reference</a></div></td></tr>");
         }
 
         body.append("</tbody></table></section>");
@@ -1687,6 +1696,14 @@ public class TaxonomyVisualizationExporter {
             + "r.hidden=!(textOk&&sectionOk&&scoreOk);"
             + "});"
             + "}"
+            + "function applyImpactPreset(mode){"
+            + "if(mode==='gaps'){document.getElementById('impactMinScore').value='1';document.getElementById('impactSection').value='';}"
+            + "if(mode==='high'){document.getElementById('impactMinScore').value='8';}"
+            + "applyImpactFilter();"
+            + "}"
+            + "function saveImpactFilters(){localStorage.setItem('impactFilters',JSON.stringify({q:document.getElementById('impactSearch').value,section:document.getElementById('impactSection').value,min:document.getElementById('impactMinScore').value}));}"
+            + "function loadImpactFilters(){try{const v=JSON.parse(localStorage.getItem('impactFilters')||'{}');document.getElementById('impactSearch').value=v.q||'';document.getElementById('impactSection').value=v.section||'';document.getElementById('impactMinScore').value=v.min||'0';}catch(e){}applyImpactFilter();}"
+            + "function exportImpactCsv(){const rows=[['Section','Konzept','Mappings','Dimensions','Enumeration','Placeholders','Score','Felder']];document.querySelectorAll('.impact-row').forEach(r=>{if(r.hidden)return;const t=r.querySelectorAll('td');rows.push([t[0].innerText.trim(),t[1].innerText.trim(),t[2].innerText.trim(),t[3].innerText.trim(),t[4].innerText.trim(),t[5].innerText.trim(),t[6].innerText.trim(),t[7].innerText.trim()]);});const csv=rows.map(a=>a.map(v=>String(v).replaceAll('\\t',' ')).join('\\t')).join('\\n');const blob=new Blob([csv],{type:'text/tab-separated-values;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='impact-heatmap.tsv';a.click();URL.revokeObjectURL(a.href);}"
             + "</script>";
 
         return renderPage("Impact Heatmap View", body.toString(), script);
@@ -2342,7 +2359,7 @@ public class TaxonomyVisualizationExporter {
         StringBuilder body = new StringBuilder();
         body.append("<h1>Concept Backlog View</h1>")
             .append("<p class=\"lead\">Priorisierte Arbeitsliste je Konzept mit Risikoscore, Layoutabdeckung und Dimensions-/Enumerationssignalen.</p>")
-            .append("<div class=\"toolbar\"><input id=\"backlogSearch\" type=\"search\" placeholder=\"Konzept oder Feld suchen...\" oninput=\"applyBacklogFilter()\"><label class=\"filter\"><input id=\"backlogNoLayout\" type=\"checkbox\" onchange=\"applyBacklogFilter()\"> Nur ohne Layout</label></div>")
+            .append("<div class=\"toolbar\"><input id=\"backlogSearch\" type=\"search\" placeholder=\"Konzept oder Feld suchen...\" oninput=\"applyBacklogFilter()\"><label class=\"filter\"><input id=\"backlogNoLayout\" type=\"checkbox\" onchange=\"applyBacklogFilter()\"> Nur ohne Layout</label><button type=\"button\" class=\"secondary\" onclick=\"applyBacklogPreset('high')\">Preset: High Risk</button><button type=\"button\" class=\"secondary\" onclick=\"saveBacklogFilters()\">Filter speichern</button><button type=\"button\" class=\"secondary\" onclick=\"loadBacklogFilters()\">Filter laden</button><button type=\"button\" class=\"secondary\" onclick=\"exportBacklogCsv()\">CSV Export</button></div>")
             .append("<section><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Risk</th><th>Layout</th><th>Dim</th><th>Enum</th><th>Formula</th><th>Felder</th></tr></thead><tbody>");
 
         for (ConceptBacklogRow row : rows) {
@@ -2365,11 +2382,15 @@ public class TaxonomyVisualizationExporter {
                 .append(row.formulaMentions())
                 .append("</td><td>")
                 .append(escapeHtml(limitJoined(row.fields(), 5)))
-                .append("</td></tr>");
+                .append("<div class=\"muted\"><a href=\"taxonomy-visualization-coverage.html#")
+                .append(escapeHtml(urlFragment(row.concept())))
+                .append("\">Coverage</a> | <a href=\"taxonomy-visualization-traceability-matrix.html#")
+                .append(escapeHtml(urlFragment(row.concept())))
+                .append("\">Traceability</a></div></td></tr>");
         }
 
         body.append("</tbody></table></section>");
-        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyBacklogFilter(){const q=normalize(document.getElementById('backlogSearch').value.trim());const noLayout=document.getElementById('backlogNoLayout').checked;document.querySelectorAll('.backlog-row').forEach(r=>{const s=r.dataset.search||'';const layout=(r.dataset.layout||'false')==='true';r.hidden=!((!q||s.includes(q))&&(!noLayout||!layout));});}</script>";
+        String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyBacklogFilter(){const q=normalize(document.getElementById('backlogSearch').value.trim());const noLayout=document.getElementById('backlogNoLayout').checked;document.querySelectorAll('.backlog-row').forEach(r=>{const s=r.dataset.search||'';const layout=(r.dataset.layout||'false')==='true';r.hidden=!((!q||s.includes(q))&&(!noLayout||!layout));});}function applyBacklogPreset(mode){if(mode==='high'){document.getElementById('backlogSearch').value='';document.getElementById('backlogNoLayout').checked=false;document.querySelectorAll('.backlog-row').forEach(r=>{const risk=Number((r.children[1]||{}).innerText||0);r.hidden=risk<8;});return;}applyBacklogFilter();}function saveBacklogFilters(){localStorage.setItem('backlogFilters',JSON.stringify({q:document.getElementById('backlogSearch').value,noLayout:document.getElementById('backlogNoLayout').checked}));}function loadBacklogFilters(){try{const v=JSON.parse(localStorage.getItem('backlogFilters')||'{}');document.getElementById('backlogSearch').value=v.q||'';document.getElementById('backlogNoLayout').checked=!!v.noLayout;}catch(e){}applyBacklogFilter();}function exportBacklogCsv(){const rows=[['Konzept','Risk','Layout','Dim','Enum','Formula','Felder']];document.querySelectorAll('.backlog-row').forEach(r=>{if(r.hidden)return;const t=r.querySelectorAll('td');rows.push([t[0].innerText.trim(),t[1].innerText.trim(),t[2].innerText.trim(),t[3].innerText.trim(),t[4].innerText.trim(),t[5].innerText.trim(),t[6].innerText.trim()]);});const tsv=rows.map(a=>a.map(v=>String(v).replaceAll('\\t',' ')).join('\\t')).join('\\n');const blob=new Blob([tsv],{type:'text/tab-separated-values;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='concept-backlog.tsv';a.click();URL.revokeObjectURL(a.href);}</script>";
         return renderPage("Concept Backlog View", body.toString(), script);
     }
 
@@ -4457,6 +4478,15 @@ public class TaxonomyVisualizationExporter {
             .replace("\"", "\\\"")
             .replace("\n", " ")
             .replace("\r", " ");
+    }
+
+    private String urlFragment(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        return value.toLowerCase(Locale.ROOT)
+            .replace(':', '-')
+            .replaceAll("[^a-z0-9._-]", "-");
     }
 
     private static boolean hasDimensions(MappingEntry entry) {
