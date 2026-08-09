@@ -95,6 +95,7 @@ public class TaxonomyVisualizationExporter {
         Path statsHtml = outputHtml.resolveSibling(stem + "-stats.html");
         Path complexityHtml = outputHtml.resolveSibling(stem + "-complexity.html");
         Path impactHeatmapHtml = outputHtml.resolveSibling(stem + "-impact-heatmap.html");
+        Path hypercubeDimensionInventoryHtml = outputHtml.resolveSibling(stem + "-hypercube-dimension-inventory.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
         Files.writeString(graphHtml, renderGraphHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -114,7 +115,8 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(statsHtml, renderStatsHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(complexityHtml, renderComplexityHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(impactHeatmapHtml, renderImpactHeatmapHtml(mappingsByConcept, placeholdersByField), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml), StandardCharsets.UTF_8);
+        Files.writeString(hypercubeDimensionInventoryHtml, renderHypercubeDimensionInventoryHtml(metadata), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -719,7 +721,8 @@ public class TaxonomyVisualizationExporter {
                                       Path allocationHtml,
                                       Path statsHtml,
                                       Path complexityHtml,
-                                      Path impactHeatmapHtml) {
+                                      Path impactHeatmapHtml,
+                                      Path hypercubeDimensionInventoryHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
             .append("<p class=\"lead\">Die Visualisierung wurde in getrennte Ansichten aufgeteilt, damit jede Seite kleiner, schneller und gezielter nutzbar ist.</p>")
@@ -749,6 +752,7 @@ public class TaxonomyVisualizationExporter {
                         .append(viewCard("15. Stats", fileNameOnly(statsHtml), "Linkbase Edge Statistics und Struktur-Hinweise"))
                         .append(viewCard("16. Complexity", fileNameOnly(complexityHtml), "Komplexitaetsindikatoren je Konzept"))
                         .append(viewCard("17. Impact Heatmap", fileNameOnly(impactHeatmapHtml), "Konzept x Section Impact-Analyse mit filterbarer Heatmap-Tabelle"))
+                        .append(viewCard("18. Hypercube Dimension Inventar", fileNameOnly(hypercubeDimensionInventoryHtml), "Filterbare Inventarliste fuer Cube-Achsen mit Domain/Member/Default-Kennzahlen"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
     }
@@ -2014,6 +2018,121 @@ public class TaxonomyVisualizationExporter {
             + "</script>";
 
         return renderPage("Intersection View", body.toString(), script);
+    }
+
+    private String renderHypercubeDimensionInventoryHtml(TaxonomyMetadata metadata) {
+        HypercubeMetadata hypercubeMetadata = metadata.hypercubeMetadata();
+        List<HypercubeDimensionInventoryRow> rows = new ArrayList<>();
+
+        for (HypercubeCube cube : hypercubeMetadata.cubes()) {
+            int primaryBindings = cube.primaryItemsAll().size() + cube.primaryItemsNotAll().size();
+            for (String dimension : cube.dimensions()) {
+                int domains = cube.domainsPerDimension().getOrDefault(dimension, List.of()).size();
+                int members = memberCountForDimension(cube, dimension);
+                int defaults = cube.defaultsPerDimension().getOrDefault(dimension, List.of()).size();
+                boolean maybeTypedAxis = domains == 0;
+                rows.add(new HypercubeDimensionInventoryRow(
+                    cube.cube(),
+                    dimension,
+                    domains,
+                    members,
+                    defaults,
+                    primaryBindings,
+                    maybeTypedAxis
+                ));
+            }
+        }
+
+        rows.sort(Comparator.comparingInt(HypercubeDimensionInventoryRow::members).reversed()
+            .thenComparing(HypercubeDimensionInventoryRow::cube)
+            .thenComparing(HypercubeDimensionInventoryRow::dimension));
+
+        int maxMembers = rows.stream().mapToInt(HypercubeDimensionInventoryRow::members).max().orElse(0);
+        long typedLikeCount = rows.stream().filter(HypercubeDimensionInventoryRow::maybeTypedAxis).count();
+        long missingDefaultCount = rows.stream().filter(row -> row.defaults() == 0).count();
+
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>Hypercube Dimension Inventar</h1>")
+            .append("<p class=\"lead\">Inventarsicht je Hypercube-Achse mit zentralen Kennzahlen fuer Domains, Members, Defaults und Primary-Bindings. Ideal fuer Gap- und Konsistenzchecks.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Hypercubes", hypercubeMetadata.cubes().size()))
+            .append(summaryCard("Dimensionen", rows.size()))
+            .append(summaryCard("Ohne Default", missingDefaultCount))
+            .append(summaryCard("Moeglich Typed Axis", typedLikeCount))
+            .append("</div>")
+            .append("<div class=\"toolbar\">")
+            .append("<input id=\"hdiSearch\" type=\"search\" placeholder=\"Hypercube oder Dimension suchen...\" oninput=\"applyHdiFilter()\">")
+            .append("<label class=\"filter\">Min Members <input id=\"hdiMinMembers\" type=\"range\" min=\"0\" max=\"")
+            .append(maxMembers)
+            .append("\" value=\"0\" oninput=\"applyHdiFilter()\"><span id=\"hdiMinMembersValue\">0</span></label>")
+            .append("<label class=\"filter\"><input id=\"hdiNoDefault\" type=\"checkbox\" onchange=\"applyHdiFilter()\"> Nur ohne Default</label>")
+            .append("<label class=\"filter\"><input id=\"hdiTypedAxis\" type=\"checkbox\" onchange=\"applyHdiFilter()\"> Nur moeglich typed axis</label>")
+            .append("</div>")
+            .append("<section><h2>Dimensionstabelle</h2><table class=\"layout-table\"><thead><tr><th>Hypercube</th><th>Dimension</th><th>Domains</th><th>Members</th><th>Defaults</th><th>Primary-Bindings</th><th>Typed?</th></tr></thead><tbody>");
+
+        if (rows.isEmpty()) {
+            body.append("<tr><td colspan=\"7\" class=\"muted\">Keine Hypercube-Dimensionsdaten gefunden.</td></tr>");
+        }
+
+        for (HypercubeDimensionInventoryRow row : rows) {
+            String search = normalizeSearch(row.cube() + " " + row.dimension());
+            int memberPercent = maxMembers <= 0 ? 0 : (int) Math.round((row.members() * 100.0) / maxMembers);
+            body.append("<tr class=\"hdi-row\" data-search=\"")
+                .append(escapeHtml(search))
+                .append("\" data-members=\"")
+                .append(row.members())
+                .append("\" data-defaults=\"")
+                .append(row.defaults())
+                .append("\" data-typed=\"")
+                .append(row.maybeTypedAxis())
+                .append("\"><td><code>")
+                .append(escapeHtml(row.cube()))
+                .append("</code></td><td><code>")
+                .append(escapeHtml(row.dimension()))
+                .append("</code></td><td>")
+                .append(row.domains())
+                .append("</td><td><div class=\"hdi-bar\"><span style=\"width:")
+                .append(memberPercent)
+                .append("%\"></span></div><div class=\"muted\">")
+                .append(row.members())
+                .append("</div></td><td>")
+                .append(row.defaults())
+                .append("</td><td>")
+                .append(row.primaryBindings())
+                .append("</td><td>")
+                .append(statusPill(!row.maybeTypedAxis(), row.maybeTypedAxis() ? "moeglich" : "explizit"))
+                .append("</td></tr>");
+        }
+
+        body.append("</tbody></table></section>");
+
+        String script = "<style>"
+            + ".hdi-bar{height:10px;background:#eaf0f7;border-radius:999px;overflow:hidden;min-width:120px;}"
+            + ".hdi-bar span{display:block;height:100%;background:linear-gradient(90deg,#84b6f4 0%,#1e5f99 100%);border-radius:999px;}"
+            + "#hdiMinMembers{accent-color:#17324d;}"
+            + "</style><script>"
+            + "function normalize(t){return (t||'').toLowerCase();}"
+            + "function applyHdiFilter(){"
+            + "const q=normalize(document.getElementById('hdiSearch').value.trim());"
+            + "const minMembers=Number(document.getElementById('hdiMinMembers').value||0);"
+            + "const noDefault=document.getElementById('hdiNoDefault').checked;"
+            + "const typedOnly=document.getElementById('hdiTypedAxis').checked;"
+            + "document.getElementById('hdiMinMembersValue').textContent=String(minMembers);"
+            + "document.querySelectorAll('.hdi-row').forEach(r=>{"
+            + "const s=r.dataset.search||'';"
+            + "const members=Number(r.dataset.members||0);"
+            + "const defaults=Number(r.dataset.defaults||0);"
+            + "const typed=(r.dataset.typed||'false')==='true';"
+            + "const textOk=!q||s.includes(q);"
+            + "const membersOk=members>=minMembers;"
+            + "const defaultOk=!noDefault||defaults===0;"
+            + "const typedOk=!typedOnly||typed;"
+            + "r.hidden=!(textOk&&membersOk&&defaultOk&&typedOk);"
+            + "});"
+            + "}"
+            + "</script>";
+
+        return renderPage("Hypercube Dimension Inventar", body.toString(), script);
     }
 
     private int memberCountForDimension(HypercubeCube cube, String dimension) {
@@ -3893,6 +4012,15 @@ public class TaxonomyVisualizationExporter {
                                     int score,
                                     Set<String> fields,
                                     Set<String> placeholders) {
+    }
+
+    private record HypercubeDimensionInventoryRow(String cube,
+                                                  String dimension,
+                                                  int domains,
+                                                  int members,
+                                                  int defaults,
+                                                  int primaryBindings,
+                                                  boolean maybeTypedAxis) {
     }
 
     private record TaxonomyMetadata(long xsdElementCount,
