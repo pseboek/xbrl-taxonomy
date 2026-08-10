@@ -115,7 +115,7 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(hypercubeHtml, renderHypercubeHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(hypercube3dHtml, renderHypercube3dHtml(metadata), StandardCharsets.UTF_8);
         copyLocalThreeBundle(taxonomyRoot, localThreeJs);
-        Files.writeString(coverageHtml, renderCoverageHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
+        Files.writeString(coverageHtml, renderCoverageHtml(forest, mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
         Files.writeString(enumerationHtml, renderEnumerationHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
         Files.writeString(referenceHtml, renderReferenceHtml(mappingsByConcept, placeholdersByField, conceptReferences), StandardCharsets.UTF_8);
         Files.writeString(calculationHtml, renderCalculationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
@@ -123,12 +123,12 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(validationHtml, renderValidationHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(allocationHtml, renderAllocationHtml(layoutSnapshot, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(statsHtml, renderStatsHtml(metadata), StandardCharsets.UTF_8);
-        Files.writeString(complexityHtml, renderComplexityHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
-        Files.writeString(impactHeatmapHtml, renderImpactHeatmapHtml(mappingsByConcept, placeholdersByField), StandardCharsets.UTF_8);
+        Files.writeString(complexityHtml, renderComplexityHtml(forest, metadata, mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(impactHeatmapHtml, renderImpactHeatmapHtml(forest, metadata, mappingsByConcept, placeholdersByField), StandardCharsets.UTF_8);
         Files.writeString(hypercubeDimensionInventoryHtml, renderHypercubeDimensionInventoryHtml(metadata), StandardCharsets.UTF_8);
-        Files.writeString(mappingFlowHtml, renderMappingFlowHtml(mappingsByConcept, metadata), StandardCharsets.UTF_8);
-        Files.writeString(conceptBacklogHtml, renderConceptBacklogHtml(mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
-        Files.writeString(scopePeriodHtml, renderScopePeriodAnalysisHtml(mappingsByConcept), StandardCharsets.UTF_8);
+        Files.writeString(mappingFlowHtml, renderMappingFlowHtml(forest, mappingsByConcept, metadata), StandardCharsets.UTF_8);
+        Files.writeString(conceptBacklogHtml, renderConceptBacklogHtml(forest, mappingsByConcept, placeholdersByField, metadata), StandardCharsets.UTF_8);
+        Files.writeString(scopePeriodHtml, renderScopePeriodAnalysisHtml(forest, metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(ruleCoverageMatrixHtml, renderRuleCoverageMatrixHtml(metadata, mappingsByConcept), StandardCharsets.UTF_8);
         Files.writeString(intersectionRiskHtml, renderIntersectionRiskHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(traceabilityMatrixHtml, renderTraceabilityMatrixHtml(mappingsByConcept, placeholdersByField, conceptReferences, metadata), StandardCharsets.UTF_8);
@@ -1565,8 +1565,10 @@ public class TaxonomyVisualizationExporter {
                 return renderPage("Hypercube 3D View", body.toString(), script);
         }
 
-    private String renderComplexityHtml(TaxonomyMetadata metadata,
+    private String renderComplexityHtml(PresentationForest forest,
+                                        TaxonomyMetadata metadata,
                                         Map<String, List<MappingEntry>> mappingsByConcept) {
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
         Map<String, Integer> calcDegree = new TreeMap<>();
         for (LinkEdge edge : metadata.sampleEdges()) {
             if (!"calculation".equals(edge.layer())) {
@@ -1585,13 +1587,17 @@ public class TaxonomyVisualizationExporter {
             List<MappingEntry> entries = mappingsByConcept.getOrDefault(conceptKey, List.of());
             String concept = entries.isEmpty() ? conceptKey : entries.get(0).concept();
 
-            int dimensionCount = 0;
+            Set<String> dimensions = new TreeSet<>(taxonomyDimensionsByConcept.getOrDefault(conceptKey, Set.of()));
             int enumSignals = 0;
             Set<String> fields = new TreeSet<>();
             for (MappingEntry entry : entries) {
                 fields.add(entry.field());
                 if (entry.dimensions() != null) {
-                    dimensionCount += entry.dimensions().size();
+                    for (DimensionSelection dimension : entry.dimensions()) {
+                        if (dimension.axisQname() != null && !dimension.axisQname().isBlank()) {
+                            dimensions.add(dimension.axisQname());
+                        }
+                    }
                 }
                 if (hasEnumeration(entry)) {
                     enumSignals++;
@@ -1600,6 +1606,8 @@ public class TaxonomyVisualizationExporter {
             if (metadata.taxonomyEnumerationsByConcept().containsKey(conceptKey)) {
                 enumSignals++;
             }
+
+            int dimensionCount = dimensions.size();
 
             int calc = calcDegree.getOrDefault(conceptKey, 0);
             int formulaMentions = metadata.formulaMentionsByConcept().getOrDefault(conceptKey, 0);
@@ -1665,8 +1673,11 @@ public class TaxonomyVisualizationExporter {
         return renderPage("Complexity View", body.toString(), script);
     }
 
-    private String renderImpactHeatmapHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+    private String renderImpactHeatmapHtml(PresentationForest forest,
+                                           TaxonomyMetadata metadata,
+                                           Map<String, List<MappingEntry>> mappingsByConcept,
                                            Map<String, List<String>> placeholdersByField) {
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
         List<ImpactHeatmapRow> rows = new ArrayList<>();
         Map<String, Long> sections = new TreeMap<>();
 
@@ -1692,8 +1703,15 @@ public class TaxonomyVisualizationExporter {
                 }
 
                 int mappingCount = sectionMappings.size();
-                int dimensionSignals = (int) sectionMappings.stream().filter(TaxonomyVisualizationExporter::hasDimensions).count();
-                int enumerationSignals = (int) sectionMappings.stream().filter(TaxonomyVisualizationExporter::hasEnumeration).count();
+                boolean conceptHasTaxonomyDimensions = taxonomyDimensionsByConcept.containsKey(conceptEntry.getKey())
+                    && !taxonomyDimensionsByConcept.get(conceptEntry.getKey()).isEmpty();
+                boolean conceptHasTaxonomyEnumeration = metadata.taxonomyEnumerationsByConcept().containsKey(conceptEntry.getKey());
+                int dimensionSignals = (int) sectionMappings.stream()
+                    .filter(entry -> hasDimensions(entry) || conceptHasTaxonomyDimensions)
+                    .count();
+                int enumerationSignals = (int) sectionMappings.stream()
+                    .filter(entry -> hasEnumeration(entry) || conceptHasTaxonomyEnumeration)
+                    .count();
                 int placeholderCount = placeholders.size();
                 int score = mappingCount + (dimensionSignals * 2) + (enumerationSignals * 2) + placeholderCount;
 
@@ -2067,17 +2085,21 @@ public class TaxonomyVisualizationExporter {
             body.append("<tr><td colspan=\"3\" class=\"muted\">Keine Formula-Abhaengigkeiten gefunden.</td></tr>");
         }
 
+        int ruleRowIndex = 0;
         for (FormulaRuleRow row : ruleRows) {
             String search = normalizeSearch(row.formulaFile() + " " + String.join(" ", row.concepts()) + " " + String.join(" ", row.fields()));
+            String conceptsHtml = renderExpandableLineList(new TreeSet<>(row.concepts()), 10, "validation-rule-" + ruleRowIndex + "-concepts");
+            String fieldsHtml = renderExpandableLineList(row.fields(), 10, "validation-rule-" + ruleRowIndex + "-fields");
             body.append("<tr class=\"validation-row\" data-search=\"")
                 .append(escapeHtml(search))
                 .append("\"><td><code>")
                 .append(escapeHtml(row.formulaFile()))
                 .append("</code></td><td>")
-                .append(escapeHtml(limitJoined(new TreeSet<>(row.concepts()), 8)))
+                .append(conceptsHtml)
                 .append("</td><td>")
-                .append(row.fields().isEmpty() ? "-" : escapeHtml(limitJoined(row.fields(), 6)))
+                .append(fieldsHtml)
                 .append("</td></tr>");
+            ruleRowIndex++;
         }
 
         body.append("</tbody></table></section>")
@@ -2091,6 +2113,7 @@ public class TaxonomyVisualizationExporter {
         for (int i = 0; i < conceptLimit; i++) {
             ValidationConceptRow row = conceptRows.get(i);
             String search = normalizeSearch(row.concept() + " " + row.mentions() + " " + String.join(" ", row.fields()));
+            String fieldsHtml = renderExpandableLineList(row.fields(), 10, "validation-concept-" + i + "-fields");
             body.append("<tr class=\"validation-row\" data-search=\"")
                 .append(escapeHtml(search))
                 .append("\"><td><code>")
@@ -2098,7 +2121,7 @@ public class TaxonomyVisualizationExporter {
                 .append("</code></td><td>")
                 .append(row.mentions())
                 .append("</td><td>")
-                .append(row.fields().isEmpty() ? "-" : escapeHtml(limitJoined(row.fields(), 6)))
+                .append(fieldsHtml)
                 .append("</td></tr>");
         }
         if (conceptRows.size() > conceptLimit) {
@@ -2113,9 +2136,53 @@ public class TaxonomyVisualizationExporter {
             + "function normalize(t){return (t||'').toLowerCase();}"
             + "function applyValidationFilter(){const q=normalize(document.getElementById('validationSearch').value.trim());"
             + "document.querySelectorAll('.validation-row').forEach(r=>{const s=r.dataset.search||'';r.hidden=q&&!s.includes(q);});}"
+            + "function toggleExpandableList(id,btn){const extra=document.getElementById(id);if(!extra)return;const open=extra.dataset.open==='true';if(open){extra.style.display='none';extra.dataset.open='false';btn.textContent='+'+(btn.dataset.hiddenCount||'0')+' anzeigen';}else{extra.style.display='block';extra.dataset.open='true';btn.textContent='weniger anzeigen';}}"
             + "</script>";
 
         return renderPage("Validation View", body.toString(), script);
+    }
+
+    private String renderExpandableLineList(Set<String> values,
+                                            int visibleCount,
+                                            String listIdSeed) {
+        if (values == null || values.isEmpty()) {
+            return "-";
+        }
+
+        List<String> sorted = new ArrayList<>(values);
+        int initial = Math.min(Math.max(1, visibleCount), sorted.size());
+        int hiddenCount = sorted.size() - initial;
+        String extraId = fieldId(listIdSeed + "-extra");
+
+        StringBuilder html = new StringBuilder();
+        html.append("<div>");
+        for (int i = 0; i < initial; i++) {
+            html.append("<div>")
+                .append(escapeHtml(sorted.get(i)))
+                .append("</div>");
+        }
+
+        if (hiddenCount > 0) {
+            html.append("<div id=\"")
+                .append(extraId)
+                .append("\" style=\"display:none;\" data-open=\"false\">");
+            for (int i = initial; i < sorted.size(); i++) {
+                html.append("<div>")
+                    .append(escapeHtml(sorted.get(i)))
+                    .append("</div>");
+            }
+            html.append("</div>")
+                .append("<button type=\"button\" class=\"secondary\" data-hidden-count=\"")
+                .append(hiddenCount)
+                .append("\" onclick=\"toggleExpandableList('")
+                .append(escapeHtml(extraId))
+                .append("', this)\">+")
+                .append(hiddenCount)
+                .append(" anzeigen</button>");
+        }
+
+        html.append("</div>");
+        return html.toString();
     }
 
     private String renderIntersectionHtml(TaxonomyMetadata metadata) {
@@ -2308,12 +2375,14 @@ public class TaxonomyVisualizationExporter {
         return renderPage("Hypercube Dimension Inventar", body.toString(), script);
     }
 
-    private String renderMappingFlowHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+    private String renderMappingFlowHtml(PresentationForest forest,
+                                         Map<String, List<MappingEntry>> mappingsByConcept,
                                          TaxonomyMetadata metadata) {
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
         Map<String, Set<String>> cubesByDimension = new TreeMap<>();
         for (HypercubeCube cube : metadata.hypercubeMetadata().cubes()) {
             for (String dimension : cube.dimensions()) {
-                cubesByDimension.computeIfAbsent(dimension, key -> new TreeSet<>()).add(cube.cube());
+                cubesByDimension.computeIfAbsent(normalizeConceptKey(dimension), key -> new TreeSet<>()).add(cube.cube());
             }
         }
 
@@ -2325,6 +2394,7 @@ public class TaxonomyVisualizationExporter {
                 sections.add(section);
 
                 Set<String> dimensions = new TreeSet<>();
+                Set<String> dimensionKeys = new TreeSet<>();
                 Set<String> cubes = new TreeSet<>();
                 if (mapping.dimensions() != null) {
                     for (DimensionSelection dimension : mapping.dimensions()) {
@@ -2332,12 +2402,24 @@ public class TaxonomyVisualizationExporter {
                             continue;
                         }
                         String axis = dimension.axisQname();
-                        dimensions.add(axis);
-                        Set<String> owningCubes = cubesByDimension.get(axis);
+                        dimensions.add(toDisplayQName(axis));
+                        dimensionKeys.add(normalizeConceptKey(axis));
+                    }
+                }
+
+                if (dimensionKeys.isEmpty()) {
+                    Set<String> taxonomyAxes = taxonomyDimensionsByConcept.getOrDefault(conceptEntry.getKey(), Set.of());
+                    for (String axis : taxonomyAxes) {
+                        dimensionKeys.add(normalizeConceptKey(axis));
+                        dimensions.add(toDisplayQName(axis));
+                    }
+                }
+
+                for (String axisKey : dimensionKeys) {
+                        Set<String> owningCubes = cubesByDimension.get(axisKey);
                         if (owningCubes != null) {
                             cubes.addAll(owningCubes);
                         }
-                    }
                 }
 
                 rows.add(new MappingFlowRow(
@@ -2393,10 +2475,13 @@ public class TaxonomyVisualizationExporter {
             body.append("<tr><td colspan=\"8\" class=\"muted\">Keine Mapping-Flow-Daten gefunden.</td></tr>");
         }
 
+        int rowIndex = 0;
         for (MappingFlowRow row : rows) {
             String search = normalizeSearch(
                 row.section() + " " + row.field() + " " + row.concept() + " " + String.join(" ", row.dimensions()) + " " + String.join(" ", row.cubes())
             );
+            String dimensionsHtml = renderExpandableLineList(row.dimensions(), 10, "mapping-flow-" + rowIndex + "-dimensions");
+            String cubesHtml = renderExpandableLineList(row.cubes(), 10, "mapping-flow-" + rowIndex + "-cubes");
             body.append("<tr class=\"mapping-flow-row\" data-search=\"")
                 .append(escapeHtml(search))
                 .append("\" data-section=\"")
@@ -2416,12 +2501,13 @@ public class TaxonomyVisualizationExporter {
                 .append("</td><td>")
                 .append(escapeHtml(row.unit() == null || row.unit().isBlank() ? "-" : row.unit()))
                 .append("</td><td>")
-                .append(escapeHtml(row.dimensions().isEmpty() ? "-" : limitJoined(row.dimensions(), 4)))
+                .append(dimensionsHtml)
                 .append("</td><td>")
-                .append(escapeHtml(row.cubes().isEmpty() ? "-" : limitJoined(row.cubes(), 3)))
+                .append(cubesHtml)
                 .append("</td><td>")
                 .append(statusPill(row.enumeration(), row.enumeration() ? "ja" : "nein"))
                 .append("</td></tr>");
+            rowIndex++;
         }
 
         body.append("</tbody></table></section>");
@@ -2445,14 +2531,17 @@ public class TaxonomyVisualizationExporter {
             + "r.hidden=!(textOk&&sectionOk&&dimOk&&cubeOk);"
             + "});"
             + "}"
+            + "function toggleExpandableList(id,btn){const extra=document.getElementById(id);if(!extra)return;const open=extra.dataset.open==='true';if(open){extra.style.display='none';extra.dataset.open='false';btn.textContent='+'+(btn.dataset.hiddenCount||'0')+' anzeigen';}else{extra.style.display='block';extra.dataset.open='true';btn.textContent='weniger anzeigen';}}"
             + "</script>";
 
         return renderPage("Mapping Flow View", body.toString(), script);
     }
 
-    private String renderConceptBacklogHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+    private String renderConceptBacklogHtml(PresentationForest forest,
+                                            Map<String, List<MappingEntry>> mappingsByConcept,
                                             Map<String, List<String>> placeholdersByField,
                                             TaxonomyMetadata metadata) {
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
         List<ConceptBacklogRow> rows = new ArrayList<>();
         for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
             List<MappingEntry> entries = conceptEntry.getValue();
@@ -2466,9 +2555,11 @@ public class TaxonomyVisualizationExporter {
                 }
             }
             boolean hasLayout = !placeholders.isEmpty();
-            int dimSignals = (int) entries.stream().filter(TaxonomyVisualizationExporter::hasDimensions).count();
+            boolean conceptHasTaxonomyDimensions = taxonomyDimensionsByConcept.containsKey(conceptEntry.getKey())
+                && !taxonomyDimensionsByConcept.get(conceptEntry.getKey()).isEmpty();
+            int dimSignals = (int) entries.stream().filter(entry -> hasDimensions(entry) || conceptHasTaxonomyDimensions).count();
             int enumSignals = (int) entries.stream().filter(TaxonomyVisualizationExporter::hasEnumeration).count()
-                + (taxonomyEnumerationForConcept(metadata, concept) == null ? 0 : 1);
+                + (metadata.taxonomyEnumerationsByConcept().containsKey(conceptEntry.getKey()) ? 1 : 0);
             int calc = metadata.formulaMentionsByConcept().getOrDefault(normalizeConceptKey(concept), 0);
             int riskScore = fields.size() + dimSignals * 2 + enumSignals + calc;
             rows.add(new ConceptBacklogRow(concept, fields.size(), hasLayout, dimSignals, enumSignals, calc, riskScore, fields, placeholders));
@@ -2514,9 +2605,16 @@ public class TaxonomyVisualizationExporter {
         return renderPage("Concept Backlog View", body.toString(), script);
     }
 
-    private String renderScopePeriodAnalysisHtml(Map<String, List<MappingEntry>> mappingsByConcept) {
+    private String renderScopePeriodAnalysisHtml(PresentationForest forest,
+                                                 TaxonomyMetadata metadata,
+                                                 Map<String, List<MappingEntry>> mappingsByConcept) {
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
         List<ScopePeriodRow> rows = new ArrayList<>();
-        for (List<MappingEntry> entries : mappingsByConcept.values()) {
+        for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
+            boolean conceptHasTaxonomyDimensions = taxonomyDimensionsByConcept.containsKey(conceptEntry.getKey())
+                && !taxonomyDimensionsByConcept.get(conceptEntry.getKey()).isEmpty();
+            boolean conceptHasTaxonomyEnumeration = metadata.taxonomyEnumerationsByConcept().containsKey(conceptEntry.getKey());
+            List<MappingEntry> entries = conceptEntry.getValue();
             for (MappingEntry entry : entries) {
                 rows.add(new ScopePeriodRow(
                     deriveSection(entry.field()),
@@ -2524,8 +2622,8 @@ public class TaxonomyVisualizationExporter {
                     entry.concept(),
                     entry.period() == null || entry.period().isBlank() ? "-" : entry.period(),
                     entry.unit() == null || entry.unit().isBlank() ? "-" : entry.unit(),
-                    hasDimensions(entry),
-                    hasEnumeration(entry)
+                    hasDimensions(entry) || conceptHasTaxonomyDimensions,
+                    hasEnumeration(entry) || conceptHasTaxonomyEnumeration
                 ));
             }
         }
@@ -2911,18 +3009,26 @@ public class TaxonomyVisualizationExporter {
 
         rows.sort(Comparator
             .comparingInt(CalculationImpactRow::calcDegree).reversed()
-            .thenComparingInt(CalculationImpactRow::formulaMentions).reversed()
+            .thenComparing(Comparator.comparingInt(CalculationImpactRow::formulaMentions).reversed())
             .thenComparing(CalculationImpactRow::concept));
+
+        int topWindow = Math.min(20, rows.size());
+        long nonZeroCalcInTopWindow = rows.stream().limit(topWindow).filter(row -> row.calcDegree() > 0).count();
+        boolean suspiciousTopZeros = !calcEdges.isEmpty() && topWindow > 0 && nonZeroCalcInTopWindow == 0;
 
         StringBuilder body = new StringBuilder();
         body.append("<h1>Calculation View: Dependency und Formula-Impact</h1>")
             .append("<p class=\"lead\">Analytische Sicht auf Calculation-Kanten (Sample) und Konzeptverwendungen in Formula-Dateien. Nutze sie fuer Impact-Analysen bei Mapping-Aenderungen.</p>")
+            .append("<div class=\"layout-row muted\"><strong>Calc-Degree</strong>Anzahl der Calculation-Kanten, in denen ein Konzept als Quelle oder Ziel vorkommt (im Sample). Hoeherer Wert bedeutet: staerker in Rechenbeziehungen verknuepft und potenziell hoeherer Impact bei Aenderungen.</div>")
             .append("<div class=\"summary\">")
             .append(summaryCard("Calculation-Kanten (Sample)", calcEdges.size()))
             .append(summaryCard("Calculation-Konzepte", calcDegree.size()))
             .append(summaryCard("Formula-Konzepte", metadata.formulaMentionsByConcept().size()))
             .append(summaryCard("Impact-Kandidaten", rows.stream().filter(r -> r.calcDegree() > 0 || r.formulaMentions() > 0).count()))
             .append("</div>")
+            .append(suspiciousTopZeros
+                ? "<div class=\"layout-row muted\"><strong>Hinweis</strong>Obwohl Calculation-Kanten im Sample vorhanden sind, haben die ersten Treffer aktuell Calc-Degree 0. Bitte Sortierung/Filter und Datengrundlage pruefen.</div>"
+                : "")
             .append("<div class=\"toolbar\"><input id=\"calcSearch\" type=\"search\" placeholder=\"Konzept, Feld oder Metrik suchen...\" oninput=\"applyCalcFilter()\"></div>")
             .append("<section><h2>Konzept-Impact</h2><table class=\"layout-table\"><thead><tr><th>Konzept</th><th>Calc-Degree</th><th>Formula-Mentions</th><th>Gemappte Felder</th></tr></thead><tbody>");
 
@@ -3051,9 +3157,11 @@ public class TaxonomyVisualizationExporter {
         return renderPage("Reference View", body.toString(), script);
     }
 
-    private String renderCoverageHtml(Map<String, List<MappingEntry>> mappingsByConcept,
+    private String renderCoverageHtml(PresentationForest forest,
+                                      Map<String, List<MappingEntry>> mappingsByConcept,
                                       Map<String, List<String>> placeholdersByField,
                                       TaxonomyMetadata metadata) {
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
         List<CoverageRow> rows = new ArrayList<>();
         for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
             List<MappingEntry> entries = conceptEntry.getValue();
@@ -3062,9 +3170,11 @@ public class TaxonomyVisualizationExporter {
                 List<String> placeholders = placeholdersByField.get(entry.field());
                 return placeholders != null && !placeholders.isEmpty();
             });
-            boolean hasDimensions = entries.stream().anyMatch(TaxonomyVisualizationExporter::hasDimensions);
+            boolean hasDimensions = (taxonomyDimensionsByConcept.containsKey(conceptEntry.getKey())
+                && !taxonomyDimensionsByConcept.get(conceptEntry.getKey()).isEmpty())
+                || entries.stream().anyMatch(TaxonomyVisualizationExporter::hasDimensions);
             boolean hasEnumeration = entries.stream().anyMatch(TaxonomyVisualizationExporter::hasEnumeration)
-                || taxonomyEnumerationForConcept(metadata, concept) != null;
+                || metadata.taxonomyEnumerationsByConcept().containsKey(conceptEntry.getKey());
 
             Set<String> fields = entries.stream().map(MappingEntry::field).collect(Collectors.toCollection(TreeSet::new));
             Set<String> placeholders = new TreeSet<>();
@@ -3355,8 +3465,8 @@ public class TaxonomyVisualizationExporter {
                                   Map<String, List<MappingEntry>> mappingsByConcept,
                                   Map<String, List<String>> placeholdersByField,
                                   LayoutSnapshot layoutSnapshot) {
-        long fieldsWithDimensions = mappingsByConcept.values().stream().flatMap(List::stream)
-            .filter(TaxonomyVisualizationExporter::hasDimensions).count();
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
+        long fieldsWithDimensions = countFieldsWithDimensions(mappingsByConcept, taxonomyDimensionsByConcept);
         long enumFields = mappingsByConcept.values().stream().flatMap(List::stream)
             .filter(TaxonomyVisualizationExporter::hasEnumeration).count();
 
@@ -3389,7 +3499,7 @@ public class TaxonomyVisualizationExporter {
                 .append("\" data-has-mapping=\"")
                 .append(role.hasMappedConcepts())
                 .append("\" data-has-dimensions=\"")
-                .append(role.hasDimensionalMappings(mappingsByConcept))
+                .append(role.hasDimensionalMappings(mappingsByConcept, taxonomyDimensionsByConcept))
                 .append("\" data-has-enumeration=\"")
                 .append(role.hasEnumerationMappings(mappingsByConcept, metadata))
                 .append("\"><summary><span>")
@@ -3399,7 +3509,7 @@ public class TaxonomyVisualizationExporter {
                 .append(role.nodeCount()).append(" Knoten</span></summary><div class=\"node-children\">");
 
             for (String rootLabel : role.rootLabels()) {
-                renderNode(body, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(), 0);
+                renderNode(body, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, taxonomyDimensionsByConcept, new LinkedHashSet<>(), 0);
             }
             body.append("</div></details>");
         }
@@ -3439,10 +3549,16 @@ public class TaxonomyVisualizationExporter {
         for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
             List<MappingEntry> conceptFields = conceptEntry.getValue();
             String conceptDisplay = conceptFields.isEmpty() ? conceptEntry.getKey() : conceptFields.get(0).concept();
+            boolean hasLayout = conceptFields.stream()
+                .map(MappingEntry::field)
+                .filter(value -> value != null && !value.isBlank())
+                .anyMatch(field -> placeholdersByField.containsKey(field) && !placeholdersByField.get(field).isEmpty());
             body.append("<article class=\"concept-item search-card\" data-search=\"")
                 .append(escapeHtml(normalizeSearch(conceptSearchText(conceptDisplay, conceptFields, placeholdersByField))))
                 .append("\"><h3><code>").append(escapeHtml(conceptDisplay)).append("</code></h3><div class=\"muted\">")
-                .append(conceptFields.size()).append(" Feldzuordnung(en)</div><div>");
+                .append(conceptFields.size()).append(" Feldzuordnung(en) ")
+                .append(statusPill(hasLayout, hasLayout ? "Layout vorhanden" : "Layout fehlt"))
+                .append("</div><div>");
             for (MappingEntry mappingEntry : conceptFields) {
                 body.append("<div>").append(escapeHtml(mappingEntry.field())).append("</div>");
             }
@@ -4024,6 +4140,13 @@ public class TaxonomyVisualizationExporter {
             .append(".node-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 16px;font-size:.94rem;margin-top:10px;}")
             .append(".node-meta div,.concept-item,.layout-row{background:#fff;border:1px solid #e5edf5;border-radius:10px;padding:8px 10px;}")
             .append(".node-meta strong,.concept-item strong,.layout-row strong{display:block;font-size:.75rem;color:#5b7086;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}")
+            .append(".meta-list{display:grid;gap:4px;}")
+            .append(".meta-list-line{line-height:1.35;}")
+            .append(".meta-list-toggle{margin-top:6px;}")
+            .append(".meta-list-toggle summary{cursor:pointer;color:#1e5f99;font-weight:600;list-style:none;}")
+            .append(".meta-list-toggle summary::-webkit-details-marker{display:none;}")
+            .append(".meta-list-toggle summary::before{content:'+';display:inline-block;margin-right:6px;}")
+            .append(".meta-list-toggle[open] summary::before{content:'-';}")
             .append(".concept-list{display:grid;gap:10px;}.concept-item h3{margin:0 0 6px;font-size:1rem;}")
             .append(".layout-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d9e3ee;border-radius:14px;overflow:hidden;}")
             .append(".layout-table th,.layout-table td{text-align:left;padding:10px 12px;border-bottom:1px solid #edf2f7;vertical-align:top;white-space:normal;overflow-wrap:anywhere;word-break:break-word;max-width:100ch;}")
@@ -4073,8 +4196,8 @@ public class TaxonomyVisualizationExporter {
                               Map<String, List<MappingEntry>> mappingsByConcept,
                               Map<String, List<String>> placeholdersByField,
                               LayoutSnapshot layoutSnapshot) {
-        long fieldsWithDimensions = mappingsByConcept.values().stream().flatMap(List::stream)
-            .filter(TaxonomyVisualizationExporter::hasDimensions).count();
+        Map<String, Set<String>> taxonomyDimensionsByConcept = buildTaxonomyDimensionsByConcept(metadata, forest);
+        long fieldsWithDimensions = countFieldsWithDimensions(mappingsByConcept, taxonomyDimensionsByConcept);
         long totalDimensions = mappingsByConcept.values().stream().flatMap(List::stream)
             .mapToLong(entry -> entry.dimensions() == null ? 0 : entry.dimensions().size()).sum();
         long enumFields = mappingsByConcept.values().stream().flatMap(List::stream)
@@ -4180,7 +4303,7 @@ public class TaxonomyVisualizationExporter {
                 .append("\" data-has-mapping=\"")
                 .append(role.hasMappedConcepts())
                 .append("\" data-has-dimensions=\"")
-                .append(role.hasDimensionalMappings(mappingsByConcept))
+                .append(role.hasDimensionalMappings(mappingsByConcept, taxonomyDimensionsByConcept))
                 .append("\" data-has-enumeration=\"")
                 .append(role.hasEnumerationMappings(mappingsByConcept, metadata))
                 .append("\">")
@@ -4192,7 +4315,7 @@ public class TaxonomyVisualizationExporter {
                 .append("<div class=\"node-children\">");
 
             for (String rootLabel : role.rootLabels()) {
-                renderNode(html, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(), 0);
+                renderNode(html, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, taxonomyDimensionsByConcept, new LinkedHashSet<>(), 0);
             }
 
             html.append("</div></details>");
@@ -4425,6 +4548,7 @@ public class TaxonomyVisualizationExporter {
                             TaxonomyMetadata metadata,
                             Map<String, List<MappingEntry>> mappingsByConcept,
                             Map<String, List<String>> placeholdersByField,
+                            Map<String, Set<String>> taxonomyDimensionsByConcept,
                             Set<String> path,
                             int depth) {
         if (!path.add(label)) {
@@ -4443,7 +4567,9 @@ public class TaxonomyVisualizationExporter {
             }
         }
 
-        boolean hasDimensions = mappedEntries.stream().anyMatch(entry -> entry.dimensions() != null && !entry.dimensions().isEmpty());
+        Set<String> taxonomyDimensions = taxonomyDimensionsByConcept.getOrDefault(normalizeConceptKey(qname), Set.of());
+        boolean hasDimensions = !taxonomyDimensions.isEmpty()
+            || mappedEntries.stream().anyMatch(entry -> entry.dimensions() != null && !entry.dimensions().isEmpty());
         boolean hasEnumeration = taxonomyEnumeration != null
             || mappedEntries.stream().anyMatch(entry -> entry.enumerationDomain() != null && !entry.enumerationDomain().isBlank());
         String searchText = normalizeSearch(role.searchText() + " " + qname + " " + display + " " + mappedEntries.stream().map(MappingEntry::field).collect(Collectors.joining(" ")) + " " + String.join(" ", placeholders));
@@ -4454,7 +4580,8 @@ public class TaxonomyVisualizationExporter {
         String periodValue = mappedEntries.stream().map(MappingEntry::period).filter(value -> value != null && !value.isBlank()).distinct().collect(Collectors.joining(", "));
         String unitValue = mappedEntries.stream().map(MappingEntry::unit).filter(value -> value != null && !value.isBlank()).distinct().collect(Collectors.joining(", "));
         String placeholderValue = placeholders.isEmpty() ? "" : String.join(", ", new TreeSet<>(placeholders));
-        String dimensionsValue = renderDimensionSummary(mappedEntries);
+        List<String> dimensions = collectDimensionEntries(mappedEntries, taxonomyDimensions);
+        String dimensionsValue = renderDimensionSummary(dimensions);
         String enumerationValue = renderEnumerationSummary(mappedEntries, taxonomyEnumeration);
 
         html.append("<details class=\"taxonomy-node\" open data-search=\"")
@@ -4485,34 +4612,173 @@ public class TaxonomyVisualizationExporter {
             .append(metaCellIfPresent("Typ", typeValue))
             .append(metaCellIfPresent("Periode", periodValue))
             .append(metaCellIfPresent("Einheit", unitValue))
-            .append(metaCellIfPresent("Dimensions", dimensionsValue))
+            .append(metaCellIfPresentHtml("Dimensions", dimensionsValue))
             .append(metaCellIfPresent("Enumeration", enumerationValue))
             .append("</div>")
             .append("<div class=\"node-children\">");
 
         for (PresentationArc childArc : role.children(label)) {
-            renderNode(html, role, childArc.to(), metadata, mappingsByConcept, placeholdersByField, new LinkedHashSet<>(path), depth + 1);
+            renderNode(html, role, childArc.to(), metadata, mappingsByConcept, placeholdersByField, taxonomyDimensionsByConcept, new LinkedHashSet<>(path), depth + 1);
         }
 
         html.append("</div></details>");
     }
 
-    private String renderDimensionSummary(List<MappingEntry> mappedEntries) {
-        if (mappedEntries.isEmpty()) {
-            return "";
-        }
+    private List<String> collectDimensionEntries(List<MappingEntry> mappedEntries,
+                                                 Set<String> taxonomyDimensions) {
         List<String> dimensions = new ArrayList<>();
-        for (MappingEntry entry : mappedEntries) {
-            if (entry.dimensions() != null) {
-                for (DimensionSelection dimension : entry.dimensions()) {
-                    dimensions.add(dimension.axisQname() + " → " + dimension.memberQname());
+        if (mappedEntries != null) {
+            for (MappingEntry entry : mappedEntries) {
+                if (entry.dimensions() != null) {
+                    for (DimensionSelection dimension : entry.dimensions()) {
+                        dimensions.add(dimension.axisQname() + " → " + dimension.memberQname());
+                    }
                 }
             }
         }
+        if (taxonomyDimensions != null) {
+            for (String dimension : taxonomyDimensions) {
+                dimensions.add(toDisplayQName(dimension));
+            }
+        }
+        return dimensions.stream().distinct().toList();
+    }
+
+    private String renderDimensionSummary(List<String> dimensionEntries) {
+        if (dimensionEntries == null || dimensionEntries.isEmpty()) {
+            return "";
+        }
+
+        final int collapsedLimit = 15;
+        StringBuilder html = new StringBuilder();
+        html.append("<div class=\"meta-list\">");
+
+        int visibleCount = Math.min(collapsedLimit, dimensionEntries.size());
+        for (int i = 0; i < visibleCount; i++) {
+            html.append("<div class=\"meta-list-line\"><code>")
+                .append(escapeHtml(dimensionEntries.get(i)))
+                .append("</code></div>");
+        }
+
+        if (dimensionEntries.size() > collapsedLimit) {
+            html.append("<details class=\"meta-list-toggle\"><summary>")
+                .append(dimensionEntries.size() - collapsedLimit)
+                .append(" weitere anzeigen</summary>");
+            for (int i = collapsedLimit; i < dimensionEntries.size(); i++) {
+                html.append("<div class=\"meta-list-line\"><code>")
+                    .append(escapeHtml(dimensionEntries.get(i)))
+                    .append("</code></div>");
+            }
+            html.append("</details>");
+        }
+
+        html.append("</div>");
+        return html.toString();
+    }
+
+    private String metaCellIfPresentHtml(String label, String htmlValue) {
+        if (htmlValue == null || htmlValue.isBlank()) {
+            return "";
+        }
+        return "<div><strong>" + escapeHtml(label) + "</strong>" + htmlValue + "</div>";
+    }
+
+    private String renderDimensionSummary(List<MappingEntry> mappedEntries,
+                                          Set<String> taxonomyDimensions) {
+        List<String> dimensions = collectDimensionEntries(mappedEntries, taxonomyDimensions);
         if (dimensions.isEmpty()) {
             return "";
         }
-        return dimensions.stream().distinct().collect(Collectors.joining(", "));
+        return renderDimensionSummary(dimensions);
+    }
+
+    private Map<String, Set<String>> buildTaxonomyDimensionsByConcept(TaxonomyMetadata metadata,
+                                                                       PresentationForest forest) {
+        if (metadata == null || metadata.hypercubeMetadata() == null || metadata.hypercubeMetadata().cubes().isEmpty()) {
+            return Map.of();
+        }
+
+        Map<String, Set<String>> dimensionsByConcept = new TreeMap<>();
+        for (HypercubeCube cube : metadata.hypercubeMetadata().cubes()) {
+            if (cube == null || cube.dimensions() == null || cube.dimensions().isEmpty()) {
+                continue;
+            }
+
+            Set<String> primaries = new LinkedHashSet<>();
+            if (cube.primaryItemsAll() != null) {
+                primaries.addAll(cube.primaryItemsAll());
+            }
+            if (cube.primaryItemsNotAll() != null) {
+                primaries.addAll(cube.primaryItemsNotAll());
+            }
+
+            for (String primary : primaries) {
+                if (primary == null || primary.isBlank()) {
+                    continue;
+                }
+                Set<String> conceptDimensions = dimensionsByConcept.computeIfAbsent(normalizeConceptKey(primary), key -> new TreeSet<>());
+                conceptDimensions.addAll(cube.dimensions());
+            }
+        }
+
+        if (forest != null && !forest.roles().isEmpty()) {
+            for (PresentationRoleGraph role : forest.roles()) {
+                for (String rootLabel : role.rootLabels()) {
+                    propagateTaxonomyDimensionsToDescendants(role, rootLabel, Set.of(), dimensionsByConcept, new LinkedHashSet<>());
+                }
+            }
+        }
+
+        return dimensionsByConcept;
+    }
+
+    private void propagateTaxonomyDimensionsToDescendants(PresentationRoleGraph role,
+                                                          String label,
+                                                          Set<String> inheritedDimensions,
+                                                          Map<String, Set<String>> dimensionsByConcept,
+                                                          Set<String> path) {
+        if (!path.add(label)) {
+            return;
+        }
+
+        String conceptKey = normalizeConceptKey(role.qname(label));
+        Set<String> ownDimensions = dimensionsByConcept.getOrDefault(conceptKey, Set.of());
+        Set<String> effectiveDimensions = new LinkedHashSet<>(inheritedDimensions);
+        effectiveDimensions.addAll(ownDimensions);
+
+        if (!effectiveDimensions.isEmpty()) {
+            dimensionsByConcept.computeIfAbsent(conceptKey, key -> new TreeSet<>()).addAll(effectiveDimensions);
+        }
+
+        for (PresentationArc childArc : role.children(label)) {
+            propagateTaxonomyDimensionsToDescendants(
+                role,
+                childArc.to(),
+                effectiveDimensions,
+                dimensionsByConcept,
+                new LinkedHashSet<>(path)
+            );
+        }
+    }
+
+    private long countFieldsWithDimensions(Map<String, List<MappingEntry>> mappingsByConcept,
+                                           Map<String, Set<String>> taxonomyDimensionsByConcept) {
+        if (mappingsByConcept == null || mappingsByConcept.isEmpty()) {
+            return 0;
+        }
+
+        long count = 0;
+        for (Map.Entry<String, List<MappingEntry>> conceptEntry : mappingsByConcept.entrySet()) {
+            boolean conceptHasTaxonomyDimensions = taxonomyDimensionsByConcept != null
+                && taxonomyDimensionsByConcept.containsKey(conceptEntry.getKey())
+                && !taxonomyDimensionsByConcept.get(conceptEntry.getKey()).isEmpty();
+            for (MappingEntry entry : conceptEntry.getValue()) {
+                if (hasDimensions(entry) || conceptHasTaxonomyDimensions) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     private String renderEnumerationSummary(List<MappingEntry> mappedEntries,
@@ -4954,8 +5220,9 @@ public class TaxonomyVisualizationExporter {
             return !labelToQname.isEmpty();
         }
 
-        private boolean hasDimensionalMappings(Map<String, List<MappingEntry>> mappingsByConcept) {
-            return hasAnyMatchingMapping(mappingsByConcept, TaxonomyVisualizationExporter::hasDimensions, new HashSet<>(), rootLabels);
+        private boolean hasDimensionalMappings(Map<String, List<MappingEntry>> mappingsByConcept,
+                                               Map<String, Set<String>> taxonomyDimensionsByConcept) {
+            return hasAnyDimensional(mappingsByConcept, taxonomyDimensionsByConcept, new HashSet<>(), rootLabels);
         }
 
         private boolean hasEnumerationMappings(Map<String, List<MappingEntry>> mappingsByConcept,
@@ -5012,6 +5279,31 @@ public class TaxonomyVisualizationExporter {
                     return true;
                 }
                 if (hasAnyEnumeration(mappingsByConcept, metadata, visited, childLabels(label))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private boolean hasAnyDimensional(Map<String, List<MappingEntry>> mappingsByConcept,
+                                          Map<String, Set<String>> taxonomyDimensionsByConcept,
+                                          Set<String> visited,
+                                          List<String> labels) {
+            for (String label : labels) {
+                if (!visited.add(label)) {
+                    continue;
+                }
+
+                String qname = qname(label);
+                String conceptKey = normalizeConceptKey(qname);
+                List<MappingEntry> mappedEntries = mappingsByConcept.getOrDefault(conceptKey, List.of());
+                boolean hasTaxonomyDimensions = taxonomyDimensionsByConcept != null
+                    && taxonomyDimensionsByConcept.containsKey(conceptKey)
+                    && !taxonomyDimensionsByConcept.get(conceptKey).isEmpty();
+                if (hasTaxonomyDimensions || mappedEntries.stream().anyMatch(TaxonomyVisualizationExporter::hasDimensions)) {
+                    return true;
+                }
+                if (hasAnyDimensional(mappingsByConcept, taxonomyDimensionsByConcept, visited, childLabels(label))) {
                     return true;
                 }
             }
