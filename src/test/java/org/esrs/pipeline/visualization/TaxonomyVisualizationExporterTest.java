@@ -45,6 +45,7 @@ class TaxonomyVisualizationExporterTest {
         Path dimensionCooccurrenceHtml = outputDir.resolve("taxonomy-visualization-dimension-cooccurrence.html");
         Path defaultMemberQualityHtml = outputDir.resolve("taxonomy-visualization-default-member-quality.html");
         Path enumDomainValidityHtml = outputDir.resolve("taxonomy-visualization-enum-domain-validity.html");
+        Path externalSchemasHtml = outputDir.resolve("taxonomy-visualization-external-schemas.html");
         Path dashboardHtml = outputDir.resolve("taxonomy-visualization-dashboard.html");
 
         TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
@@ -83,6 +84,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(Files.exists(dimensionCooccurrenceHtml));
         assertTrue(Files.exists(defaultMemberQualityHtml));
         assertTrue(Files.exists(enumDomainValidityHtml));
+        assertTrue(Files.exists(externalSchemasHtml));
         assertTrue(Files.exists(dashboardHtml));
 
         String html = Files.readString(outputHtml, StandardCharsets.UTF_8);
@@ -114,6 +116,7 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(html.contains("taxonomy-visualization-dimension-cooccurrence.html"));
         assertTrue(html.contains("taxonomy-visualization-default-member-quality.html"));
         assertTrue(html.contains("taxonomy-visualization-enum-domain-validity.html"));
+        assertTrue(html.contains("taxonomy-visualization-external-schemas.html"));
         assertTrue(html.contains("taxonomy-visualization-dashboard.html"));
 
         String tree = Files.readString(treeHtml, StandardCharsets.UTF_8);
@@ -192,6 +195,13 @@ class TaxonomyVisualizationExporterTest {
 
         String enumDomainValidity = Files.readString(enumDomainValidityHtml, StandardCharsets.UTF_8);
         assertTrue(enumDomainValidity.contains("Enum Domain Validity View"));
+
+        String externalSchemas = Files.readString(externalSchemasHtml, StandardCharsets.UTF_8);
+        assertTrue(externalSchemas.contains("External Schema References"));
+        assertTrue(externalSchemas.contains("http://www.xbrl.org/dtr/type/2022-03-31"));
+        assertTrue(externalSchemas.contains("http://www.xbrl.org/2003/linkbase"));
+        assertTrue(externalSchemas.contains("http://www.w3.org/1999/xlink"));
+        assertTrue(externalSchemas.contains("http://xbrl.org/2005/xbrldt"));
 
         String dashboard = Files.readString(dashboardHtml, StandardCharsets.UTF_8);
         assertTrue(dashboard.contains("Master Dashboard"));
