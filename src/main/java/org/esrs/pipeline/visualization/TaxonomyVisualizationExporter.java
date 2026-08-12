@@ -3606,8 +3606,9 @@ public class TaxonomyVisualizationExporter {
                 body.append("<input id=\"graphSearch\" type=\"search\" class=\"graph-search\" placeholder=\"Knoten suchen (Konzept, Feld, Domain...)\" oninput=\"drawGraph()\">")
                         .append("<button type=\"button\" class=\"secondary\" onclick=\"clearGraphSearch()\">Suche löschen</button>");
         body.append("<label class=\"filter\"><input type=\"checkbox\" id=\"graphShowLabels\" onchange=\"drawGraph()\"> Labels anzeigen</label>")
+            .append("<label class=\"filter\"><input type=\"checkbox\" id=\"graphClusterThemes\" checked onchange=\"drawGraph()\"> nach Thema gruppieren</label>")
             .append("</div><div class=\"theme-legend\" id=\"themeLegend\"></div>")
-            .append("<div class=\"graph-wrap\"><svg id=\"dependencyGraph\" class=\"graph\" viewBox=\"0 0 1400 620\"></svg></div>")
+            .append("<div class=\"graph-wrap\"><svg id=\"dependencyGraph\" class=\"graph\" viewBox=\"0 0 1800 980\"></svg></div>")
                         .append("<div class=\"node-info\" id=\"nodeInfo\">Knoten anklicken, um Details zu sehen (Thema aus Mapping-Domäne, Grad, Layer, Nachbarn).</div>")
             .append("<p class=\"muted\">Hinweis: Darstellung basiert auf einem layer-balancierten Edge-Sample zur Performance-Stabilität.</p>");
 
@@ -3650,6 +3651,10 @@ public class TaxonomyVisualizationExporter {
                         ];
                         let selectedNode='';
                         function normalize(t){return (t||'').toLowerCase();}
+                        function stableHash(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=(h*16777619)>>>0;}return h>>>0;}
+                        function layerRank(layer){const order=['presentation','definition','dimension','calculation','label','reference','other'];const idx=order.indexOf(layer);return idx<0?order.length:idx;}
+                        function setSvgVisible(el,visible){el.style.display=visible?'':'none';}
+                        function curvePath(p1,p2,bend){const mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;const dx=p2.x-p1.x,dy=p2.y-p1.y;const len=Math.max(1,Math.hypot(dx,dy));const nx=-dy/len,ny=dx/len;const cx=mx+nx*bend,cy=my+ny*bend;return `M ${p1.x.toFixed(2)} ${p1.y.toFixed(2)} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;}
                         function fallbackTheme(name){const n=(name||'');const stripped=n.includes('_')?n.substring(n.indexOf('_')+1):n;const m=stripped.match(/^[A-Z]+(?=[A-Z][a-z]|$)|^[A-Z]?[a-z]+|^[a-z]+/);return (m?m[0]:'other').toLowerCase();}
                         function buildThemeColorMap(){
                             const baseThemes=Array.from(new Set(Object.values(nodeMeta).map(m=>(m&&m.theme)?m.theme:'other'))).sort();
@@ -3692,6 +3697,7 @@ public class TaxonomyVisualizationExporter {
                             svg.innerHTML='';
                             const selectedLayers=new Set(Array.from(document.querySelectorAll('.layer-toggle:checked')).map(e=>e.value));
                             const showAllLabels=!!(document.getElementById('graphShowLabels')&&document.getElementById('graphShowLabels').checked);
+                            const clusterThemes=!!(document.getElementById('graphClusterThemes')&&document.getElementById('graphClusterThemes').checked);
                             const query=normalize((document.getElementById('graphSearch')||{value:''}).value.trim());
                             let layerEdges=edges.filter(e=>selectedLayers.has(e.layer));
                             if(!layerEdges.length){
@@ -3726,8 +3732,8 @@ public class TaxonomyVisualizationExporter {
                             layerEdges.forEach(e=>{if(!byLayer.has(e.layer))byLayer.set(e.layer,[]);byLayer.get(e.layer).push(e);});
                             const sampledEdges=[];
                             const activeLayerOrder=Array.from(selectedLayers).sort();
-                            const perLayerBudget=query?140:95;
-                            const totalBudget=query?520:360;
+                            const perLayerBudget=query?110:70;
+                            const totalBudget=query?420:280;
                             for(const layer of activeLayerOrder){
                                 const arr=byLayer.get(layer)||[];
                                 for(let i=0;i<arr.length && i<perLayerBudget && sampledEdges.length<totalBudget;i++){
@@ -3749,43 +3755,77 @@ public class TaxonomyVisualizationExporter {
                             const ns='http://www.w3.org/2000/svg';
                             const g=document.createElementNS(ns,'g');
                             svg.appendChild(g);
-                            const width=1400,height=620,pad=36;
+                            const width=1800,height=980,pad=52;
                             let seed=1337;
                             const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
-                            const pos=nodes.map(()=>({x:pad+rand()*(width-2*pad),y:pad+rand()*(height-2*pad),vx:0,vy:0}));
                             const degree=new Array(nodes.length).fill(0);
                             filteredEdges.forEach(e=>{degree[idx.get(e.s)]++;degree[idx.get(e.t)]++;});
-                            for(let iter=0;iter<120;iter++){
+
+                            const themeByNode=new Map(nodes.map(n=>[n,metaFor(n).theme]));
+                            const distinctThemes=Array.from(new Set(Array.from(themeByNode.values()))).sort();
+                            const anchorByTheme=new Map();
+                            const ringRadius=Math.min(width,height)*0.34;
+                            distinctThemes.forEach((theme,i)=>{
+                                const angle=(Math.PI*2*i)/Math.max(1,distinctThemes.length)-Math.PI/2;
+                                anchorByTheme.set(theme,{x:width/2 + Math.cos(angle)*ringRadius,y:height/2 + Math.sin(angle)*ringRadius*0.72});
+                            });
+
+                            const pos=nodes.map((name)=>{
+                                const anchor=anchorByTheme.get(themeByNode.get(name))||{x:width/2,y:height/2};
+                                const jitter=28+rand()*46;
+                                const angle=rand()*Math.PI*2;
+                                return {
+                                    x:Math.max(pad,Math.min(width-pad,anchor.x+Math.cos(angle)*jitter)),
+                                    y:Math.max(pad,Math.min(height-pad,anchor.y+Math.sin(angle)*jitter)),
+                                    vx:0,
+                                    vy:0
+                                };
+                            });
+
+                            for(let iter=0;iter<220;iter++){
+                                const cooling=1-(iter/220);
                                 for(let i=0;i<pos.length;i++){
                                     for(let j=i+1;j<pos.length;j++){
                                         let dx=pos[j].x-pos[i].x,dy=pos[j].y-pos[i].y;
                                         let d2=dx*dx+dy*dy+0.01;
-                                        let force=900/d2;
+                                        let force=Math.min(18,2600/d2);
                                         let d=Math.sqrt(d2);
                                         let fx=(dx/d)*force,fy=(dy/d)*force;
                                         pos[i].vx-=fx;pos[i].vy-=fy;pos[j].vx+=fx;pos[j].vy+=fy;
+
+                                        const minSep=15+Math.min(7,(Math.max(degree[i],degree[j])*0.12));
+                                        if(d<minSep){
+                                            const push=(minSep-d)*0.22;
+                                            const px=(dx/d)*push,py=(dy/d)*push;
+                                            pos[i].vx-=px;pos[i].vy-=py;pos[j].vx+=px;pos[j].vy+=py;
+                                        }
                                     }
                                 }
                                 for(const e of filteredEdges){
                                     const si=idx.get(e.s),ti=idx.get(e.t);
                                     let dx=pos[ti].x-pos[si].x,dy=pos[ti].y-pos[si].y;
                                     let d=Math.sqrt(dx*dx+dy*dy)+0.001;
-                                    let target=68+Math.min(72,Math.abs(degree[si]-degree[ti])*1.2);
-                                    let spring=(d-target)*0.014;
+                                    const interTheme=themeByNode.get(e.s)!==themeByNode.get(e.t);
+                                    let target=(interTheme?112:84)+Math.min(66,Math.abs(degree[si]-degree[ti])*1.1);
+                                    let spring=(d-target)*0.011;
                                     let fx=(dx/d)*spring,fy=(dy/d)*spring;
                                     pos[si].vx+=fx;pos[si].vy+=fy;pos[ti].vx-=fx;pos[ti].vy-=fy;
                                 }
                                 for(let i=0;i<pos.length;i++){
-                                    let gx=(width/2-pos[i].x)*0.0018,gy=(height/2-pos[i].y)*0.0018;
-                                    pos[i].vx=(pos[i].vx+gx)*0.84;
-                                    pos[i].vy=(pos[i].vy+gy)*0.84;
+                                    const nodeName=nodes[i];
+                                    const nodeTheme=themeByNode.get(nodeName);
+                                    const anchor=anchorByTheme.get(nodeTheme)||{x:width/2,y:height/2};
+                                    const gx=(width/2-pos[i].x)*0.0012,gy=(height/2-pos[i].y)*0.0012;
+                                    const tx=(anchor.x-pos[i].x)*(clusterThemes?0.0048:0.0011),ty=(anchor.y-pos[i].y)*(clusterThemes?0.0048:0.0011);
+                                    pos[i].vx=(pos[i].vx+gx+tx)*((0.83-(1-cooling)*0.08));
+                                    pos[i].vy=(pos[i].vy+gy+ty)*((0.83-(1-cooling)*0.08));
                                     pos[i].x=Math.max(pad,Math.min(width-pad,pos[i].x+pos[i].vx));
                                     pos[i].y=Math.max(pad,Math.min(height-pad,pos[i].y+pos[i].vy));
                                 }
                             }
 
                             const layerColors={presentation:'#245b8f',calculation:'#be5d00',definition:'#3a7f2a',label:'#6a4c93',reference:'#00798c',dimension:'#7a6a00',other:'#6b7280'};
-                            const nodeTheme=new Map(nodes.map(n=>[n,metaFor(n).theme]));
+                            const nodeTheme=themeByNode;
                             const nodeColor=new Map(nodes.map(n=>[n,colorForTheme(nodeTheme.get(n))]));
                             const themeCounts=new Map();
                             nodeTheme.forEach(v=>themeCounts.set(v,(themeCounts.get(v)||0)+1));
@@ -3801,21 +3841,52 @@ public class TaxonomyVisualizationExporter {
                             filteredEdges.forEach(e=>{layerByNode.get(e.s).add(e.layer);layerByNode.get(e.t).add(e.layer);});
                             const labelByNode=new Map();
 
+                            const halos=document.createElementNS(ns,'g');
+                            halos.setAttribute('opacity','0.22');
+                            g.appendChild(halos);
+                            const nodesByTheme=new Map();
+                            nodes.forEach(name=>{const theme=nodeTheme.get(name)||'other';if(!nodesByTheme.has(theme))nodesByTheme.set(theme,[]);nodesByTheme.get(theme).push(name);});
+                            nodesByTheme.forEach((themeNodes,theme)=>{
+                                if(themeNodes.length<3)return;
+                                let cx=0,cy=0;
+                                themeNodes.forEach(name=>{const p=pos[idx.get(name)];cx+=p.x;cy+=p.y;});
+                                cx/=themeNodes.length;cy/=themeNodes.length;
+                                let maxDx=0,maxDy=0;
+                                themeNodes.forEach(name=>{const p=pos[idx.get(name)];maxDx=Math.max(maxDx,Math.abs(p.x-cx));maxDy=Math.max(maxDy,Math.abs(p.y-cy));});
+                                const halo=document.createElementNS(ns,'ellipse');
+                                halo.setAttribute('cx',cx);halo.setAttribute('cy',cy);
+                                halo.setAttribute('rx',Math.min(260,Math.max(48,maxDx+28)));
+                                halo.setAttribute('ry',Math.min(180,Math.max(34,maxDy+22)));
+                                halo.setAttribute('fill',colorForTheme(theme));
+                                halo.setAttribute('fill-opacity','0.12');
+                                halo.setAttribute('stroke',colorForTheme(theme));
+                                halo.setAttribute('stroke-opacity','0.18');
+                                halo.setAttribute('stroke-width','1.2');
+                                halos.appendChild(halo);
+                            });
+
                             filteredEdges.forEach(e=>{
                                 const si=idx.get(e.s),ti=idx.get(e.t);
                                 const p1=pos[si],p2=pos[ti];
-                                const l=document.createElementNS(ns,'line');
-                                l.setAttribute('x1',p1.x);l.setAttribute('y1',p1.y);l.setAttribute('x2',p2.x);l.setAttribute('y2',p2.y);
-                                l.setAttribute('stroke',layerColors[e.layer]||layerColors.other);
-                                l.setAttribute('stroke-width','1.4');l.setAttribute('stroke-opacity','0.32');
-                                l.dataset.s=e.s;l.dataset.t=e.t;
-                                g.appendChild(l);
+                                const layerOffset=(layerRank(e.layer)-3)*6;
+                                const pairHash=(stableHash(e.s+'|'+e.t+'|'+e.layer)%%9)-4;
+                                const themeOffset=(nodeTheme.get(e.s)===nodeTheme.get(e.t))?8:20;
+                                const bend=layerOffset+pairHash*3+themeOffset;
+                                const path=document.createElementNS(ns,'path');
+                                path.setAttribute('d',curvePath(p1,p2,bend));
+                                path.setAttribute('fill','none');
+                                path.setAttribute('stroke',layerColors[e.layer]||layerColors.other);
+                                path.setAttribute('stroke-width','1.35');
+                                path.setAttribute('stroke-opacity','0.24');
+                                path.dataset.s=e.s;path.dataset.t=e.t;
+                                path.setAttribute('class','edge');
+                                g.appendChild(path);
                             });
 
                             nodes.forEach((name,i)=>{
                                 const p=pos[i];
                                 const c=document.createElementNS(ns,'circle');
-                                c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','3.6');
+                                c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','4.1');
                                 c.setAttribute('fill',nodeColor.get(name));c.setAttribute('fill-opacity','0.95');
                                 c.dataset.n=name;c.dataset.theme=nodeTheme.get(name);c.style.cursor='pointer';
                                 const tt=document.createElementNS(ns,'title');tt.textContent=name;c.appendChild(tt);
@@ -3837,7 +3908,7 @@ public class TaxonomyVisualizationExporter {
                                     let cx=0,cy=0;
                                     keptFocus.forEach(n=>{const p=pos[idx.get(n)];cx+=p.x;cy+=p.y;});
                                     cx/=keptFocus.length;cy/=keptFocus.length;
-                                    scale=1.28;
+                                    scale=1.22;
                                     tx=(width/2)-cx*scale;
                                     ty=(height/2)-cy*scale;
                                     if(!selectedNode || !idx.has(selectedNode)){
@@ -3852,34 +3923,34 @@ public class TaxonomyVisualizationExporter {
                                     const i=idx.get(name);
                                     if(selectedNode){
                                         const near=name===selectedNode||(neighbors&&neighbors.has(name));
-                                        labelEl.hidden=!(near || scale>=2.1);
+                                        setSvgVisible(labelEl,(near || scale>=2.1));
                                         return;
                                     }
                                     if(showAllLabels){
                                         labelEl.textContent=name;
-                                        labelEl.hidden=false;
+                                        setSvgVisible(labelEl,true);
                                         return;
                                     }
                                     labelEl.textContent=shortName(name,34);
-                                    if(scale>=2.0){labelEl.hidden=false;return;}
-                                    if(scale>=1.55){labelEl.hidden=(i%%3!==0);return;}
-                                    if(scale>=1.2){labelEl.hidden=(i%%7!==0);return;}
-                                    labelEl.hidden=true;
+                                    if(scale>=2.0){setSvgVisible(labelEl,true);return;}
+                                    if(scale>=1.55){setSvgVisible(labelEl,(i%%3===0));return;}
+                                    if(scale>=1.2){setSvgVisible(labelEl,(i%%7===0));return;}
+                                    setSvgVisible(labelEl,false);
                                 });
                             }
 
                             function highlight(){
                                 const neighbors=selectedNode?adj.get(selectedNode):null;
-                                g.querySelectorAll('line').forEach(l=>{
-                                    if(!selectedNode){l.setAttribute('stroke-opacity','0.32');l.setAttribute('stroke-width','1.4');return;}
+                                g.querySelectorAll('.edge').forEach(l=>{
+                                    if(!selectedNode){l.setAttribute('stroke-opacity','0.24');l.setAttribute('stroke-width','1.35');return;}
                                     const hit=l.dataset.s===selectedNode||l.dataset.t===selectedNode;
-                                    l.setAttribute('stroke-opacity',hit?'0.94':'0.07');
-                                    l.setAttribute('stroke-width',hit?'2.4':'1');
+                                    l.setAttribute('stroke-opacity',hit?'0.92':'0.05');
+                                    l.setAttribute('stroke-width',hit?'2.2':'1.0');
                                 });
                                 g.querySelectorAll('circle').forEach(c=>{
                                     const n=c.dataset.n;
                                     if(!selectedNode){
-                                        c.setAttribute('r','3.6');
+                                        c.setAttribute('r','4.1');
                                         c.setAttribute('fill',nodeColor.get(n));
                                         c.setAttribute('fill-opacity','0.95');
                                         return;
@@ -3906,7 +3977,7 @@ public class TaxonomyVisualizationExporter {
                                 updateLabelVisibility();
                             }
 
-                            svg.onwheel=(ev)=>{ev.preventDefault();scale=Math.max(0.35,Math.min(3.4,scale*(ev.deltaY<0?1.08:0.92)));apply();};
+                            svg.onwheel=(ev)=>{ev.preventDefault();scale=Math.max(0.35,Math.min(3.6,scale*(ev.deltaY<0?1.08:0.92)));apply();};
                             svg.onmousedown=(ev)=>{drag=true;sx=ev.clientX;sy=ev.clientY;};
                             svg.onmouseup=()=>{drag=false;};
                             svg.onmouseleave=()=>{drag=false;};
@@ -4151,7 +4222,7 @@ public class TaxonomyVisualizationExporter {
             .append(".layout-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d9e3ee;border-radius:14px;overflow:hidden;}")
             .append(".layout-table th,.layout-table td{text-align:left;padding:10px 12px;border-bottom:1px solid #edf2f7;vertical-align:top;white-space:normal;overflow-wrap:anywhere;word-break:break-word;max-width:100ch;}")
             .append(".layout-table th{background:#f3f7fb;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:#5b7086;}")
-            .append(".graph-wrap{background:#fff;border:1px solid #d9e3ee;border-radius:14px;padding:12px;overflow:auto;}svg.graph{width:100%;min-width:860px;height:620px;background:linear-gradient(180deg,#fbfdff,#f4f8fc);border-radius:10px;}")
+            .append(".graph-wrap{background:#fff;border:1px solid #d9e3ee;border-radius:14px;padding:12px;overflow:auto;}svg.graph{width:100%;min-width:1100px;height:760px;background:linear-gradient(180deg,#fbfdff,#f4f8fc);border-radius:10px;}")
             .append(".flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}.flow-step{background:#fff;border:1px solid #d9e3ee;border-radius:14px;padding:12px;}")
             .append(".flow-step .title{font-weight:700;margin:4px 0;}.flow-step .count{font-size:1.3rem;font-weight:700;color:#17324d;}.flow-step .step{font-size:.75rem;color:#5b7086;text-transform:uppercase;letter-spacing:.05em;}")
             .append(".layer-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px;}")

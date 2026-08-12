@@ -1,12 +1,23 @@
 # ESRS Set1 XBRL Taxonomy - Java 25 Pipeline
 
-Dieses Repository enthaelt:
+Dieses Repository enthält:
 
 - das lokale EFRAG ESRS Set-1 Taxonomiepaket,
 - eine Java-25/Maven-Referenzpipeline zur Erzeugung von XBRL und iXBRL,
 - Arelle-basierte Validierung,
-- iXBRL-Viewer-Export fuer eine interaktive HTML-Sicht,
+- einen iXBRL-Viewer-Export für eine interaktive HTML-Sicht,
+- eine aktuelle Taxonomie-Visualisierungs-Suite mit mehreren HTML-Ansichten,
 - Dokumentation und Checklisten unter `md-files/`.
+
+## Aktueller Projektstand
+
+Der aktuelle Output im Repository enthält bereits die generierten Artefakte unter `output/`, darunter:
+
+- `report-instance.xml`
+- `report-ixbrl.xhtml`
+- `report-interaktiv.html`
+- `taxonomy-visualization.html` als zentrale Startseite
+- die einzelnen Visualisierungsansichten wie `taxonomy-visualization-tree.html`, `graph`, `layer`, `matrix`, `flow`, `hypercube`, `dashboard` und weitere Analyseviews.
 
 ## Ziele des Projekts
 
@@ -74,12 +85,20 @@ Im Projektordner:
 mvn test
 ```
 
-Standardlauf (ohne Arelle-Blockade):
+Standardlauf ohne Arelle-Blockade:
 
 ```powershell
 $env:SKIP_ARELLE = "true"
 mvn exec:java
 ```
+
+Alternativ direkt mit der aktuellen Projektkonfiguration:
+
+```powershell
+mvn -B exec:java
+```
+
+> Wichtig: Der Pipeline-Lauf erzeugt die HTML-Visualisierungen automatisch unter `output/`. Wenn Arelle lokal verfügbar ist, kann der volle Validierungslauf mit dem Strict-Gate gestartet werden.
 
 ## Visualisierungen erzeugen
 
@@ -122,7 +141,7 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-enum-domain-validity.html` fuer Domain- und Allowed-Value-Uebersicht
 - `taxonomy-visualization-dashboard.html` als zentraler Einstieg mit globaler Suche/Filterung
 
-Der Explorer enthaelt 28 Ansichten:
+Der aktuelle Explorer liefert derzeit 29 HTML-Ansichten plus die zentrale Startseite:
 
 1. Tree: Presentation-Hierarchie mit Drilldown
 2. Graph: Interaktiver Abhaengigkeitsgraph (Sample) aus Linkbase-Kanten
@@ -152,6 +171,7 @@ Der Explorer enthaelt 28 Ansichten:
 26. Default Member Quality: Status je Dimension fuer fehlende/mehrfache Defaults
 27. Enum Domain Validity: Enumeration-Domain-Konsistenz und Value-Transparenz
 28. Master Dashboard: Zentrale Hub-Seite mit globaler Suche und Themenfiltern
+29. Indexseite: zentrale Landingpage mit Verlinkung aller Analyseansichten
 
 ## Visualisierungen lesen und verstehen
 
