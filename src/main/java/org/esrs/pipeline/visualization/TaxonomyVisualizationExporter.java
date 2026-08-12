@@ -105,6 +105,7 @@ public class TaxonomyVisualizationExporter {
         Path dimensionCooccurrenceHtml = outputHtml.resolveSibling(stem + "-dimension-cooccurrence.html");
         Path defaultMemberQualityHtml = outputHtml.resolveSibling(stem + "-default-member-quality.html");
         Path enumDomainValidityHtml = outputHtml.resolveSibling(stem + "-enum-domain-validity.html");
+        Path externalSchemasHtml = outputHtml.resolveSibling(stem + "-external-schemas.html");
         Path dashboardHtml = outputHtml.resolveSibling(stem + "-dashboard.html");
 
         Files.writeString(treeHtml, renderTreeHtml(forest, metadata, mappingsByConcept, placeholdersByField, layoutSnapshot), StandardCharsets.UTF_8);
@@ -135,8 +136,9 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(dimensionCooccurrenceHtml, renderDimensionCooccurrenceHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(defaultMemberQualityHtml, renderDefaultMemberQualityHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(enumDomainValidityHtml, renderEnumDomainValidityHtml(mappingsByConcept, metadata), StandardCharsets.UTF_8);
-        Files.writeString(dashboardHtml, renderDashboardHtml(treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml), StandardCharsets.UTF_8);
-        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, dashboardHtml), StandardCharsets.UTF_8);
+        Files.writeString(externalSchemasHtml, renderExternalSchemasHtml(metadata.externalSchemaReferences()), StandardCharsets.UTF_8);
+        Files.writeString(dashboardHtml, renderDashboardHtml(treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, externalSchemasHtml), StandardCharsets.UTF_8);
+        Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, externalSchemasHtml, dashboardHtml), StandardCharsets.UTF_8);
 
         return new VisualizationResult(
             outputHtml,
@@ -381,7 +383,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0), Map.of());
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0), Map.of(), List.of());
         }
 
         long xsdElementCount = 0;
@@ -396,6 +398,7 @@ public class TaxonomyVisualizationExporter {
         Map<String, Integer> formulaMentionsByConcept = new TreeMap<>();
         Map<String, Set<String>> formulaConceptsByFileRaw = new TreeMap<>();
         List<DimensionalArc> dimensionalArcs = new ArrayList<>();
+        Map<String, ExternalSchemaReference> externalSchemaReferencesByNamespace = new TreeMap<>();
 
         try (Stream<Path> stream = Files.walk(taxonomyBase)) {
             for (Path file : stream.filter(Files::isRegularFile).toList()) {
@@ -407,7 +410,13 @@ public class TaxonomyVisualizationExporter {
                     xsdImportCount += countOccurrences(xsdText, "<xsd:include") + countOccurrences(xsdText, "<xs:include");
                     collectHrefTargetsFromText(xsdText, hrefTargets);
                     collectEnumerationConceptsFromText(xsdText, taxonomyEnumerationsByConcept);
+                    collectExternalSchemaReferences(file, xsdText, externalSchemaReferencesByNamespace);
                     continue;
+                }
+
+                if (fileName.endsWith(".xml")) {
+                    String xmlText = Files.readString(file, StandardCharsets.UTF_8);
+                    collectExternalSchemaReferences(file, xmlText, externalSchemaReferencesByNamespace);
                 }
                 if (!fileName.endsWith(".xml")) {
                     continue;
@@ -508,6 +517,10 @@ public class TaxonomyVisualizationExporter {
         for (Map.Entry<String, Set<String>> entry : formulaConceptsByFileRaw.entrySet()) {
             formulaConceptsByFile.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
+        List<ExternalSchemaReference> externalSchemaReferences = externalSchemaReferencesByNamespace.values().stream()
+            .sorted(Comparator.comparing(ExternalSchemaReference::namespace).thenComparing(ExternalSchemaReference::schemaLocation))
+            .toList();
+
         return new TaxonomyMetadata(
             xsdElementCount,
             xsdImportCount,
@@ -519,7 +532,8 @@ public class TaxonomyVisualizationExporter {
             formulaMentionsByConcept,
             formulaConceptsByFile,
             hypercubeMetadata,
-            domainMembersByDomain
+            domainMembersByDomain,
+            externalSchemaReferences
         );
     }
 
@@ -660,6 +674,109 @@ public class TaxonomyVisualizationExporter {
         return domainMembersByDomain;
     }
 
+    private void collectExternalSchemaReferences(Path file,
+                                                String xsdText,
+                                                Map<String, ExternalSchemaReference> externalSchemaReferencesByNamespace) {
+        if (xsdText == null || xsdText.isBlank()) {
+            return;
+        }
+
+        Matcher xmlnsMatcher = Pattern.compile("xmlns(?::([A-Za-z0-9_-]+))?=\"([^\"]+)\"").matcher(xsdText);
+        while (xmlnsMatcher.find()) {
+            String namespace = xmlnsMatcher.group(2).trim();
+            if (namespace == null || namespace.isBlank()) {
+                continue;
+            }
+            if (namespace.startsWith("http://www.w3.org/2001/XMLSchema")
+                || namespace.startsWith("https://xbrl.efrag.org/taxonomy/esrs/")
+                || namespace.startsWith("http://www.efrag.org/esrs")) {
+                continue;
+            }
+            String defaultHint = inferSchemaLocationHint(namespace);
+            externalSchemaReferencesByNamespace.computeIfAbsent(namespace, key -> new ExternalSchemaReference(
+                namespace,
+                defaultHint,
+                classifyExternalSchema(namespace),
+                file.getFileName().toString()
+            ));
+        }
+
+        Matcher schemaLocationMatcher = Pattern.compile("(?:<xsd:import|<xs:import|<xsd:include|<xs:include)[^>]*schemaLocation=\"([^\"]+)\"[^>]*>").matcher(xsdText);
+        while (schemaLocationMatcher.find()) {
+            String schemaLocation = schemaLocationMatcher.group(1).trim();
+            if (schemaLocation == null || schemaLocation.isBlank()) {
+                continue;
+            }
+            String namespace = namespaceForSchemaLocation(schemaLocation);
+            if (namespace == null || namespace.isBlank()) {
+                continue;
+            }
+            externalSchemaReferencesByNamespace.computeIfAbsent(namespace, key -> new ExternalSchemaReference(
+                namespace,
+                schemaLocation,
+                classifyExternalSchema(namespace),
+                file.getFileName().toString()
+            ));
+        }
+    }
+
+    private String inferSchemaLocationHint(String namespace) {
+        if (namespace == null || namespace.isBlank()) {
+            return "-";
+        }
+        if (namespace.contains("/dtr/type/")) {
+            return "https://www.xbrl.org/dtr/type/2022-03-31/types.xsd";
+        }
+        if (namespace.contains("/2003/linkbase")) {
+            return "https://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd";
+        }
+        if (namespace.contains("/1999/xlink")) {
+            return "https://www.w3.org/1999/xlink.xsd";
+        }
+        if (namespace.contains("/2005/xbrldt")) {
+            return "https://www.xbrl.org/2005/xbrldt.xsd";
+        }
+        return "-";
+    }
+
+    private String classifyExternalSchema(String namespace) {
+        if (namespace == null || namespace.isBlank()) {
+            return "external";
+        }
+        if (namespace.contains("/dtr/type/")) {
+            return "DTR type namespace";
+        }
+        if (namespace.contains("/2003/linkbase")) {
+            return "XBRL linkbase namespace";
+        }
+        if (namespace.contains("/1999/xlink")) {
+            return "XLink namespace";
+        }
+        if (namespace.contains("/2005/xbrldt")) {
+            return "XBRL dimensions namespace";
+        }
+        return "external schema reference";
+    }
+
+    private String namespaceForSchemaLocation(String schemaLocation) {
+        if (schemaLocation == null || schemaLocation.isBlank()) {
+            return null;
+        }
+        if (schemaLocation.contains("dtr/type/2022-03-31")) {
+            return "http://www.xbrl.org/dtr/type/2022-03-31";
+        }
+        if (schemaLocation.contains("xbrl-linkbase-2003") || schemaLocation.contains("/2003/linkbase")) {
+            return "http://www.xbrl.org/2003/linkbase";
+        }
+        if (schemaLocation.contains("1999/xlink")) {
+            return "http://www.w3.org/1999/xlink";
+        }
+        if (schemaLocation.contains("xbrldt")) {
+            return "http://xbrl.org/2005/xbrldt";
+        }
+        return null;
+    }
+
     private void collectEnumerationConceptsFromText(String xsdText,
                                                     Map<String, TaxonomyEnumeration> taxonomyEnumerationsByConcept) {
         if (xsdText == null || xsdText.isBlank()) {
@@ -789,6 +906,7 @@ public class TaxonomyVisualizationExporter {
                                       Path dimensionCooccurrenceHtml,
                                       Path defaultMemberQualityHtml,
                                       Path enumDomainValidityHtml,
+                                      Path externalSchemasHtml,
                                       Path dashboardHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>ESRS Taxonomie-Visualisierungen</h1>")
@@ -802,6 +920,7 @@ public class TaxonomyVisualizationExporter {
             .append(summaryCard("Konzepte", mappingsByConcept.size()))
             .append(summaryCard("Layout-Placeholders", layoutSnapshot.placeholderMappings().size()))
             .append(summaryCard("XSD Elemente", metadata.xsdElementCount()))
+            .append(summaryCard("Externe Schemas", metadata.externalSchemaReferences().size()))
             .append(summaryCard("Verlinkungen (href)", metadata.hrefTargets().size()))
             .append("</div>")
             .append("<section><h2>Ansichten</h2><div class=\"flow-grid\">")
@@ -832,6 +951,7 @@ public class TaxonomyVisualizationExporter {
                         .append(viewCard("25. Dimension Co-Occurrence", fileNameOnly(dimensionCooccurrenceHtml), "Haeufigkeiten von Dimensionspaaren ueber alle Hypercubes"))
                         .append(viewCard("26. Default Member Quality", fileNameOnly(defaultMemberQualityHtml), "Qualitaetscheck fuer Default-Member je Dimension"))
                         .append(viewCard("27. Enum Domain Validity", fileNameOnly(enumDomainValidityHtml), "Uebersicht je Enumeration-Domain mit Nutzungs- und Value-Signalen"))
+            .append(viewCard("28. External Schema References", fileNameOnly(externalSchemasHtml), "Externe XBRL-Namespaces wie Linkbase, XLink, XBRL Dimensions und DTR Types"))
             .append("</div></section>");
         return renderPage("ESRS Taxonomie-Visualisierungen", body.toString(), "");
     }
@@ -862,7 +982,8 @@ public class TaxonomyVisualizationExporter {
                                        Path traceabilityMatrixHtml,
                                        Path dimensionCooccurrenceHtml,
                                        Path defaultMemberQualityHtml,
-                                       Path enumDomainValidityHtml) {
+                                       Path enumDomainValidityHtml,
+                                       Path externalSchemasHtml) {
         StringBuilder body = new StringBuilder();
         body.append("<h1>Master Dashboard: Visual Analytics Hub</h1>")
             .append("<p class=\"lead\">Ein zentraler Einstieg mit globaler Suche und Themenfiltern fuer alle Visualisierungsansichten.</p>")
@@ -902,6 +1023,7 @@ public class TaxonomyVisualizationExporter {
             .append(dashboardCard("Dimension Co-Occurrence", fileNameOnly(dimensionCooccurrenceHtml), "dimension frequency pairs", "Struktur"))
             .append(dashboardCard("Default Member Quality", fileNameOnly(defaultMemberQualityHtml), "defaults consistency", "Quality"))
             .append(dashboardCard("Enum Domain Validity", fileNameOnly(enumDomainValidityHtml), "enum domain validity", "Quality"))
+            .append(dashboardCard("External Schema References", fileNameOnly(externalSchemasHtml), "external schemas dtr xlink linkbase xbrldt", "Quality"))
             .append("</div></section>");
 
         String script = "<script>"
@@ -2878,6 +3000,43 @@ public class TaxonomyVisualizationExporter {
         body.append("</tbody></table></section>");
         String script = "<script>function normalize(t){return (t||'').toLowerCase();}function applyDefaultFilter(){const q=normalize(document.getElementById('defSearch').value.trim());const issues=document.getElementById('defIssues').checked;document.querySelectorAll('.def-row').forEach(r=>{const s=r.dataset.search||'';const issue=(r.dataset.issue||'false')==='true';r.hidden=!((!q||s.includes(q))&&(!issues||issue));});}</script>";
         return renderPage("Default Member Quality View", body.toString(), script);
+    }
+
+    private String renderExternalSchemasHtml(List<ExternalSchemaReference> externalSchemaReferences) {
+        StringBuilder body = new StringBuilder();
+        body.append("<h1>External Schema References</h1>")
+            .append("<p class=\"lead\">Externe XBRL-Schemata, welche die ESRS-Taxonomie referenziert. Diese Sicht dient als Nachweis der verwendeten Standard-Namespaces und Linkbase-Referenzen.</p>")
+            .append("<div class=\"summary\">")
+            .append(summaryCard("Externe Schemas", externalSchemaReferences == null ? 0 : externalSchemaReferences.size()))
+            .append(summaryCard("DTR Types", countByKind(externalSchemaReferences, "DTR type namespace")))
+            .append(summaryCard("Linkbase", countByKind(externalSchemaReferences, "XBRL linkbase namespace")))
+            .append(summaryCard("XLink", countByKind(externalSchemaReferences, "XLink namespace")))
+            .append(summaryCard("XBRL Dimensions", countByKind(externalSchemaReferences, "XBRL dimensions namespace")))
+            .append("</div>")
+            .append("<section><h2>Namespace-Liste</h2><table class=\"layout-table\"><thead><tr><th>Typ</th><th>Namespace</th><th>SchemaLocation/Hinweis</th><th>Quelle</th></tr></thead><tbody>");
+
+        if (externalSchemaReferences == null || externalSchemaReferences.isEmpty()) {
+            body.append("<tr><td colspan=\"4\">Keine externen Schemas gefunden.</td></tr>");
+        } else {
+            for (ExternalSchemaReference ref : externalSchemaReferences) {
+                body.append("<tr>")
+                    .append("<td>").append(escapeHtml(ref.kind())).append("</td>")
+                    .append("<td><code>").append(escapeHtml(ref.namespace())).append("</code></td>")
+                    .append("<td><code>").append(escapeHtml(ref.schemaLocation())).append("</code></td>")
+                    .append("<td>").append(escapeHtml(ref.source())).append("</td>")
+                    .append("</tr>");
+            }
+        }
+
+        body.append("</tbody></table></section>");
+        return renderPage("External Schema References", body.toString(), "");
+    }
+
+    private long countByKind(List<ExternalSchemaReference> externalSchemaReferences, String kind) {
+        if (externalSchemaReferences == null || externalSchemaReferences.isEmpty()) {
+            return 0;
+        }
+        return externalSchemaReferences.stream().filter(ref -> kind.equals(ref.kind())).count();
     }
 
     private String renderEnumDomainValidityHtml(Map<String, List<MappingEntry>> mappingsByConcept,
@@ -5209,7 +5368,8 @@ public class TaxonomyVisualizationExporter {
                                     Map<String, Integer> formulaMentionsByConcept,
                                     Map<String, List<String>> formulaConceptsByFile,
                                     HypercubeMetadata hypercubeMetadata,
-                                    Map<String, List<String>> domainMembersByDomain) {
+                                    Map<String, List<String>> domainMembersByDomain,
+                                    List<ExternalSchemaReference> externalSchemaReferences) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();
             layers.addAll(fileCountByLayer.keySet());
@@ -5239,6 +5399,12 @@ public class TaxonomyVisualizationExporter {
 
     private record HypercubeMetadata(List<HypercubeCube> cubes,
                                      int relationCount) {
+    }
+
+    private record ExternalSchemaReference(String namespace,
+                                           String schemaLocation,
+                                           String kind,
+                                           String source) {
     }
 
     public record VisualizationResult(Path outputPath,

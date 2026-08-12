@@ -76,8 +76,17 @@ public final class TestTaxonomyFixture {
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
             .append("<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" ")
             .append("xmlns:esrs=\"http://www.efrag.org/esrs\" ")
+            .append("xmlns:dtr=\"http://www.xbrl.org/dtr/type/2022-03-31\" ")
+            .append("xmlns:link=\"http://www.xbrl.org/2003/linkbase\" ")
+            .append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" ")
+            .append("xmlns:xbrldt=\"http://xbrl.org/2005/xbrldt\" ")
             .append("targetNamespace=\"http://www.efrag.org/esrs\" ")
             .append("elementFormDefault=\"qualified\">\n");
+
+        builder.append("  <xsd:import namespace=\"http://www.xbrl.org/dtr/type/2022-03-31\" schemaLocation=\"http://www.xbrl.org/dtr/type/2022-03-31/types.xsd\"/>\n")
+            .append("  <xsd:import namespace=\"http://www.xbrl.org/2003/linkbase\" schemaLocation=\"http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd\"/>\n")
+            .append("  <xsd:import namespace=\"http://www.w3.org/1999/xlink\" schemaLocation=\"http://www.w3.org/1999/xlink.xsd\"/>\n")
+            .append("  <xsd:import namespace=\"http://xbrl.org/2005/xbrldt\" schemaLocation=\"http://xbrl.org/2005/xbrldt.xsd\"/>\n");
 
         for (String qname : qnames) {
             String localName = qname.substring("esrs:".length());
