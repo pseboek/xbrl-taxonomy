@@ -1,16 +1,67 @@
 package org.esrs.pipeline.visualization;
 
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.esrs.pipeline.mapping.MappingRegistry;
 import org.esrs.pipeline.support.TestTaxonomyFixture;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 
 class TaxonomyVisualizationExporterTest {
+    @Test
+    void shouldIncludeXbrldtAbstractElementsLikeHypercubeItem() throws Exception {
+        TaxonomyVisualizationExporter exporter = new TaxonomyVisualizationExporter();
+        Method collectExternalSchemaTypes = TaxonomyVisualizationExporter.class.getDeclaredMethod(
+            "collectExternalSchemaTypes",
+            Document.class,
+            String.class,
+            String.class,
+            List.class
+        );
+        collectExternalSchemaTypes.setAccessible(true);
+
+        String xsd = """
+            <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                       xmlns:xbrli="http://www.xbrl.org/2003/instance"
+                       xmlns:xbrldt="http://xbrl.org/2005/xbrldt"
+                       targetNamespace="http://xbrl.org/2005/xbrldt"
+                       elementFormDefault="qualified">
+              <xs:element name="hypercubeItem"
+                          id="xbrldt_hypercubeItem"
+                          abstract="true"
+                          substitutionGroup="xbrli:item"
+                          type="xbrli:stringItemType"/>
+            </xs:schema>
+            """;
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        Document document = factory.newDocumentBuilder().parse(new java.io.ByteArrayInputStream(xsd.getBytes(StandardCharsets.UTF_8)));
+        document.getDocumentElement().normalize();
+
+        List<Object> types = new ArrayList<>();
+        collectExternalSchemaTypes.invoke(exporter, document, "http://xbrl.org/2005/xbrldt", "http://xbrl.org/2005/xbrldt.xsd", types);
+
+        assertTrue(types.stream().anyMatch(type -> {
+            try {
+                return "http://xbrl.org/2005/xbrldt".equals(type.getClass().getMethod("namespace").invoke(type))
+                    && "hypercubeItem".equals(type.getClass().getMethod("name").invoke(type));
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
+        }));
+    }
+
     @Test
     void shouldExportHierarchicalTaxonomyExplorer() throws Exception {
         Path root = Path.of(".").toAbsolutePath().normalize();
@@ -202,10 +253,10 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(externalSchemas.contains("http://www.xbrl.org/2003/linkbase"));
         assertTrue(externalSchemas.contains("http://www.w3.org/1999/xlink"));
         assertTrue(externalSchemas.contains("http://xbrl.org/2005/xbrldt"));
-        assertTrue(externalSchemas.contains("externalSchemaNodes"));
-        assertTrue(externalSchemas.contains("externalSchemaEdges"));
-        assertTrue(externalSchemas.contains("externalSchemaSearch"));
-        assertTrue(externalSchemas.contains("External Schema Dependency Graph"));
+        assertFalse(externalSchemas.contains("externalSchemaNodes"));
+        assertFalse(externalSchemas.contains("externalSchemaEdges"));
+        assertFalse(externalSchemas.contains("externalSchemaSearch"));
+        assertFalse(externalSchemas.contains("External Schema Dependency Graph"));
         assertTrue(externalSchemas.contains("Analysierte XSD-Typen"));
         assertTrue(externalSchemas.contains("Typ-Inventar"));
         assertTrue(externalSchemas.contains("domainItemType"));
@@ -215,6 +266,10 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(externalSchemas.contains("applyExternalSchemaTableFilters"));
         assertTrue(externalSchemas.contains("external-type-row"));
         assertTrue(externalSchemas.contains("external-namespace-row"));
+        assertTrue(externalSchemas.contains("sortTable"));
+        assertTrue(externalSchemas.contains("sort-button"));
+        assertTrue(externalSchemas.contains("resetExternalSchemaTypeFilters"));
+        assertTrue(externalSchemas.contains("resetExternalNamespaceFilters"));
 
         String dashboard = Files.readString(dashboardHtml, StandardCharsets.UTF_8);
         assertTrue(dashboard.contains("Master Dashboard"));

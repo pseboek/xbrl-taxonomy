@@ -530,6 +530,7 @@ public class TaxonomyVisualizationExporter {
             .sorted(Comparator.comparing(ExternalSchemaReference::namespace).thenComparing(ExternalSchemaReference::schemaLocation))
             .toList();
         ExternalSchemaAnalysis externalSchemaAnalysis = analyzeExternalSchemas(externalSchemaReferences);
+        List<ExternalSchemaType> mergedTypes = mergeExternalSchemaTypes(externalSchemaAnalysis.types(), taxonomyBase);
 
         return new TaxonomyMetadata(
             xsdElementCount,
@@ -544,7 +545,7 @@ public class TaxonomyVisualizationExporter {
             hypercubeMetadata,
             domainMembersByDomain,
             externalSchemaReferences,
-            externalSchemaAnalysis.types(),
+            mergedTypes,
             externalSchemaAnalysis.edges()
         );
     }
@@ -732,6 +733,43 @@ public class TaxonomyVisualizationExporter {
         }
     }
 
+    private List<ExternalSchemaType> mergeExternalSchemaTypes(List<ExternalSchemaType> externalTypes, Path taxonomyBase) {
+        Map<String, ExternalSchemaType> uniqueTypes = new TreeMap<>();
+        if (externalTypes != null) {
+            for (ExternalSchemaType type : externalTypes) {
+                uniqueTypes.putIfAbsent(type.namespace() + "|" + type.name(), type);
+            }
+        }
+
+        if (taxonomyBase != null && Files.exists(taxonomyBase)) {
+            try (Stream<Path> stream = Files.walk(taxonomyBase)) {
+                for (Path file : stream.filter(Files::isRegularFile).filter(path -> path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".xsd")).toList()) {
+                    try {
+                        String xsdText = Files.readString(file, StandardCharsets.UTF_8);
+                        Document document = parseXmlText(xsdText, file.toString());
+                        String targetNamespace = document.getDocumentElement().getAttribute("targetNamespace");
+                        if (targetNamespace == null || targetNamespace.isBlank()) {
+                            targetNamespace = file.toUri().toString();
+                        }
+                        List<ExternalSchemaType> localTypes = new ArrayList<>();
+                        collectExternalSchemaTypes(document, targetNamespace, file.toString(), localTypes);
+                        for (ExternalSchemaType type : localTypes) {
+                            uniqueTypes.putIfAbsent(type.namespace() + "|" + type.name(), type);
+                        }
+                    } catch (IOException ignored) {
+                        // ignore malformed local schema files for the overview
+                    }
+                }
+            } catch (IOException ignored) {
+                // ignore walk failures for the overview
+            }
+        }
+
+        List<ExternalSchemaType> merged = new ArrayList<>(uniqueTypes.values());
+        merged.sort(Comparator.comparing(ExternalSchemaType::namespace).thenComparing(ExternalSchemaType::name));
+        return merged;
+    }
+
     private ExternalSchemaAnalysis analyzeExternalSchemas(List<ExternalSchemaReference> references) {
         List<ExternalSchemaType> types = new ArrayList<>();
         List<ExternalSchemaEdge> edges = new ArrayList<>();
@@ -800,6 +838,7 @@ public class TaxonomyVisualizationExporter {
                                              List<ExternalSchemaType> types) {
         collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "simpleType"), namespace, source, types, false);
         collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "complexType"), namespace, source, types, true);
+        collectExternalSchemaElementNodes(document.getElementsByTagNameNS(XS_NS, "element"), namespace, source, types);
     }
 
     private void collectExternalSchemaTypeNodes(NodeList nodes,
@@ -818,6 +857,28 @@ public class TaxonomyVisualizationExporter {
             NodeList enumerations = typeElement.getElementsByTagNameNS(XS_NS, "enumeration");
             String facets = enumerations.getLength() > 0 ? "enumeration(" + enumerations.getLength() + ")" : collectFacetSummary(typeElement);
             String category = classifyExternalType(name, base, complex, enumerations.getLength() > 0);
+            types.add(new ExternalSchemaType(namespace, name, category, base, source, facets, "loaded"));
+        }
+    }
+
+    private void collectExternalSchemaElementNodes(NodeList nodes,
+                                                  String namespace,
+                                                  String source,
+                                                  List<ExternalSchemaType> types) {
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element element = (Element) nodes.item(i);
+            String name = element.getAttribute("name");
+            if (name == null || name.isBlank()) continue;
+            String type = element.getAttribute("type");
+            String substitutionGroup = element.getAttribute("substitutionGroup");
+            String base = (!type.isBlank()) ? type : (!substitutionGroup.isBlank()) ? substitutionGroup : "-";
+            String category = classifyExternalType(name, base, false, false);
+            if (!substitutionGroup.isBlank()) {
+                category = "element/substitution";
+            } else if (!type.isBlank()) {
+                category = "element";
+            }
+            String facets = element.hasAttribute("abstract") && Boolean.parseBoolean(element.getAttribute("abstract")) ? "abstract" : "-";
             types.add(new ExternalSchemaType(namespace, name, category, base, source, facets, "loaded"));
         }
     }
@@ -887,7 +948,7 @@ public class TaxonomyVisualizationExporter {
             return "https://www.w3.org/1999/xlink.xsd";
         }
         if (namespace.contains("/2005/xbrldt")) {
-            return "https://www.xbrl.org/2005/xbrldt.xsd";
+            return "http://www.xbrl.org/2005/xbrldt-2005.xsd";
         }
         return "-";
     }
@@ -3173,22 +3234,15 @@ public class TaxonomyVisualizationExporter {
             .append(summaryCard("Analysierte XSD-Typen", types.size()))
             .append(summaryCard("XSD-Importe", edges.size()))
             .append("</div>")
-            .append("<section><h2>Externe XSD-Typen und Abhängigkeiten</h2><div class=\"layer-toolbar\" id=\"externalSchemaFilters\">")
-            .append("<input id=\"externalSchemaSearch\" type=\"search\" class=\"graph-search\" placeholder=\"Namespace, Location, Typ oder Quelle suchen\" oninput=\"drawExternalSchemaGraph()\">")
-            .append("<label class=\"filter\">Kategorie <select id=\"externalSchemaCategory\" onchange=\"drawExternalSchemaGraph()\"><option value=\"\">Alle</option>");
-        types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
-            .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
-        body.append("</select></label><label class=\"filter\">Status <select id=\"externalSchemaStatus\" onchange=\"drawExternalSchemaGraph()\"><option value=\"\">Alle</option><option value=\"loaded\">geladen</option><option value=\"unavailable\">nicht verfügbar</option><option value=\"parse error\">Parse-Fehler</option></select></label>")
-            .append("<button type=\"button\" class=\"secondary\" onclick=\"clearExternalSchemaSearch()\">Suche löschen</button></div>")
-            .append("<div class=\"graph-wrap\"><svg id=\"externalSchemaGraph\" class=\"graph\" viewBox=\"0 0 1600 760\" role=\"img\" aria-label=\"External Schema Dependency Graph\"></svg></div>")
-            .append("<div class=\"node-info\" id=\"externalSchemaInfo\">Knoten anklicken, um Typ, Basistyp, Facets, Quelle und Status zu sehen.</div></section>")
             .append("<section><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
             .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
-        body.append("</select></label><label class=\"filter\">Status <select id=\"externalTypeStatus\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option><option value=\"loaded\">geladen</option><option value=\"unavailable\">nicht verfügbar</option><option value=\"parse error\">Parse-Fehler</option></select></label></div><table class=\"layout-table\"><thead><tr><th>Kategorie</th><th>Typ</th><th>Basistyp</th><th>Facets</th><th>Status</th></tr></thead><tbody>");
+        body.append("</select></label><label class=\"filter\">Status <select id=\"externalTypeStatus\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option><option value=\"loaded\">geladen</option><option value=\"unavailable\">nicht verfügbar</option><option value=\"parse error\">Parse-Fehler</option></select></label><button type=\"button\" class=\"secondary\" onclick=\"resetExternalSchemaTypeFilters()\">Filter zurücksetzen</button></div>")
+            .append("<table id=\"externalTypeTable\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeTable\" data-sort-column=\"0\">Kategorie</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeTable\" data-sort-column=\"1\">Typ</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeTable\" data-sort-column=\"2\">Basistyp</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeTable\" data-sort-column=\"3\">Facets</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeTable\" data-sort-column=\"4\">Status</button></th></tr></thead><tbody>");
         for (ExternalSchemaType type : types) {
             body.append("<tr class=\"external-type-row\" data-category=\"").append(escapeHtml(type.category())).append("\" data-status=\"")
-                .append(escapeHtml(type.status())).append("\" data-search=\"").append(escapeHtml((type.namespace() + " " + type.name() + " " + type.base() + " " + type.facets()).toLowerCase(Locale.ROOT))).append("\"><td>").append(escapeHtml(type.category())).append("</td><td><code>")
+                .append(escapeHtml(type.status())).append("\" data-search=\"").append(escapeHtml((type.namespace() + " " + type.name() + " " + type.base() + " " + type.facets()).toLowerCase(Locale.ROOT))).append("\"><td>")
+                .append(escapeHtml(type.category())).append("</td><td><code>")
                 .append(escapeHtml(type.namespace() + ":" + type.name())).append("</code></td><td>")
                 .append(escapeHtml(type.base())).append("</td><td>").append(escapeHtml(type.facets()))
                 .append("</td><td>").append(escapeHtml(type.status())).append("</td></tr>");
@@ -3198,7 +3252,7 @@ public class TaxonomyVisualizationExporter {
             .append("<section><h2>Namespace-Liste</h2><div class=\"toolbar\"><input id=\"externalNamespaceSearch\" type=\"search\" placeholder=\"Namespace, Location oder Quelle suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Typ <select id=\"externalNamespaceKind\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         references.stream().map(ExternalSchemaReference::kind).distinct().sorted().forEach(kind -> body.append("<option value=\"")
             .append(escapeHtml(kind)).append("\">").append(escapeHtml(kind)).append("</option>"));
-        body.append("</select></label></div><table class=\"layout-table\"><thead><tr><th>Typ</th><th>Namespace</th><th>SchemaLocation/Hinweis</th><th>Quelle</th></tr></thead><tbody>");
+        body.append("</select></label><button type=\"button\" class=\"secondary\" onclick=\"resetExternalNamespaceFilters()\">Filter zurücksetzen</button></div><table id=\"externalNamespaceTable\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"0\">Typ</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"1\">Namespace</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"2\">SchemaLocation/Hinweis</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"3\">Quelle</button></th></tr></thead><tbody>");
 
         if (references.isEmpty()) {
             body.append("<tr><td colspan=\"4\">Keine externen Schemas gefunden.</td></tr>");
@@ -3214,7 +3268,60 @@ public class TaxonomyVisualizationExporter {
         }
 
         body.append("</tbody></table></section>");
-        return renderPage("External Schema References", body.toString(), renderExternalSchemaGraphScript(references, types, edges));
+        return renderPage("External Schema References", body.toString(), renderExternalSchemaTableScript());
+    }
+
+    private String renderExternalSchemaTableScript() {
+        return """
+            <script>
+            function resetExternalSchemaTypeFilters(){
+                const search=document.getElementById('externalTypeSearch'); if(search) search.value='';
+                const category=document.getElementById('externalTypeCategory'); if(category) category.value='';
+                const status=document.getElementById('externalTypeStatus'); if(status) status.value='';
+                applyExternalSchemaTableFilters();
+            }
+            function resetExternalNamespaceFilters(){
+                const search=document.getElementById('externalNamespaceSearch'); if(search) search.value='';
+                const kind=document.getElementById('externalNamespaceKind'); if(kind) kind.value='';
+                applyExternalSchemaTableFilters();
+            }
+            function applyExternalSchemaTableFilters(){
+                const typeQuery=((document.getElementById('externalTypeSearch')||{}).value||'').toLowerCase().trim();
+                const typeCategory=((document.getElementById('externalTypeCategory')||{}).value||'');
+                const typeStatus=((document.getElementById('externalTypeStatus')||{}).value||'');
+                document.querySelectorAll('.external-type-row').forEach(row=>{const match=(!typeQuery||(row.dataset.search||'').includes(typeQuery))&&(!typeCategory||row.dataset.category===typeCategory)&&(!typeStatus||row.dataset.status===typeStatus);row.hidden=!match;});
+                const namespaceQuery=((document.getElementById('externalNamespaceSearch')||{}).value||'').toLowerCase().trim();
+                const namespaceKind=((document.getElementById('externalNamespaceKind')||{}).value||'');
+                document.querySelectorAll('.external-namespace-row').forEach(row=>{const match=(!namespaceQuery||(row.dataset.search||'').includes(namespaceQuery))&&(!namespaceKind||row.dataset.kind===namespaceKind);row.hidden=!match;});
+            }
+            function sortTable(tableId, columnIndex, direction) {
+                const table = document.getElementById(tableId);
+                if (!table) return;
+                const tbody = table.querySelector('tbody');
+                if (!tbody) return;
+                const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.hidden);
+                rows.sort((a, b) => {
+                    const left = (a.children[columnIndex]?.textContent || '').trim().toLowerCase();
+                    const right = (b.children[columnIndex]?.textContent || '').trim().toLowerCase();
+                    const result = left.localeCompare(right, undefined, {numeric: true, sensitivity: 'base'});
+                    return direction === 'asc' ? result : -result;
+                });
+                rows.forEach(row => tbody.appendChild(row));
+            }
+            document.addEventListener('click', function(event) {
+                const button = event.target.closest('.sort-button');
+                if (!button) return;
+                const tableId = button.dataset.sortTable;
+                const columnIndex = Number(button.dataset.sortColumn || 0);
+                const table = document.getElementById(tableId);
+                if (!table) return;
+                const current = table.dataset.sortState || '';
+                const next = current === 'asc:' + columnIndex ? 'desc:' + columnIndex : 'asc:' + columnIndex;
+                table.dataset.sortState = next;
+                sortTable(tableId, columnIndex, next.startsWith('asc') ? 'asc' : 'desc');
+            });
+            </script>
+            """;
     }
 
     private String renderExternalSchemaGraphScript(List<ExternalSchemaReference> references,
@@ -3293,15 +3400,22 @@ public class TaxonomyVisualizationExporter {
               const ids=new Set(visible.map(n=>n.id));
               const edges=externalSchemaEdges.filter(e=>ids.has(e.s)&&ids.has(e.t));
               const groups=visible.filter(n=>n.type==='group'),schemas=visible.filter(n=>n.type==='schema'||n.type==='type'),positions=new Map();
-                            groups.forEach((n,i)=>positions.set(n.id,{x:35,y:58+i*72}));
-                            schemas.filter(n=>n.type==='schema').forEach((n,i)=>positions.set(n.id,{x:315,y:45+i*64}));
-                            schemas.filter(n=>n.type==='type').forEach((n,i)=>positions.set(n.id,{x:900+Math.floor(i/24)*320,y:40+(i-Math.floor(i/24)*24)*72}));
-                            const typeCount=schemas.filter(n=>n.type==='type').length;
-                            const graphWidth=2500,graphHeight=Math.max(820,Math.ceil(typeCount/5)*72+90);
+                            const typeNodes=schemas.filter(n=>n.type==='type');
+                            const schemaNodes=schemas.filter(n=>n.type==='schema');
+                            groups.forEach((n,i)=>positions.set(n.id,{x:35,y:26+i*52}));
+                            schemaNodes.forEach((n,i)=>positions.set(n.id,{x:220,y:26+i*28}));
+                            const maxPerColumn=12;
+                            typeNodes.forEach((n,i)=>{
+                                const col=Math.floor(i/maxPerColumn);
+                                const row=i%%maxPerColumn;
+                                positions.set(n.id,{x:500+col*160,y:26+row*24});
+                            });
+                            const graphWidth=Math.max(980, 500 + Math.max(1, Math.ceil(typeNodes.length/maxPerColumn))*160 + 110);
+                            const graphHeight=Math.max(220, 26 + Math.min(maxPerColumn, Math.max(1, typeNodes.length || 1))*24 + 30);
                             svg.setAttribute('viewBox','0 0 '+graphWidth+' '+graphHeight);svg.style.width=graphWidth+'px';svg.style.height=graphHeight+'px';
               svg.innerHTML='';
-              edges.forEach(e=>{const a=positions.get(e.s),b=positions.get(e.t);if(!a||!b)return;const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',b.x);line.setAttribute('y1',b.y);line.setAttribute('x2',a.x+105);line.setAttribute('y2',a.y);line.setAttribute('class','graph-edge');svg.appendChild(line);});
-                            visible.forEach(n=>{const p=positions.get(n.id),g=document.createElementNS('http://www.w3.org/2000/svg','g');if(!p)return;g.addEventListener('click',()=>{document.getElementById('externalSchemaInfo').innerHTML='<strong>'+n.label+'</strong><br>Kategorie: '+n.kind+(n.base?'<br>Basistyp: <code>'+n.base+'</code>':'')+(n.facets?'<br>Facets: '+n.facets:'')+(n.location?'<br>Quelle: '+n.location:'')+(n.source?'<br>Status: '+n.source:'');});const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=n.label;g.appendChild(title);const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r',n.type==='group'?27:n.type==='type'?16:21);circle.setAttribute('fill',n.type==='group'?'#0b5fff':n.type==='type'?'#f59e0b':'#00a878');g.appendChild(circle);const text=document.createElementNS('http://www.w3.org/2000/svg','text');text.setAttribute('x',p.x+23);text.setAttribute('y',p.y-10);text.setAttribute('class','external-graph-label');text.setAttribute('font-size','13.75');text.setAttribute('style','white-space:nowrap');const label=n.label||'';const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x',p.x+23);span.setAttribute('dy','0');span.textContent=label;text.appendChild(span);g.appendChild(text);svg.appendChild(g);});
+              edges.forEach(e=>{const a=positions.get(e.s),b=positions.get(e.t);if(!a||!b)return;const direction=a.x<b.x?1:-1;const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',direction>0?b.x:a.x+24);line.setAttribute('y1',b.y);line.setAttribute('x2',direction>0?a.x+24:b.x);line.setAttribute('y2',a.y);line.setAttribute('class','graph-edge');svg.appendChild(line);});
+                            visible.forEach(n=>{const p=positions.get(n.id),g=document.createElementNS('http://www.w3.org/2000/svg','g');if(!p)return;const details=()=>{document.getElementById('externalSchemaInfo').innerHTML='<strong>'+n.label+'</strong><br>Kategorie: '+n.kind+(n.base?'<br>Basistyp: <code>'+n.base+'</code>':'')+(n.facets?'<br>Facets: '+n.facets:'')+(n.location?'<br>Quelle: '+n.location:'')+(n.source?'<br>Status: '+n.source:'');};g.addEventListener('click',(event)=>{event.stopPropagation();const isVisible=text.style.display!=='none';text.style.display=isVisible?'none':'inline';details();});const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=n.label;g.appendChild(title);const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r',n.type==='group'?14:n.type==='type'?9:12);circle.setAttribute('fill',n.type==='group'?'#0b5fff':n.type==='type'?'#f59e0b':'#00a878');g.appendChild(circle);const text=document.createElementNS('http://www.w3.org/2000/svg','text');text.setAttribute('x',p.x+16);text.setAttribute('y',p.y-8);text.setAttribute('class','external-graph-label');text.setAttribute('font-size','10');text.setAttribute('style','white-space:nowrap;display:none;');const label=n.label||'';const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x',p.x+16);span.setAttribute('dy','0');span.textContent=label;text.appendChild(span);g.appendChild(text);svg.appendChild(g);});
             }
             drawExternalSchemaGraph();
                         applyExternalSchemaTableFilters();
