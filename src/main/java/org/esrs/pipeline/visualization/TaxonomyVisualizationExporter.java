@@ -2,9 +2,14 @@ package org.esrs.pipeline.visualization;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -41,6 +46,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TaxonomyVisualizationExporter {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final HttpClient EXTERNAL_SCHEMA_CLIENT = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(3))
+        .followRedirects(HttpClient.Redirect.NORMAL)
+        .build();
     private static final String TAXONOMY_PATH = "xbrl.efrag.org/taxonomy/esrs/2023-12-22";
     private static final String LINK_NS = "http://www.xbrl.org/2003/linkbase";
     private static final String XLINK_NS = "http://www.w3.org/1999/xlink";
@@ -136,7 +145,7 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(dimensionCooccurrenceHtml, renderDimensionCooccurrenceHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(defaultMemberQualityHtml, renderDefaultMemberQualityHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(enumDomainValidityHtml, renderEnumDomainValidityHtml(mappingsByConcept, metadata), StandardCharsets.UTF_8);
-        Files.writeString(externalSchemasHtml, renderExternalSchemasHtml(metadata.externalSchemaReferences()), StandardCharsets.UTF_8);
+        Files.writeString(externalSchemasHtml, renderExternalSchemasHtml(metadata.externalSchemaReferences(), metadata.externalSchemaTypes(), metadata.externalSchemaEdges()), StandardCharsets.UTF_8);
         Files.writeString(dashboardHtml, renderDashboardHtml(treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, externalSchemasHtml), StandardCharsets.UTF_8);
         Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, externalSchemasHtml, dashboardHtml), StandardCharsets.UTF_8);
 
@@ -383,7 +392,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0), Map.of(), List.of());
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0), Map.of(), List.of(), List.of(), List.of());
         }
 
         long xsdElementCount = 0;
@@ -520,6 +529,7 @@ public class TaxonomyVisualizationExporter {
         List<ExternalSchemaReference> externalSchemaReferences = externalSchemaReferencesByNamespace.values().stream()
             .sorted(Comparator.comparing(ExternalSchemaReference::namespace).thenComparing(ExternalSchemaReference::schemaLocation))
             .toList();
+        ExternalSchemaAnalysis externalSchemaAnalysis = analyzeExternalSchemas(externalSchemaReferences);
 
         return new TaxonomyMetadata(
             xsdElementCount,
@@ -533,7 +543,9 @@ public class TaxonomyVisualizationExporter {
             formulaConceptsByFile,
             hypercubeMetadata,
             domainMembersByDomain,
-            externalSchemaReferences
+            externalSchemaReferences,
+            externalSchemaAnalysis.types(),
+            externalSchemaAnalysis.edges()
         );
     }
 
@@ -717,6 +729,147 @@ public class TaxonomyVisualizationExporter {
                 classifyExternalSchema(namespace),
                 file.getFileName().toString()
             ));
+        }
+    }
+
+    private ExternalSchemaAnalysis analyzeExternalSchemas(List<ExternalSchemaReference> references) {
+        List<ExternalSchemaType> types = new ArrayList<>();
+        List<ExternalSchemaEdge> edges = new ArrayList<>();
+        Map<String, String> responseCache = new HashMap<>();
+        for (ExternalSchemaReference reference : references) {
+            String location = reference.schemaLocation();
+            if (location == null || !location.startsWith("http")) {
+                continue;
+            }
+            String xsdText = responseCache.get(location);
+            String status = "loaded";
+            if (xsdText == null) {
+                try {
+                    HttpRequest request = HttpRequest.newBuilder(URI.create(location))
+                        .timeout(Duration.ofSeconds(5))
+                        .header("Accept", "application/xml, text/xml, */*")
+                        .GET()
+                        .build();
+                    HttpResponse<String> response = EXTERNAL_SCHEMA_CLIENT.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+                    if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                        xsdText = response.body();
+                        responseCache.put(location, xsdText);
+                    } else {
+                        status = "HTTP " + response.statusCode();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    status = "interrupted";
+                } catch (IOException | IllegalArgumentException e) {
+                    status = "unavailable";
+                }
+            }
+            if (xsdText == null || xsdText.isBlank()) {
+                types.add(new ExternalSchemaType(reference.namespace(), "(Schema nicht geladen)", "unbekannt", "-", location, "-", status));
+                continue;
+            }
+            try {
+                Document document = parseXmlText(xsdText, location);
+                Element root = document.getDocumentElement();
+                String targetNamespace = root.getAttribute("targetNamespace");
+                if (targetNamespace == null || targetNamespace.isBlank()) targetNamespace = reference.namespace();
+                collectExternalSchemaEdges(document, targetNamespace, location, edges);
+                collectExternalSchemaTypes(document, targetNamespace, location, types);
+            } catch (IOException e) {
+                types.add(new ExternalSchemaType(reference.namespace(), "(XSD nicht parsebar)", "unbekannt", "-", location, "-", "parse error"));
+            }
+        }
+        Map<String, ExternalSchemaType> uniqueTypes = new TreeMap<>();
+        for (ExternalSchemaType type : types) {
+            uniqueTypes.putIfAbsent(type.namespace() + "|" + type.name(), type);
+        }
+        Map<String, ExternalSchemaEdge> uniqueEdges = new TreeMap<>();
+        for (ExternalSchemaEdge edge : edges) {
+            uniqueEdges.putIfAbsent(edge.source() + "|" + edge.target() + "|" + edge.relation(), edge);
+        }
+        List<ExternalSchemaType> deduplicatedTypes = new ArrayList<>(uniqueTypes.values());
+        List<ExternalSchemaEdge> deduplicatedEdges = new ArrayList<>(uniqueEdges.values());
+        deduplicatedTypes.sort(Comparator.comparing(ExternalSchemaType::namespace).thenComparing(ExternalSchemaType::name));
+        deduplicatedEdges.sort(Comparator.comparing(ExternalSchemaEdge::source).thenComparing(ExternalSchemaEdge::target));
+        return new ExternalSchemaAnalysis(deduplicatedTypes, deduplicatedEdges);
+    }
+
+    private void collectExternalSchemaTypes(Document document,
+                                             String namespace,
+                                             String source,
+                                             List<ExternalSchemaType> types) {
+        collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "simpleType"), namespace, source, types, false);
+        collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "complexType"), namespace, source, types, true);
+    }
+
+    private void collectExternalSchemaTypeNodes(NodeList nodes,
+                                                String namespace,
+                                                String source,
+                                                List<ExternalSchemaType> types,
+                                                boolean complex) {
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element typeElement = (Element) nodes.item(i);
+            String name = typeElement.getAttribute("name");
+            if (name == null || name.isBlank()) continue;
+            NodeList restrictions = typeElement.getElementsByTagNameNS(XS_NS, "restriction");
+            NodeList extensions = typeElement.getElementsByTagNameNS(XS_NS, "extension");
+            String base = restrictions.getLength() > 0 ? ((Element) restrictions.item(0)).getAttribute("base")
+                : extensions.getLength() > 0 ? ((Element) extensions.item(0)).getAttribute("base") : "-";
+            NodeList enumerations = typeElement.getElementsByTagNameNS(XS_NS, "enumeration");
+            String facets = enumerations.getLength() > 0 ? "enumeration(" + enumerations.getLength() + ")" : collectFacetSummary(typeElement);
+            String category = classifyExternalType(name, base, complex, enumerations.getLength() > 0);
+            types.add(new ExternalSchemaType(namespace, name, category, base, source, facets, "loaded"));
+        }
+    }
+
+    private String collectFacetSummary(Element typeElement) {
+        List<String> facets = new ArrayList<>();
+        for (String facet : List.of("length", "minLength", "maxLength", "pattern", "minInclusive", "maxInclusive", "fractionDigits")) {
+            if (typeElement.getElementsByTagNameNS(XS_NS, facet).getLength() > 0) facets.add(facet);
+        }
+        return facets.isEmpty() ? "-" : String.join(", ", facets);
+    }
+
+    private String classifyExternalType(String name, String base, boolean complex, boolean enumeration) {
+        String value = (name + " " + base).toLowerCase(Locale.ROOT);
+        if (enumeration) return "enumeration";
+        if (value.matches(".*(decimal|integer|int|long|short|byte|double|float|number|amount|percent).*")) return "numerisch";
+        if (value.matches(".*(date|time|year|duration).*")) return "datum/zeit";
+        if (value.matches(".*(boolean|bool).*")) return "boolean";
+        if (value.matches(".*(qname|uri|href|reference).*")) return "referenz/qname";
+        if (complex) return "komplex";
+        if (value.matches(".*(string|text|token|normalized).*")) return "string/text";
+        return "unbekannt";
+    }
+
+    private void collectExternalSchemaEdges(Document document,
+                                             String sourceNamespace,
+                                             String source,
+                                             List<ExternalSchemaEdge> edges) {
+        for (String localName : List.of("import", "include")) {
+            NodeList nodes = document.getElementsByTagNameNS(XS_NS, localName);
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Element element = (Element) nodes.item(i);
+                String target = element.getAttribute("namespace");
+                if (target == null || target.isBlank()) target = element.getAttribute("schemaLocation");
+                if (target != null && !target.isBlank()) edges.add(new ExternalSchemaEdge(sourceNamespace, target, localName, source));
+            }
+        }
+    }
+
+    private Document parseXmlText(String xml, String source) throws IOException {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
+            factory.setExpandEntityReferences(false);
+            return factory.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new IOException("Failed to parse external schema: " + source, e);
         }
     }
 
@@ -3002,24 +3155,56 @@ public class TaxonomyVisualizationExporter {
         return renderPage("Default Member Quality View", body.toString(), script);
     }
 
-    private String renderExternalSchemasHtml(List<ExternalSchemaReference> externalSchemaReferences) {
+    private String renderExternalSchemasHtml(List<ExternalSchemaReference> externalSchemaReferences,
+                                             List<ExternalSchemaType> externalSchemaTypes,
+                                             List<ExternalSchemaEdge> externalSchemaEdges) {
         StringBuilder body = new StringBuilder();
+        List<ExternalSchemaReference> references = externalSchemaReferences == null ? List.of() : externalSchemaReferences;
+        List<ExternalSchemaType> types = externalSchemaTypes == null ? List.of() : externalSchemaTypes;
+        List<ExternalSchemaEdge> edges = externalSchemaEdges == null ? List.of() : externalSchemaEdges;
         body.append("<h1>External Schema References</h1>")
             .append("<p class=\"lead\">Externe XBRL-Schemata, welche die ESRS-Taxonomie referenziert. Diese Sicht dient als Nachweis der verwendeten Standard-Namespaces und Linkbase-Referenzen.</p>")
             .append("<div class=\"summary\">")
-            .append(summaryCard("Externe Schemas", externalSchemaReferences == null ? 0 : externalSchemaReferences.size()))
-            .append(summaryCard("DTR Types", countByKind(externalSchemaReferences, "DTR type namespace")))
-            .append(summaryCard("Linkbase", countByKind(externalSchemaReferences, "XBRL linkbase namespace")))
-            .append(summaryCard("XLink", countByKind(externalSchemaReferences, "XLink namespace")))
-            .append(summaryCard("XBRL Dimensions", countByKind(externalSchemaReferences, "XBRL dimensions namespace")))
+            .append(summaryCard("Externe Schemas", references.size()))
+            .append(summaryCard("DTR Types", countByKind(references, "DTR type namespace")))
+            .append(summaryCard("Linkbase", countByKind(references, "XBRL linkbase namespace")))
+            .append(summaryCard("XLink", countByKind(references, "XLink namespace")))
+            .append(summaryCard("XBRL Dimensions", countByKind(references, "XBRL dimensions namespace")))
+            .append(summaryCard("Analysierte XSD-Typen", types.size()))
+            .append(summaryCard("XSD-Importe", edges.size()))
             .append("</div>")
-            .append("<section><h2>Namespace-Liste</h2><table class=\"layout-table\"><thead><tr><th>Typ</th><th>Namespace</th><th>SchemaLocation/Hinweis</th><th>Quelle</th></tr></thead><tbody>");
+            .append("<section><h2>Externe XSD-Typen und Abhängigkeiten</h2><div class=\"layer-toolbar\" id=\"externalSchemaFilters\">")
+            .append("<input id=\"externalSchemaSearch\" type=\"search\" class=\"graph-search\" placeholder=\"Namespace, Location, Typ oder Quelle suchen\" oninput=\"drawExternalSchemaGraph()\">")
+            .append("<label class=\"filter\">Kategorie <select id=\"externalSchemaCategory\" onchange=\"drawExternalSchemaGraph()\"><option value=\"\">Alle</option>");
+        types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
+            .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
+        body.append("</select></label><label class=\"filter\">Status <select id=\"externalSchemaStatus\" onchange=\"drawExternalSchemaGraph()\"><option value=\"\">Alle</option><option value=\"loaded\">geladen</option><option value=\"unavailable\">nicht verfügbar</option><option value=\"parse error\">Parse-Fehler</option></select></label>")
+            .append("<button type=\"button\" class=\"secondary\" onclick=\"clearExternalSchemaSearch()\">Suche löschen</button></div>")
+            .append("<div class=\"graph-wrap\"><svg id=\"externalSchemaGraph\" class=\"graph\" viewBox=\"0 0 1600 760\" role=\"img\" aria-label=\"External Schema Dependency Graph\"></svg></div>")
+            .append("<div class=\"node-info\" id=\"externalSchemaInfo\">Knoten anklicken, um Typ, Basistyp, Facets, Quelle und Status zu sehen.</div></section>")
+            .append("<section><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
+        types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
+            .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
+        body.append("</select></label><label class=\"filter\">Status <select id=\"externalTypeStatus\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option><option value=\"loaded\">geladen</option><option value=\"unavailable\">nicht verfügbar</option><option value=\"parse error\">Parse-Fehler</option></select></label></div><table class=\"layout-table\"><thead><tr><th>Kategorie</th><th>Typ</th><th>Basistyp</th><th>Facets</th><th>Status</th></tr></thead><tbody>");
+        for (ExternalSchemaType type : types) {
+            body.append("<tr class=\"external-type-row\" data-category=\"").append(escapeHtml(type.category())).append("\" data-status=\"")
+                .append(escapeHtml(type.status())).append("\" data-search=\"").append(escapeHtml((type.namespace() + " " + type.name() + " " + type.base() + " " + type.facets()).toLowerCase(Locale.ROOT))).append("\"><td>").append(escapeHtml(type.category())).append("</td><td><code>")
+                .append(escapeHtml(type.namespace() + ":" + type.name())).append("</code></td><td>")
+                .append(escapeHtml(type.base())).append("</td><td>").append(escapeHtml(type.facets()))
+                .append("</td><td>").append(escapeHtml(type.status())).append("</td></tr>");
+        }
+        if (types.isEmpty()) body.append("<tr><td colspan=\"5\">Keine externen XSD-Typen analysiert.</td></tr>");
+        body.append("</tbody></table></section>")
+            .append("<section><h2>Namespace-Liste</h2><div class=\"toolbar\"><input id=\"externalNamespaceSearch\" type=\"search\" placeholder=\"Namespace, Location oder Quelle suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Typ <select id=\"externalNamespaceKind\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
+        references.stream().map(ExternalSchemaReference::kind).distinct().sorted().forEach(kind -> body.append("<option value=\"")
+            .append(escapeHtml(kind)).append("\">").append(escapeHtml(kind)).append("</option>"));
+        body.append("</select></label></div><table class=\"layout-table\"><thead><tr><th>Typ</th><th>Namespace</th><th>SchemaLocation/Hinweis</th><th>Quelle</th></tr></thead><tbody>");
 
-        if (externalSchemaReferences == null || externalSchemaReferences.isEmpty()) {
+        if (references.isEmpty()) {
             body.append("<tr><td colspan=\"4\">Keine externen Schemas gefunden.</td></tr>");
         } else {
-            for (ExternalSchemaReference ref : externalSchemaReferences) {
-                body.append("<tr>")
+            for (ExternalSchemaReference ref : references) {
+                body.append("<tr class=\"external-namespace-row\" data-kind=\"").append(escapeHtml(ref.kind())).append("\" data-search=\"").append(escapeHtml((ref.namespace() + " " + ref.schemaLocation() + " " + ref.source()).toLowerCase(Locale.ROOT))).append("\">")
                     .append("<td>").append(escapeHtml(ref.kind())).append("</td>")
                     .append("<td><code>").append(escapeHtml(ref.namespace())).append("</code></td>")
                     .append("<td><code>").append(escapeHtml(ref.schemaLocation())).append("</code></td>")
@@ -3029,7 +3214,99 @@ public class TaxonomyVisualizationExporter {
         }
 
         body.append("</tbody></table></section>");
-        return renderPage("External Schema References", body.toString(), "");
+        return renderPage("External Schema References", body.toString(), renderExternalSchemaGraphScript(references, types, edges));
+    }
+
+    private String renderExternalSchemaGraphScript(List<ExternalSchemaReference> references,
+                                                   List<ExternalSchemaType> types,
+                                                   List<ExternalSchemaEdge> schemaEdges) {
+        StringBuilder nodes = new StringBuilder("[");
+        StringBuilder edges = new StringBuilder("[");
+        Set<String> groups = new HashSet<>();
+        int edgeIndex = 0;
+        for (ExternalSchemaReference ref : references) {
+            String schemaId = "schema:" + ref.namespace();
+            String groupId = "group:" + ref.kind();
+            if (nodes.length() > 1) nodes.append(',');
+            nodes.append("{id:'").append(escapeJs(schemaId)).append("',label:'").append(escapeJs(ref.namespace()))
+                .append("',type:'schema',kind:'").append(escapeJs(ref.kind())).append("',location:'")
+                .append(escapeJs(ref.schemaLocation())).append("',source:'").append(escapeJs(ref.source())).append("'}");
+            if (groups.add(groupId)) {
+                nodes.append(',').append("{id:'").append(escapeJs(groupId)).append("',label:'").append(escapeJs(ref.kind()))
+                    .append("',type:'group',kind:'").append(escapeJs(ref.kind())).append("',location:'',source:''}");
+            }
+            if (edgeIndex++ > 0) edges.append(',');
+            edges.append("{s:'").append(escapeJs(groupId)).append("',t:'").append(escapeJs(schemaId)).append("'}");
+        }
+        for (ExternalSchemaType type : types) {
+            String typeId = "type:" + type.namespace() + ":" + type.name();
+            String categoryId = "category:" + type.category();
+            String schemaId = "schema:" + type.namespace();
+            if (nodes.length() > 1) nodes.append(',');
+            nodes.append("{id:'").append(escapeJs(typeId)).append("',label:'").append(escapeJs(type.name()))
+                .append("',type:'type',kind:'").append(escapeJs(type.category())).append("',base:'")
+                .append(escapeJs(type.base())).append("',facets:'").append(escapeJs(type.facets())).append("',location:'")
+                .append(escapeJs(type.source())).append("',source:'").append(escapeJs(type.status())).append("'}");
+            if (groups.add(categoryId)) {
+                nodes.append(',').append("{id:'").append(escapeJs(categoryId)).append("',label:'").append(escapeJs(type.category()))
+                    .append("',type:'group',kind:'").append(escapeJs(type.category())).append("',location:'',source:''}");
+            }
+            if (edgeIndex++ > 0) edges.append(',');
+            edges.append("{s:'").append(escapeJs(categoryId)).append("',t:'").append(escapeJs(typeId)).append("'}");
+            if (references.stream().anyMatch(reference -> reference.namespace().equals(type.namespace()))) {
+                edges.append(',').append("{s:'").append(escapeJs(schemaId)).append("',t:'").append(escapeJs(typeId)).append("'}");
+            }
+        }
+        for (ExternalSchemaEdge edge : schemaEdges) {
+            String sourceId = "schema:" + edge.source();
+            String targetId = "schema:" + edge.target();
+            if (references.stream().anyMatch(reference -> reference.namespace().equals(edge.source()) || reference.namespace().equals(edge.target()))) {
+                edges.append(',').append("{s:'").append(escapeJs(sourceId)).append("',t:'").append(escapeJs(targetId)).append("'}");
+            }
+        }
+        nodes.append(']');
+        edges.append(']');
+        return """
+            <script>
+            const externalSchemaNodes=%s;
+            const externalSchemaEdges=%s;
+            function clearExternalSchemaSearch(){const e=document.getElementById('externalSchemaSearch');if(e)e.value='';drawExternalSchemaGraph();}
+                        function applyExternalSchemaTableFilters(){
+                            const typeQuery=((document.getElementById('externalTypeSearch')||{}).value||'').toLowerCase().trim();
+                            const typeCategory=((document.getElementById('externalTypeCategory')||{}).value||'');
+                            const typeStatus=((document.getElementById('externalTypeStatus')||{}).value||'');
+                            document.querySelectorAll('.external-type-row').forEach(row=>{const match=(!typeQuery||(row.dataset.search||'').includes(typeQuery))&&(!typeCategory||row.dataset.category===typeCategory)&&(!typeStatus||row.dataset.status===typeStatus);row.hidden=!match;});
+                            const namespaceQuery=((document.getElementById('externalNamespaceSearch')||{}).value||'').toLowerCase().trim();
+                            const namespaceKind=((document.getElementById('externalNamespaceKind')||{}).value||'');
+                            document.querySelectorAll('.external-namespace-row').forEach(row=>{const match=(!namespaceQuery||(row.dataset.search||'').includes(namespaceQuery))&&(!namespaceKind||row.dataset.kind===namespaceKind);row.hidden=!match;});
+                        }
+            function drawExternalSchemaGraph(){
+              const svg=document.getElementById('externalSchemaGraph');if(!svg)return;
+              const query=((document.getElementById('externalSchemaSearch')||{}).value||'').toLowerCase();
+                            const category=((document.getElementById('externalSchemaCategory')||{}).value||'');
+                            const status=((document.getElementById('externalSchemaStatus')||{}).value||'');
+                            const matches=n=>!query||[n.label,n.location,n.source,n.kind,n.base,n.facets].join(' ').toLowerCase().includes(query);
+                            const visibleTypes=externalSchemaNodes.filter(n=>n.type==='type'&&matches(n)&&(!category||n.kind===category)&&(!status||n.source===status));
+                            const visibleSchemaIds=new Set(visibleTypes.map(n=>n.id.replace(/^type:/,'').split(':').slice(0,-1).join(':')).map(n=>'schema:'+n));
+                            const isVisible=n=>{if(n.type==='type')return visibleTypes.includes(n);if(n.type==='group')return !category||n.kind===category;return !query||matches(n)||visibleSchemaIds.has(n.id);};
+                            const visible=externalSchemaNodes.filter(isVisible);
+              const ids=new Set(visible.map(n=>n.id));
+              const edges=externalSchemaEdges.filter(e=>ids.has(e.s)&&ids.has(e.t));
+              const groups=visible.filter(n=>n.type==='group'),schemas=visible.filter(n=>n.type==='schema'||n.type==='type'),positions=new Map();
+                            groups.forEach((n,i)=>positions.set(n.id,{x:35,y:58+i*72}));
+                            schemas.filter(n=>n.type==='schema').forEach((n,i)=>positions.set(n.id,{x:315,y:45+i*64}));
+                            schemas.filter(n=>n.type==='type').forEach((n,i)=>positions.set(n.id,{x:900+Math.floor(i/24)*320,y:40+(i-Math.floor(i/24)*24)*72}));
+                            const typeCount=schemas.filter(n=>n.type==='type').length;
+                            const graphWidth=2500,graphHeight=Math.max(820,Math.ceil(typeCount/5)*72+90);
+                            svg.setAttribute('viewBox','0 0 '+graphWidth+' '+graphHeight);svg.style.width=graphWidth+'px';svg.style.height=graphHeight+'px';
+              svg.innerHTML='';
+              edges.forEach(e=>{const a=positions.get(e.s),b=positions.get(e.t);if(!a||!b)return;const line=document.createElementNS('http://www.w3.org/2000/svg','line');line.setAttribute('x1',b.x);line.setAttribute('y1',b.y);line.setAttribute('x2',a.x+105);line.setAttribute('y2',a.y);line.setAttribute('class','graph-edge');svg.appendChild(line);});
+                            visible.forEach(n=>{const p=positions.get(n.id),g=document.createElementNS('http://www.w3.org/2000/svg','g');if(!p)return;g.addEventListener('click',()=>{document.getElementById('externalSchemaInfo').innerHTML='<strong>'+n.label+'</strong><br>Kategorie: '+n.kind+(n.base?'<br>Basistyp: <code>'+n.base+'</code>':'')+(n.facets?'<br>Facets: '+n.facets:'')+(n.location?'<br>Quelle: '+n.location:'')+(n.source?'<br>Status: '+n.source:'');});const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=n.label;g.appendChild(title);const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r',n.type==='group'?27:n.type==='type'?16:21);circle.setAttribute('fill',n.type==='group'?'#0b5fff':n.type==='type'?'#f59e0b':'#00a878');g.appendChild(circle);const text=document.createElementNS('http://www.w3.org/2000/svg','text');text.setAttribute('x',p.x+23);text.setAttribute('y',p.y-10);text.setAttribute('class','external-graph-label');text.setAttribute('font-size','13.75');text.setAttribute('style','white-space:nowrap');const label=n.label||'';const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x',p.x+23);span.setAttribute('dy','0');span.textContent=label;text.appendChild(span);g.appendChild(text);svg.appendChild(g);});
+            }
+            drawExternalSchemaGraph();
+                        applyExternalSchemaTableFilters();
+            </script>
+            """.formatted(nodes, edges);
     }
 
     private long countByKind(List<ExternalSchemaReference> externalSchemaReferences, String kind) {
@@ -5369,7 +5646,9 @@ public class TaxonomyVisualizationExporter {
                                     Map<String, List<String>> formulaConceptsByFile,
                                     HypercubeMetadata hypercubeMetadata,
                                     Map<String, List<String>> domainMembersByDomain,
-                                    List<ExternalSchemaReference> externalSchemaReferences) {
+                                    List<ExternalSchemaReference> externalSchemaReferences,
+                                    List<ExternalSchemaType> externalSchemaTypes,
+                                    List<ExternalSchemaEdge> externalSchemaEdges) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();
             layers.addAll(fileCountByLayer.keySet());
@@ -5405,6 +5684,25 @@ public class TaxonomyVisualizationExporter {
                                            String schemaLocation,
                                            String kind,
                                            String source) {
+    }
+
+    private record ExternalSchemaType(String namespace,
+                                      String name,
+                                      String category,
+                                      String base,
+                                      String source,
+                                      String facets,
+                                      String status) {
+    }
+
+    private record ExternalSchemaEdge(String source,
+                                      String target,
+                                      String relation,
+                                      String location) {
+    }
+
+    private record ExternalSchemaAnalysis(List<ExternalSchemaType> types,
+                                          List<ExternalSchemaEdge> edges) {
     }
 
     public record VisualizationResult(Path outputPath,

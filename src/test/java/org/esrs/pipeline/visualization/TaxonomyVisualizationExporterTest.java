@@ -202,6 +202,19 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(externalSchemas.contains("http://www.xbrl.org/2003/linkbase"));
         assertTrue(externalSchemas.contains("http://www.w3.org/1999/xlink"));
         assertTrue(externalSchemas.contains("http://xbrl.org/2005/xbrldt"));
+        assertTrue(externalSchemas.contains("externalSchemaNodes"));
+        assertTrue(externalSchemas.contains("externalSchemaEdges"));
+        assertTrue(externalSchemas.contains("externalSchemaSearch"));
+        assertTrue(externalSchemas.contains("External Schema Dependency Graph"));
+        assertTrue(externalSchemas.contains("Analysierte XSD-Typen"));
+        assertTrue(externalSchemas.contains("Typ-Inventar"));
+        assertTrue(externalSchemas.contains("domainItemType"));
+        assertTrue(externalSchemas.contains("enumeration"));
+        assertTrue(externalSchemas.contains("externalTypeSearch"));
+        assertTrue(externalSchemas.contains("externalNamespaceSearch"));
+        assertTrue(externalSchemas.contains("applyExternalSchemaTableFilters"));
+        assertTrue(externalSchemas.contains("external-type-row"));
+        assertTrue(externalSchemas.contains("external-namespace-row"));
 
         String dashboard = Files.readString(dashboardHtml, StandardCharsets.UTF_8);
         assertTrue(dashboard.contains("Master Dashboard"));
