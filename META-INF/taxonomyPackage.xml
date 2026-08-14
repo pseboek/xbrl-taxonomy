@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- (C) Copyright EFRAG - https://efrag.org/ -->
+<tp:taxonomyPackage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tp="http://xbrl.org/2016/taxonomy-package" xml:lang="en" xsi:schemaLocation="http://xbrl.org/2016/taxonomy-package http://www.xbrl.org/2016/taxonomy-package.xsd">
+    <tp:identifier>https://xbrl.efrag.org/taxonomy/esrs/2023-12-22/2024-08-30</tp:identifier>
+    <tp:name>ESRS XBRL Taxonomy 2024 (Set 1)</tp:name>
+    <tp:description>The package contains the ESRS XBRL Taxonomy, based on the first set of sector-agnostic European Sustainabilty Reporting Standards (ESRS) published in the Official Journal by the European Commission on 22 December 2023</tp:description>
+    <tp:version>2023-12-22</tp:version>
+    <tp:license href="https://www.efrag.org/About/PrivacyPolicy#subtitle4" name="EFRAG's Intellectual property"/>
+    <tp:publisher>EFRAG</tp:publisher>
+    <tp:publisherURL>http://www.efrag.org</tp:publisherURL>
+    <tp:publisherCountry>BE</tp:publisherCountry>
+    <tp:publicationDate>2024-08-30</tp:publicationDate>
+    <tp:entryPoints>
+        <tp:entryPoint>
+            <tp:name>ESRS All (all topics and disclosure requirements, with all linkbases)</tp:name>
+            <tp:entryPointDocument href="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22/esrs_all.xsd"/>
+        </tp:entryPoint>
+        <tp:entryPoint>
+            <tp:name>ESRS Core (concepts, labels and references only)</tp:name>
+            <tp:entryPointDocument href="https://xbrl.efrag.org/taxonomy/esrs/2023-12-22/common/esrs_cor.xsd"/>
+        </tp:entryPoint>
+    </tp:entryPoints>
+</tp:taxonomyPackage>

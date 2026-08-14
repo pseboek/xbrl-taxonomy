@@ -1,10 +1,22 @@
 /target/
 /.idea/
 /.vscode/
-/arelle/
+/arelle/*
 /META-INF/
 /xbrl.efrag.org/
 /.VSCodeCounter/
+
+# Required runtime inputs for strict XBRL/Arelle validation
+!/arelle/plugin/
+/arelle/plugin/*
+!/arelle/plugin/iXBRLViewerPlugin/
+!/arelle/plugin/iXBRLViewerPlugin/**
+/arelle/plugin/iXBRLViewerPlugin/**/__pycache__/
+*.pyc
+!/META-INF/
+!/META-INF/**
+!/xbrl.efrag.org/
+!/xbrl.efrag.org/**
 
 # Generated build artefacts
 output/*
