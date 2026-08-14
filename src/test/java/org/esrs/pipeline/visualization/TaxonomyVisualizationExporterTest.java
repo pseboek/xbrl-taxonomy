@@ -268,6 +268,9 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(externalSchemas.contains("Typkategorie- und Basistyp-Ranking"));
         assertTrue(externalSchemas.contains("externalTypeCategoryRanking"));
         assertTrue(externalSchemas.contains("externalBaseTypeRanking"));
+        assertTrue(externalSchemas.contains("Facet-/Enumeration-Analyse"));
+        assertTrue(externalSchemas.contains("externalFacetRanking"));
+        assertTrue(externalSchemas.contains("externalEnumerationRanking"));
         assertTrue(externalSchemas.contains("Typ-Inventar"));
         assertTrue(externalSchemas.contains("domainItemType"));
         assertTrue(externalSchemas.contains("enumeration"));
