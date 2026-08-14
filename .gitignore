@@ -5,4 +5,8 @@
 /META-INF/
 /xbrl.efrag.org/
 /.VSCodeCounter/
-output/taxonomy-visualization-tree.html
+
+# Generated build artefacts
+output/*
+!output/.gitignore
+!output/README.md

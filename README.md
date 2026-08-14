@@ -1,8 +1,12 @@
 # ESRS Set1 XBRL Taxonomy - Java 25 Pipeline
 
+[![CI](https://github.com/pseboek/xbrl-taxonomy/actions/workflows/ci-xbrl-ixbrl-java.yml/badge.svg?branch=main)](https://github.com/pseboek/xbrl-taxonomy/actions/workflows/ci-xbrl-ixbrl-java.yml)
+
 Stand: 2026-08-14
 
-Dieser Repository-Stand spiegelt die aktuellen Änderungen auf `main` wider, inklusive aktueller Visualisierungs- und Import-Optimierungen sowie der vorhandenen generierten Output-Dateien unter `output/`.
+> Status-Quelle: GitHub Actions und die zugehörigen Build-Artefakte. Diese Werte sind die autoritative Quelle für Build-, Validierungs- und Release-Status. Die README-Informationen werden nicht separat gepflegt, sondern aus dem laufenden CI/Build-Prozess abgeleitet.
+
+Dieser Repository-Stand spiegelt die aktuellen Änderungen auf `main` wider, inklusive aktueller Visualisierungs- und Import-Optimierungen. Der Ordner `output/` ist ein klar abgegrenzter Build-/Artifact-Bereich und enthält ausschließlich generierte Laufzeitdateien wie XBRL-Instanzen, iXBRL-Ausgaben und Visualisierungs-HTMLs.
 
 Dieses Repository enthält:
 
@@ -15,7 +19,9 @@ Dieses Repository enthält:
 
 ## Aktueller Projektstand
 
-Der aktuelle Output im Repository enthält bereits die generierten Artefakte unter `output/`, darunter:
+Der Ordner `output/` ist bewusst ein Build-/Artifact-Bereich und wird bei jedem Pipeline-Lauf neu erzeugt. Ein lokaler Lauf kann dort generierte Ergebnisse hinterlassen; diese gelten als Artefakte und nicht als Quellcode des Projekts.
+
+Beispiele für generierte Dateien unter `output/` sind:
 
 - `report-instance.xml`
 - `report-ixbrl.xhtml`
@@ -83,26 +89,28 @@ python -m pip install --user bottle
 
 ## Schnellstart
 
-Im Projektordner:
+Lokaler Schnelllauf (nicht produktionsreif, Arelle deaktiviert):
 
 ```powershell
 mvn test
-```
-
-Standardlauf ohne Arelle-Blockade:
-
-```powershell
 $env:SKIP_ARELLE = "true"
+$env:FAIL_ON_VALIDATION_ISSUES = "false"
 mvn exec:java
 ```
 
-Alternativ direkt mit der aktuellen Projektkonfiguration:
+Produktionstauglicher Lauf (strikte Validierung, Arelle aktiv):
 
 ```powershell
-mvn -B exec:java
+./scripts/run-strict-production-gate.ps1 -ArelleCmd "arelleCmdLine"
 ```
 
-> Wichtig: Der Pipeline-Lauf erzeugt die HTML-Visualisierungen automatisch unter `output/`. Wenn Arelle lokal verfügbar ist, kann der volle Validierungslauf mit dem Strict-Gate gestartet werden.
+Standard-CI-Validierung (vollständig, nicht optional):
+
+```powershell
+mvn -B verify
+```
+
+> Wichtig: Der lokale Schnelllauf dient nur der schnellen Iteration. Der produktionsreife Lauf blockiert bei Arelle-Fehlern bzw. Validierungsproblemen und ist der Referenzpfad für CI und Release-Checks.
 
 ## Visualisierungen erzeugen
 
@@ -270,8 +278,17 @@ Hinweise:
 mvn clean
 mvn compile
 mvn test
+
+# Lokaler Schnelllauf, Arelle deaktiviert
+$env:SKIP_ARELLE = "true"
+$env:FAIL_ON_VALIDATION_ISSUES = "false"
 mvn exec:java
-mvn -Pcoverage verify
+
+# Produktionsreifer Lauf, Arelle aktiv und Gate blockiert bei Fehlern
+./scripts/run-strict-production-gate.ps1 -ArelleCmd "arelleCmdLine"
+
+# Standard-CI-/Verify-Gate (nicht optional)
+mvn -B verify
 ```
 
 Einzeltests:
@@ -280,6 +297,36 @@ Einzeltests:
 mvn -Dtest=FactBuilderTest test
 mvn -Dtest=FactBuilderTest#shouldRejectInvalidNumericValue test
 ```
+
+## Release- und Operations-Checkliste
+
+Vor jedem Release oder produktionsnahen Snapshot gilt:
+
+1. `mvn clean verify`
+2. Strict-Gate ausfuehren: `./scripts/run-strict-production-gate.ps1 -ArelleCmd "arelleCmdLine"`
+3. Arelle-Validierung separat pruefen und Ergebnis dokumentieren
+4. Viewer-Plugin-Check durchfuehren (`REQUIRE_VIEWER_PLUGIN=true`)
+5. Snapshot/Artefakte archivieren, z. B. exportierte HTML-/XML-Ausgaben und Validierungslogs unter `output/`
+6. Build-Status und Coverage erfassen, z. B. Maven-Report, Surefire-/Jacoco-Ergebnisse sowie Fail/Pass-Status dokumentieren
+
+Empfohlener Release-Flow:
+
+```powershell
+mvn clean verify
+./scripts/run-strict-production-gate.ps1 -ArelleCmd "arelleCmdLine"
+$env:SKIP_ARELLE = "false"
+$env:FAIL_ON_VALIDATION_ISSUES = "true"
+$env:REQUIRE_VIEWER_PLUGIN = "true"
+mvn exec:java
+```
+
+Wichtige Release-Merkmale:
+
+- alle Build-Gates muessen gruen sein
+- Arelle-Validierung darf nicht nur loggen, sondern muss den Releasepfad blockieren
+- Viewer-Plugin muss fuer produktionsnahe Ausgaben verifiziert sein
+- Artefakte werden nach einem erfolgreichen Lauf zeitstempel- oder snapshot-gebunden archiviert
+- Coverage und Build-Status werden im Release-Dokument oder im CI-Artifact mitgeliefert
 
 ## Projektstruktur (Kurz)
 

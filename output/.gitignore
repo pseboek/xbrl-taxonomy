@@ -1,0 +1,5 @@
+# This directory contains generated build artefacts.
+# Source files, mappings, scripts and documentation live outside of this folder.
+*
+!.gitignore
+!README.md
