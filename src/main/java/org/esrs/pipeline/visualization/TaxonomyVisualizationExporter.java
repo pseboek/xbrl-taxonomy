@@ -1100,7 +1100,11 @@ public class TaxonomyVisualizationExporter {
         }
         int count = 0;
         int index = 0;
-        while ((index = text.indexOf(token, index)) >= 0) {
+        while (true) {
+            index = text.indexOf(token, index);
+            if (index < 0) {
+                break;
+            }
             count++;
             index += token.length();
         }
@@ -3484,8 +3488,9 @@ public class TaxonomyVisualizationExporter {
                 nodes.append(',').append("{id:'").append(escapeJs(groupId)).append("',label:'").append(escapeJs(ref.kind()))
                     .append("',type:'group',kind:'").append(escapeJs(ref.kind())).append("',location:'',source:''}");
             }
-            if (edgeIndex++ > 0) edges.append(',');
+            if (edgeIndex > 0) edges.append(',');
             edges.append("{s:'").append(escapeJs(groupId)).append("',t:'").append(escapeJs(schemaId)).append("'}");
+            edgeIndex++;
         }
         for (ExternalSchemaType type : types) {
             String typeId = "type:" + type.namespace() + ":" + type.name();
@@ -3500,8 +3505,9 @@ public class TaxonomyVisualizationExporter {
                 nodes.append(',').append("{id:'").append(escapeJs(categoryId)).append("',label:'").append(escapeJs(type.category()))
                     .append("',type:'group',kind:'").append(escapeJs(type.category())).append("',location:'',source:''}");
             }
-            if (edgeIndex++ > 0) edges.append(',');
+            if (edgeIndex > 0) edges.append(',');
             edges.append("{s:'").append(escapeJs(categoryId)).append("',t:'").append(escapeJs(typeId)).append("'}");
+            edgeIndex++;
             if (references.stream().anyMatch(reference -> reference.namespace().equals(type.namespace()))) {
                 edges.append(',').append("{s:'").append(escapeJs(schemaId)).append("',t:'").append(escapeJs(typeId)).append("'}");
             }
@@ -4338,13 +4344,14 @@ public class TaxonomyVisualizationExporter {
                 nodeMetaJson.append('{');
                 int metaIndex = 0;
                 for (Map.Entry<String, GraphNodeMeta> entry : nodeMeta.entrySet()) {
-                        if (metaIndex++ > 0) {
+                        if (metaIndex > 0) {
                                 nodeMetaJson.append(',');
                         }
                         nodeMetaJson.append("\"").append(escapeJs(entry.getKey())).append("\":")
                                 .append("{theme:\"").append(escapeJs(entry.getValue().theme())).append("\",")
                                 .append("search:\"").append(escapeJs(entry.getValue().search())).append("\",")
                                 .append("domains:\"").append(escapeJs(entry.getValue().domains())).append("\"}");
+                            metaIndex++;
                 }
                 nodeMetaJson.append('}');
 

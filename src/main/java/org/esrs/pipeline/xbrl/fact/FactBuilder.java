@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -138,7 +139,7 @@ public class FactBuilder {
         if ("enumeration".equalsIgnoreCase(entry.type())) {
             if ("esrs:YesNoDomain".equalsIgnoreCase(entry.enumerationDomain())) {
                 if ("true".equalsIgnoreCase(trimmed) || "false".equalsIgnoreCase(trimmed)) {
-                    return trimmed.toLowerCase();
+                    return trimmed.toLowerCase(Locale.ROOT);
                 }
                 if (!YES_NO_ENUM.contains(trimmed)) {
                     throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);

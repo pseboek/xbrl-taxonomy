@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="ESRS PMD rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.github.io/pmd-7.17.0/ruleset_xml_schema.xsd">
+    <description>Blocking correctness rules for the Java 25 pipeline.</description>
+    <rule ref="category/java/errorprone.xml">
+        <exclude name="AvoidDuplicateLiterals" />
+        <exclude name="AvoidLiteralsInIfCondition" />
+        <exclude name="AvoidFieldNameMatchingMethodName" />
+    </rule>
+</ruleset>

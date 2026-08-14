@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ValidationReportParser {
                 continue;
             }
 
-            String normalized = trimmed.toLowerCase();
+            String normalized = trimmed.toLowerCase(Locale.ROOT);
             if (normalized.startsWith("[info]")) {
                 issues.add(new ValidationIssue("INFO", "ARELLE", trimmed));
             } else if (normalized.contains("error")) {
