@@ -22,7 +22,8 @@ public record PipelineConfig(
     boolean enforceMappingScope,
     String arelleDisclosureSystem,
     String arelleLogFormat,
-    String ixbrlViewerPlugin
+    String ixbrlViewerPlugin,
+    boolean skipTaxonomyVisualization
 ) {
     public static PipelineConfig load(Path root) throws IOException {
         return load(root, System.getenv());
@@ -45,6 +46,7 @@ public record PipelineConfig(
         boolean failOnValidationIssues = getBoolean(defaults, env, "pipeline.validation.failOnIssues", "FAIL_ON_VALIDATION_ISSUES");
         boolean requireViewerPlugin = getBoolean(defaults, env, "pipeline.viewer.requirePlugin", "REQUIRE_VIEWER_PLUGIN");
         boolean enforceMappingScope = getBoolean(defaults, env, "pipeline.mappingScope.enforce", "ENFORCE_MAPPING_SCOPE");
+        boolean skipTaxonomyVisualization = getBoolean(defaults, env, "pipeline.visualization.skip", "SKIP_TAXONOMY_VISUALIZATION");
 
         String disclosureSystem = get(defaults, env, "pipeline.arelle.disclosureSystem", "ARELLE_DISCLOSURE_SYSTEM");
         String logFormat = get(defaults, env, "pipeline.arelle.logFormat", "ARELLE_LOG_FORMAT");
@@ -66,7 +68,8 @@ public record PipelineConfig(
             enforceMappingScope,
             toNullable(disclosureSystem),
             toNullable(logFormat),
-            toNullable(viewerPlugin)
+            toNullable(viewerPlugin),
+            skipTaxonomyVisualization
         );
     }
 

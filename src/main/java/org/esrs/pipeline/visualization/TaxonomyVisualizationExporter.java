@@ -4226,7 +4226,8 @@ public class TaxonomyVisualizationExporter {
                 .append(role.nodeCount()).append(" Knoten</span></summary><div class=\"node-children\">");
 
             for (String rootLabel : role.rootLabels()) {
-                renderNode(body, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, taxonomyDimensionsByConcept, new LinkedHashSet<>(), 0);
+                renderNode(body, role, rootLabel, metadata, mappingsByConcept, placeholdersByField,
+                    taxonomyDimensionsByConcept, new LinkedHashSet<>(), new HashSet<>(), 0);
             }
             body.append("</div></details>");
         }
@@ -5104,7 +5105,8 @@ public class TaxonomyVisualizationExporter {
                 .append("<div class=\"node-children\">");
 
             for (String rootLabel : role.rootLabels()) {
-                renderNode(html, role, rootLabel, metadata, mappingsByConcept, placeholdersByField, taxonomyDimensionsByConcept, new LinkedHashSet<>(), 0);
+                renderNode(html, role, rootLabel, metadata, mappingsByConcept, placeholdersByField,
+                    taxonomyDimensionsByConcept, new LinkedHashSet<>(), new HashSet<>(), 0);
             }
 
             html.append("</div></details>");
@@ -5339,10 +5341,13 @@ public class TaxonomyVisualizationExporter {
                             Map<String, List<String>> placeholdersByField,
                             Map<String, Set<String>> taxonomyDimensionsByConcept,
                             Set<String> path,
+                            Set<String> expandedNodes,
                             int depth) {
         if (!path.add(label)) {
             return;
         }
+
+        boolean expandChildren = expandedNodes.add(label);
 
         String qname = role.qname(label);
         String display = humanize(qname);
@@ -5406,8 +5411,11 @@ public class TaxonomyVisualizationExporter {
             .append("</div>")
             .append("<div class=\"node-children\">");
 
-        for (PresentationArc childArc : role.children(label)) {
-            renderNode(html, role, childArc.to(), metadata, mappingsByConcept, placeholdersByField, taxonomyDimensionsByConcept, new LinkedHashSet<>(path), depth + 1);
+        if (expandChildren) {
+            for (PresentationArc childArc : role.children(label)) {
+                renderNode(html, role, childArc.to(), metadata, mappingsByConcept, placeholdersByField,
+                    taxonomyDimensionsByConcept, new LinkedHashSet<>(path), expandedNodes, depth + 1);
+            }
         }
 
         html.append("</div></details>");

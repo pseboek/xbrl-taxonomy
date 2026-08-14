@@ -51,6 +51,7 @@ jobs:
         run: |
           $env:SKIP_ARELLE = "true"
           $env:FAIL_ON_VALIDATION_ISSUES = "false"
+          $env:SKIP_TAXONOMY_VISUALIZATION = "true"
           mvn -B exec:java
 
       - name: Upload generated artifacts
@@ -88,6 +89,7 @@ jobs:
       - name: Run strict production gate
         shell: pwsh
         env:
+          SKIP_TAXONOMY_VISUALIZATION: "true"
           ARELLE_CMD: ${{ vars.ARELLE_CMD || 'arelleCmdLine' }}
         run: |
           ./scripts/run-strict-production-gate.ps1 -ArelleCmd "$env:ARELLE_CMD"

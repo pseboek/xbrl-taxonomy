@@ -58,7 +58,8 @@ public class ReportingPipelineOrchestrator {
             true,
             null,
             null,
-            "iXBRLViewerPlugin"
+            "iXBRLViewerPlugin",
+            false
         ));
     }
 
@@ -164,13 +165,22 @@ public class ReportingPipelineOrchestrator {
             viewerExportResult = new IxbrlViewerExporter.ViewerExportResult(false, 0, "Viewer export skipped by configuration.");
         }
 
-        Path taxonomyVisualizationOut = outputDir.resolve("taxonomy-visualization.html");
-        TaxonomyVisualizationExporter.VisualizationResult visualizationResult = visualizationExporter.export(
-            mappingRegistry,
-            taxonomyRoot,
-            layoutMap,
-            taxonomyVisualizationOut
-        );
+        if (!config.skipTaxonomyVisualization()) {
+            Path taxonomyVisualizationOut = outputDir.resolve("taxonomy-visualization.html");
+            TaxonomyVisualizationExporter.VisualizationResult visualizationResult = visualizationExporter.export(
+                mappingRegistry,
+                taxonomyRoot,
+                layoutMap,
+                taxonomyVisualizationOut
+            );
+            LOG.info("Taxonomy visualization written to {} (fields={}, concepts={}, placeholders={})",
+                visualizationResult.outputPath(),
+                visualizationResult.fieldCount(),
+                visualizationResult.conceptCount(),
+                visualizationResult.placeholderCount());
+        } else {
+            LOG.info("Taxonomy visualization skipped by SKIP_TAXONOMY_VISUALIZATION=true.");
+        }
 
         if (failOnValidationIssues && hasBlockingIssues(validationIssues)) {
             LOG.error("Validation gate failed with blocking issues.");
@@ -180,12 +190,6 @@ public class ReportingPipelineOrchestrator {
         LOG.info("Pipeline run completed. validationIssues={}, viewerFallbackUsed={}",
             validationIssues.size(),
             viewerExportResult.fallbackUsed());
-        LOG.info("Taxonomy visualization written to {} (fields={}, concepts={}, placeholders={})",
-            visualizationResult.outputPath(),
-            visualizationResult.fieldCount(),
-            visualizationResult.conceptCount(),
-            visualizationResult.placeholderCount());
-
         return new PipelineResult(xbrlOut, ixbrlOut, viewerOut, validationIssues, viewerExportResult.fallbackUsed());
     }
 
