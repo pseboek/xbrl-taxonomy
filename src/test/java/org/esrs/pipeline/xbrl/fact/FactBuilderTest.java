@@ -104,7 +104,7 @@ class FactBuilderTest {
         ReportEnvelope envelope = new ReportEnvelope(
             new ReportingEntity("scheme", "id", "entity"),
             new ReportingPeriod(LocalDate.parse("2025-01-01"), LocalDate.parse("2025-12-31"), false),
-            List.of(new DisclosureFact("strategy.targetTypeAbsoluteOrRelative", "Absolute", List.of(), null, null))
+            List.of(new DisclosureFact("strategy.targetTypeAbsoluteOrRelative", "esrs:AbsoluteTargetMember", List.of(), null, null))
         );
         MappingRegistry registry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));
         FactBuilder builder = new FactBuilder();
@@ -115,7 +115,45 @@ class FactBuilderTest {
             Map.of("strategy.targetTypeAbsoluteOrRelative#1", "c1")
         );
 
-        assertEquals("Absolute", result.facts().getFirst().value());
+        assertEquals("https://xbrl.efrag.org/taxonomy/esrs/2023-12-22#AbsoluteTargetMember", result.facts().getFirst().value());
+    }
+
+    @Test
+    void shouldAcceptConfiguredBooleanValueForPreconditionFlag() throws Exception {
+        ReportEnvelope envelope = new ReportEnvelope(
+            new ReportingEntity("scheme", "id", "entity"),
+            new ReportingPeriod(LocalDate.parse("2025-01-01"), LocalDate.parse("2025-12-31"), false),
+            List.of(new DisclosureFact("strategy.actionPlansDependOnPreconditions", "true", List.of(), null, null))
+        );
+        MappingRegistry registry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));
+        FactBuilder builder = new FactBuilder();
+
+        FactBuilder.FactBuildResult result = builder.build(
+            envelope,
+            registry,
+            Map.of("strategy.actionPlansDependOnPreconditions#1", "c1")
+        );
+
+        assertEquals("true", result.facts().getFirst().value());
+    }
+
+    @Test
+    void shouldCanonicalizeEnumerationMemberToTaxonomyHref() throws Exception {
+        ReportEnvelope envelope = new ReportEnvelope(
+            new ReportingEntity("scheme", "id", "entity"),
+            new ReportingPeriod(LocalDate.parse("2025-01-01"), LocalDate.parse("2025-12-31"), false),
+            List.of(new DisclosureFact("strategy.targetTypeAbsoluteOrRelative", "esrs:AbsoluteTargetMember", List.of(), null, null))
+        );
+        MappingRegistry registry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));
+        FactBuilder builder = new FactBuilder();
+
+        FactBuilder.FactBuildResult result = builder.build(
+            envelope,
+            registry,
+            Map.of("strategy.targetTypeAbsoluteOrRelative#1", "c1")
+        );
+
+        assertEquals("https://xbrl.efrag.org/taxonomy/esrs/2023-12-22#AbsoluteTargetMember", result.facts().getFirst().value());
     }
 
     @Test
@@ -137,7 +175,7 @@ class FactBuilderTest {
             Map.of("test.multiEnum#1", "c1")
         );
 
-        assertEquals("esrs:AbsoluteMember esrs:RelativeMember", result.facts().getFirst().value());
+        assertEquals("https://xbrl.efrag.org/taxonomy/esrs/2023-12-22#AbsoluteMember https://xbrl.efrag.org/taxonomy/esrs/2023-12-22#RelativeMember", result.facts().getFirst().value());
     }
 
     @Test

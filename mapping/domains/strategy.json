@@ -26,14 +26,18 @@
     },
     "strategy.actionPlansDependOnPreconditions": {
       "concept": "esrs:AbilityToImplementActionOrActionPlanDependsOnSpecificPreconditions",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
+      "enumerationDomain": "esrs:YesNoDomain",
+      "allowedValues": ["esrs:YesMember", "esrs:NoMember", "true", "false"],
       "dimensions": []
     },
     "strategy.targetTypeAbsoluteOrRelative": {
       "concept": "esrs:AbsoluteOrRelativeTarget",
-      "type": "text",
+      "type": "enumeration",
       "period": "duration",
+      "enumerationDomain": "esrs:AbsoluteOrRelativeTargetMember",
+      "allowedValues": ["esrs:AbsoluteTargetMember", "esrs:RelativeTargetMember"],
       "dimensions": []
     },
     "strategy.adjustmentComparativeInfoImpracticable": {

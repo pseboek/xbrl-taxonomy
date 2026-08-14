@@ -36,7 +36,7 @@ class ContextBuilderTest {
         ReportEnvelope envelope = new ReportEnvelope(
             new ReportingEntity("scheme", "id", "entity"),
             new ReportingPeriod(LocalDate.parse("2025-12-31"), LocalDate.parse("2025-12-31"), true),
-            List.of(new DisclosureFact("strategy.targetTypeAbsoluteOrRelative", "Absolute", List.of(), null, null))
+            List.of(new DisclosureFact("strategy.targetTypeAbsoluteOrRelative", "esrs:AbsoluteTargetMember", List.of(), null, null))
         );
 
         MappingRegistry mappingRegistry = MappingRegistry.fromPath(Path.of("mapping/map-esrs-2023-12-22.json"));

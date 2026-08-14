@@ -5,6 +5,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +43,18 @@ class PipelineConfigTest {
         assertFalse(config.failOnValidationIssues());
         assertTrue(config.requireViewerPlugin());
         assertEquals("CustomViewerPlugin", config.ixbrlViewerPlugin());
+    }
+
+    @Test
+    void shouldRejectMissingArelleWhenStrictValidationIsEnabled() throws Exception {
+        Path root = Path.of(".").toAbsolutePath().normalize();
+        PipelineConfig config = PipelineConfig.load(root, Map.of(
+            "SKIP_ARELLE", "false",
+            "ARELLE_CMD", "",
+            "FAIL_ON_VALIDATION_ISSUES", "true"
+        ));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, config::validate);
+        assertTrue(exception.getMessage().contains("ARELLE_CMD"));
     }
 }

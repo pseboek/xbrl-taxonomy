@@ -16,6 +16,7 @@ public final class EsrsPipelineApplication {
     public static void main(String[] args) throws Exception {
         Path root = Path.of(".").toAbsolutePath().normalize();
         PipelineConfig config = PipelineConfig.load(root);
+        config.validate();
 
         LOG.info("Starting ESRS pipeline with input={}, mapping={}, output={}",
             config.inputJson(),

@@ -154,16 +154,15 @@ public class FactBuilder {
                             throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
                         }
                     }
-                    // XBRL enum2 set lexical form uses a whitespace-separated QName list.
-                    return String.join(" ", new LinkedHashSet<>(setValues));
+                    return String.join(" ", canonicalizeEnumerationValues(new LinkedHashSet<>(setValues), entry.allowedValues()));
                 }
 
                 if (!entry.allowedValues().contains(trimmed)) {
                     throw new IllegalArgumentException("Invalid enumeration value for field " + entry.field() + ": " + value);
                 }
-                return trimmed;
+                return canonicalizeEnumerationValue(trimmed);
             }
-            return trimmed;
+            return canonicalizeEnumerationValue(trimmed);
         }
 
         if ("text".equalsIgnoreCase(entry.type())) {
@@ -198,6 +197,34 @@ public class FactBuilder {
         }
 
         return List.of(value.trim());
+    }
+
+    private String canonicalizeEnumerationValue(String value) {
+        if (value == null || value.isBlank()) {
+            return value;
+        }
+        String trimmed = value.trim();
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+            return trimmed;
+        }
+        if (trimmed.contains(":")) {
+            String prefix = trimmed.substring(0, trimmed.indexOf(':'));
+            String localName = trimmed.substring(trimmed.indexOf(':') + 1);
+            if ("esrs".equalsIgnoreCase(prefix)) {
+                return "https://xbrl.efrag.org/taxonomy/esrs/2023-12-22#" + localName;
+            }
+        }
+        return trimmed;
+    }
+
+    private List<String> canonicalizeEnumerationValues(Set<String> values, List<String> allowedValues) {
+        List<String> normalized = new ArrayList<>();
+        for (String allowedValue : allowedValues) {
+            if (values.contains(allowedValue)) {
+                normalized.add(canonicalizeEnumerationValue(allowedValue));
+            }
+        }
+        return normalized;
     }
 
     public record FactBuildResult(List<XbrlFact> facts, Map<String, String> unitByField) {

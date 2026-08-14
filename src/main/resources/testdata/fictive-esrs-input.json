@@ -271,14 +271,14 @@
     },
     {
       "field": "strategy.actionPlansDependOnPreconditions",
-      "value": "Umsetzung ist an regulatorische Freigaben in Drittlaendern gebunden.",
+      "value": "true",
       "dimensions": [],
       "unitOverride": null,
       "decimalsOverride": null
     },
     {
       "field": "strategy.targetTypeAbsoluteOrRelative",
-      "value": "Absolute",
+      "value": "esrs:AbsoluteTargetMember",
       "dimensions": [],
       "unitOverride": null,
       "decimalsOverride": null

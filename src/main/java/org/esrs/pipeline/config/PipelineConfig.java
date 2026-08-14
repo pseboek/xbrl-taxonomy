@@ -70,6 +70,24 @@ public record PipelineConfig(
         );
     }
 
+    public void validate() {
+        if (!skipArelle && (arelleCommand == null || arelleCommand.isBlank())) {
+            throw new IllegalArgumentException("ARELLE_CMD must be configured when SKIP_ARELLE=false.");
+        }
+
+        if (requireViewerPlugin && (ixbrlViewerPlugin == null || ixbrlViewerPlugin.isBlank())) {
+            throw new IllegalArgumentException("IXBRL_VIEWER_PLUGIN must be configured when REQUIRE_VIEWER_PLUGIN=true.");
+        }
+
+        if (failOnValidationIssues && !skipArelle && (arelleCommand == null || arelleCommand.isBlank())) {
+            throw new IllegalArgumentException("FAIL_ON_VALIDATION_ISSUES requires a valid ARELLE_CMD when Arelle is enabled.");
+        }
+
+        if (root == null || !root.toFile().exists()) {
+            throw new IllegalArgumentException("Root path does not exist: " + root);
+        }
+    }
+
     private static Properties loadDefaults() throws IOException {
         Properties properties = new Properties();
         try (InputStream in = PipelineConfig.class.getResourceAsStream("/pipeline-defaults.properties")) {
@@ -83,14 +101,15 @@ public record PipelineConfig(
 
     private static String get(Properties defaults, Map<String, String> env, String key, String envName) {
         String envValue = env.get(envName);
-        if (envValue != null && !envValue.isBlank()) {
+        if (envValue != null) {
             return envValue;
         }
         return defaults.getProperty(key);
     }
 
     private static boolean getBoolean(Properties defaults, Map<String, String> env, String key, String envName) {
-        return Boolean.parseBoolean(get(defaults, env, key, envName));
+        String value = get(defaults, env, key, envName);
+        return value != null && !value.isBlank() && Boolean.parseBoolean(value);
     }
 
     private static String toNullable(String value) {

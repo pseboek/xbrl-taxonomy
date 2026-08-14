@@ -39,12 +39,19 @@ if ([string]::IsNullOrWhiteSpace($env:IXBRL_VIEWER_PLUGIN)) {
     }
 }
 
-Write-Host "Running strict production gate with ARELLE_CMD=$ArelleCmd"
-mvn -B test
+Write-Host "Mode: production-grade validation (not the local quick run)"
+Write-Host "Arelle command: $ArelleCmd"
+
+mvn -B verify
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "Strict production gate failed during tests."
+    Write-Error "Strict production gate failed during Maven verification."
     exit $LASTEXITCODE
 }
+
+$env:ARELLE_CMD = $ArelleCmd
+$env:SKIP_ARELLE = "false"
+$env:FAIL_ON_VALIDATION_ISSUES = "true"
+$env:REQUIRE_VIEWER_PLUGIN = "true"
 
 mvn -B exec:java
 if ($LASTEXITCODE -ne 0) {

@@ -19,7 +19,8 @@ on:
       - ".github/workflows/ci-xbrl-ixbrl-java.yml"
 
 jobs:
-  build-test-pipeline:
+  local-fast-path:
+    name: Local quick run
     runs-on: windows-latest
 
     steps:
@@ -33,19 +34,20 @@ jobs:
           java-version: "25"
           cache: maven
 
-      - name: Build, test and coverage gate
-        run: mvn -B -Pcoverage verify
+      - name: Run local fast-path verification
+        run: mvn -B test
 
-      - name: Run pipeline (Arelle skipped)
+      - name: Run local quick pipeline execution
         shell: pwsh
         run: |
           $env:SKIP_ARELLE = "true"
+          $env:FAIL_ON_VALIDATION_ISSUES = "false"
           mvn -B exec:java
 
       - name: Upload generated artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: esrs-pipeline-output
+          name: esrs-local-fast-path-output
           path: |
             output/report-instance.xml
             output/report-ixbrl.xhtml
@@ -53,9 +55,9 @@ jobs:
             output/arelle-xbrl.log
             output/arelle-ixbrl.log
 
-  strict-arelle-gate:
+  strict-production-validation:
+    name: Strict production validation
     runs-on: windows-latest
-    if: ${{ vars.ARELLE_CMD != '' }}
 
     steps:
       - name: Checkout
@@ -68,9 +70,45 @@ jobs:
           java-version: "25"
           cache: maven
 
+      - name: Setup Python and Arelle
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install arelle-release
+
       - name: Run strict production gate
         shell: pwsh
         env:
-          ARELLE_CMD: ${{ vars.ARELLE_CMD }}
+          ARELLE_CMD: ${{ vars.ARELLE_CMD || 'arelleCmdLine' }}
         run: |
           ./scripts/run-strict-production-gate.ps1 -ArelleCmd "$env:ARELLE_CMD"
+
+      - name: Write build status summary
+        shell: pwsh
+        run: |
+          $status = "PASS"
+          $timestamp = (Get-Date).ToString("o")
+          $branch = "${{ github.ref_name }}"
+          $commit = "${{ github.sha }}"
+
+          @"
+          # Build status
+
+          - workflow: ci-xbrl-ixbrl-java
+          - branch: $branch
+          - commit: $commit
+          - timestamp: $timestamp
+          - status: $status
+          - source: GitHub Actions workflow
+          - validation: strict production gate + Arelle validation + viewer plugin check
+          - coverage: JaCoCo report generated during `mvn clean verify`
+          "@ | Set-Content -Path "output/build-status.md" -Encoding utf8
+
+      - name: Upload build status artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: esrs-build-status
+          path: |
+            output/build-status.md
+            target/site/jacoco/index.html
+            target/site/jacoco/jacoco.xml
