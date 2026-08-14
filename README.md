@@ -139,6 +139,7 @@ Danach findest du die Dateien unter `output/`:
 - `taxonomy-visualization-dimension-cooccurrence.html` fuer Analyse haeufiger Dimensionspaarungen
 - `taxonomy-visualization-default-member-quality.html` fuer Default-Member-Qualitaetschecks
 - `taxonomy-visualization-enum-domain-validity.html` fuer Domain- und Allowed-Value-Uebersicht
+- `taxonomy-visualization-external-schemas.html` fuer externe Schema-Namespaces, Typen und Substitution Groups
 - `taxonomy-visualization-dashboard.html` als zentraler Einstieg mit globaler Suche/Filterung
 
 Der aktuelle Explorer liefert derzeit 29 HTML-Ansichten plus die zentrale Startseite:
@@ -170,8 +171,9 @@ Der aktuelle Explorer liefert derzeit 29 HTML-Ansichten plus die zentrale Starts
 25. Dimension Co-Occurrence: Haeufigkeitsanalyse von Dimensionspaaren ueber Hypercubes
 26. Default Member Quality: Status je Dimension fuer fehlende/mehrfache Defaults
 27. Enum Domain Validity: Enumeration-Domain-Konsistenz und Value-Transparenz
-28. Master Dashboard: Zentrale Hub-Seite mit globaler Suche und Themenfiltern
-29. Indexseite: zentrale Landingpage mit Verlinkung aller Analyseansichten
+28. External Schemas: Filterbare und sortierbare Tabellen fuer Namespaces, XSD-Typen und Substitution Groups
+29. Master Dashboard: Zentrale Hub-Seite mit globaler Suche und Themenfiltern
+30. Indexseite: zentrale Landingpage mit Verlinkung aller Analyseansichten
 
 ## Visualisierungen lesen und verstehen
 

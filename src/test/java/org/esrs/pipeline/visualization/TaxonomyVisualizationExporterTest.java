@@ -258,6 +258,11 @@ class TaxonomyVisualizationExporterTest {
         assertFalse(externalSchemas.contains("externalSchemaSearch"));
         assertFalse(externalSchemas.contains("External Schema Dependency Graph"));
         assertTrue(externalSchemas.contains("Analysierte XSD-Typen"));
+        assertTrue(externalSchemas.contains("Substitution Groups"));
+        assertTrue(externalSchemas.contains("Substitution-Group-Tabelle"));
+        assertTrue(externalSchemas.contains("externalSubstitutionTable"));
+        assertTrue(externalSchemas.contains("externalSubstitutionSearch"));
+        assertTrue(externalSchemas.contains("externalSubstitutionGroup"));
         assertTrue(externalSchemas.contains("Typ-Inventar"));
         assertTrue(externalSchemas.contains("domainItemType"));
         assertTrue(externalSchemas.contains("enumeration"));
