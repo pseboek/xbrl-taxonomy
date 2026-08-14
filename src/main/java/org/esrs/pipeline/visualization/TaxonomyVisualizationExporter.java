@@ -3306,7 +3306,8 @@ public class TaxonomyVisualizationExporter {
             .append(summaryCard("XSD-Importe", edges.size()))
             .append(summaryCard("Substitution Groups", externalSchemaSubstitutions.size()))
             .append("</div>")
-            .append("<section><h2>Substitution-Group-Tabelle</h2><div class=\"toolbar\"><input id=\"externalSubstitutionSearch\" type=\"search\" placeholder=\"Element, Gruppe, Typ oder Namespace suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Gruppe <select id=\"externalSubstitutionGroup\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
+            .append("<nav class=\"view-jump-links\" aria-label=\"Externe Schema-Auswertungen\"><strong>Schnellzugriff:</strong> <a href=\"#externalSubstitutions\">Substitution Groups</a> <a href=\"#externalImports\">Import-/Include-Matrix</a> <a href=\"#externalRankings\">Typ-Rankings</a> <a href=\"#externalFacets\">Facet-/Enumeration-Analyse</a> <a href=\"#externalTypes\">Typ-Inventar</a> <a href=\"#externalNamespaces\">Namespace-Liste</a></nav>")
+            .append("<section id=\"externalSubstitutions\"><h2>Substitution-Group-Tabelle</h2><div class=\"toolbar\"><input id=\"externalSubstitutionSearch\" type=\"search\" placeholder=\"Element, Gruppe, Typ oder Namespace suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Gruppe <select id=\"externalSubstitutionGroup\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         externalSchemaSubstitutions.stream().map(ExternalSchemaSubstitution::substitutionGroup).distinct().sorted().forEach(group -> body.append("<option value=\"")
             .append(escapeHtml(group)).append("\">").append(escapeHtml(group)).append("</option>"));
         body.append("</select></label></div><table id=\"externalSubstitutionTable\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"0\">Substitution Group</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"1\">Element</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"2\">Typ</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"3\">Namespace</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"4\">Abstrakt</button></th></tr></thead><tbody>");
@@ -3319,7 +3320,7 @@ public class TaxonomyVisualizationExporter {
         }
         if (externalSchemaSubstitutions.isEmpty()) body.append("<tr><td colspan=\"5\">Keine substitutionGroup-Elemente gefunden.</td></tr>");
         body.append("</tbody></table></section>")
-            .append("<section><h2>Import-/Include-Matrix</h2><p class=\"lead\">Zeilen importieren oder inkludieren die in den Spalten aufgefuehrten Namespaces bzw. SchemaLocations.</p><div class=\"table-scroll\"><table id=\"externalImportMatrix\" class=\"layout-table\"><thead><tr><th>Quelle \\ Ziel</th>");
+            .append("<section id=\"externalImports\"><h2>Import-/Include-Matrix</h2><p class=\"lead\">Zeilen importieren oder inkludieren die in den Spalten aufgefuehrten Namespaces bzw. SchemaLocations.</p><div class=\"table-scroll\"><table id=\"externalImportMatrix\" class=\"layout-table\"><thead><tr><th>Quelle \\ Ziel</th>");
         Set<String> matrixNamespaces = new TreeSet<>();
         for (ExternalSchemaEdge edge : edges) {
             matrixNamespaces.add(edge.source());
@@ -3340,7 +3341,7 @@ public class TaxonomyVisualizationExporter {
         }
         if (matrixNamespaces.isEmpty()) body.append("<tr><td>Keine Import-/Include-Kanten gefunden.</td></tr>");
         body.append("</tbody></table></div></section>")
-            .append("<section><h2>Typkategorie- und Basistyp-Ranking</h2><div class=\"split-grid\"><div><h3>Typkategorien</h3><table id=\"externalTypeCategoryRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeCategoryRanking\" data-sort-column=\"0\">Kategorie</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeCategoryRanking\" data-sort-column=\"1\">Anzahl</button></th><th>Anteil</th></tr></thead><tbody>");
+            .append("<section id=\"externalRankings\"><h2>Typkategorie- und Basistyp-Ranking</h2><div class=\"split-grid\"><div><h3>Typkategorien</h3><table id=\"externalTypeCategoryRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeCategoryRanking\" data-sort-column=\"0\">Kategorie</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeCategoryRanking\" data-sort-column=\"1\">Anzahl</button></th><th>Anteil</th></tr></thead><tbody>");
         Map<String, Long> categoryCounts = types.stream().collect(Collectors.groupingBy(ExternalSchemaType::category, TreeMap::new, Collectors.counting()));
         for (Map.Entry<String, Long> entry : categoryCounts.entrySet()) {
             body.append("<tr><td>").append(escapeHtml(entry.getKey())).append("</td><td>").append(entry.getValue()).append("</td><td>")
@@ -3354,7 +3355,7 @@ public class TaxonomyVisualizationExporter {
             .append(formatPercentage(entry.getValue(), types.size())).append("</td></tr>"));
         if (baseCounts.isEmpty()) body.append("<tr><td colspan=\"3\">Keine Basistypen vorhanden.</td></tr>");
         body.append("</tbody></table></div></div></section>")
-            .append("<section><h2>Facet-/Enumeration-Analyse</h2><div class=\"split-grid\"><div><h3>Facet-Haeufigkeit</h3><table id=\"externalFacetRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalFacetRanking\" data-sort-column=\"0\">Facet</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalFacetRanking\" data-sort-column=\"1\">Typen</button></th></tr></thead><tbody>");
+            .append("<section id=\"externalFacets\"><h2>Facet-/Enumeration-Analyse</h2><div class=\"split-grid\"><div><h3>Facet-Haeufigkeit</h3><table id=\"externalFacetRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalFacetRanking\" data-sort-column=\"0\">Facet</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalFacetRanking\" data-sort-column=\"1\">Typen</button></th></tr></thead><tbody>");
         Map<String, Long> facetCounts = new TreeMap<>();
         for (ExternalSchemaType type : types) {
             for (String facet : splitFacets(type.facets())) {
@@ -3372,7 +3373,7 @@ public class TaxonomyVisualizationExporter {
                 .append(entry.getValue()).append("</td></tr>"));
         if (types.stream().noneMatch(type -> enumerationSize(type.facets()) >= 0)) body.append("<tr><td colspan=\"2\">Keine Enumerationen vorhanden.</td></tr>");
         body.append("</tbody></table></div></div></section>")
-            .append("<section><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
+            .append("<section id=\"externalTypes\"><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
             .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
         body.append("</select></label><label class=\"filter\">Status <select id=\"externalTypeStatus\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option><option value=\"loaded\">geladen</option><option value=\"unavailable\">nicht verfügbar</option><option value=\"parse error\">Parse-Fehler</option></select></label><button type=\"button\" class=\"secondary\" onclick=\"resetExternalSchemaTypeFilters()\">Filter zurücksetzen</button></div>")
@@ -3387,7 +3388,7 @@ public class TaxonomyVisualizationExporter {
         }
         if (types.isEmpty()) body.append("<tr><td colspan=\"5\">Keine externen XSD-Typen analysiert.</td></tr>");
         body.append("</tbody></table></section>")
-            .append("<section><h2>Namespace-Liste</h2><div class=\"toolbar\"><input id=\"externalNamespaceSearch\" type=\"search\" placeholder=\"Namespace, Location oder Quelle suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Typ <select id=\"externalNamespaceKind\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
+            .append("<section id=\"externalNamespaces\"><h2>Namespace-Liste</h2><div class=\"toolbar\"><input id=\"externalNamespaceSearch\" type=\"search\" placeholder=\"Namespace, Location oder Quelle suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Typ <select id=\"externalNamespaceKind\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         references.stream().map(ExternalSchemaReference::kind).distinct().sorted().forEach(kind -> body.append("<option value=\"")
             .append(escapeHtml(kind)).append("\">").append(escapeHtml(kind)).append("</option>"));
         body.append("</select></label><button type=\"button\" class=\"secondary\" onclick=\"resetExternalNamespaceFilters()\">Filter zurücksetzen</button></div><table id=\"externalNamespaceTable\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"0\">Typ</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"1\">Namespace</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"2\">SchemaLocation/Hinweis</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalNamespaceTable\" data-sort-column=\"3\">Quelle</button></th></tr></thead><tbody>");
