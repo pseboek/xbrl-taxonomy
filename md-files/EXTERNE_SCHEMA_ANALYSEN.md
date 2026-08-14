@@ -19,3 +19,9 @@ Die Daten stammen aus den geladenen externen XSDs und den lokalen ESRS-Taxonomie
 Die Matrix stellt die gefundenen `xsd:import`- und `xsd:include`-Beziehungen gegenueber. Die Zeilen sind die Quellschemata, die Spalten die Zielnamespaces oder SchemaLocations. Eine Zelle kann `import`, `include` oder beide Beziehungen enthalten.
 
 Damit lassen sich zentrale Abhaengigkeiten, isolierte Schemas und auffaellige Include-Ketten schnell erkennen.
+
+## Typkategorie- und Basistyp-Ranking
+
+Die Rankings aggregieren das Typinventar nach Kategorie und Basistyp. Neben der absoluten Anzahl wird der Anteil am gesamten Inventar angezeigt. Die Tabellen koennen ueber die Spaltenkoepfe sortiert werden.
+
+Das Kategorie-Ranking zeigt beispielsweise den Anteil von Enumerationen, komplexen Typen oder Elementen. Das Basistyp-Ranking macht sichtbar, welche XSD- oder XBRL-Basistypen die externen Definitionen dominieren.

@@ -3339,6 +3339,20 @@ public class TaxonomyVisualizationExporter {
         }
         if (matrixNamespaces.isEmpty()) body.append("<tr><td>Keine Import-/Include-Kanten gefunden.</td></tr>");
         body.append("</tbody></table></div></section>")
+            .append("<section><h2>Typkategorie- und Basistyp-Ranking</h2><div class=\"split-grid\"><div><h3>Typkategorien</h3><table id=\"externalTypeCategoryRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeCategoryRanking\" data-sort-column=\"0\">Kategorie</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalTypeCategoryRanking\" data-sort-column=\"1\">Anzahl</button></th><th>Anteil</th></tr></thead><tbody>");
+        Map<String, Long> categoryCounts = types.stream().collect(Collectors.groupingBy(ExternalSchemaType::category, TreeMap::new, Collectors.counting()));
+        for (Map.Entry<String, Long> entry : categoryCounts.entrySet()) {
+            body.append("<tr><td>").append(escapeHtml(entry.getKey())).append("</td><td>").append(entry.getValue()).append("</td><td>")
+                .append(formatPercentage(entry.getValue(), types.size())).append("</td></tr>");
+        }
+        if (categoryCounts.isEmpty()) body.append("<tr><td colspan=\"3\">Keine Typkategorien vorhanden.</td></tr>");
+        body.append("</tbody></table></div><div><h3>Basistypen</h3><table id=\"externalBaseTypeRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalBaseTypeRanking\" data-sort-column=\"0\">Basistyp</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalBaseTypeRanking\" data-sort-column=\"1\">Anzahl</button></th><th>Anteil</th></tr></thead><tbody>");
+        Map<String, Long> baseCounts = types.stream().collect(Collectors.groupingBy(ExternalSchemaType::base, TreeMap::new, Collectors.counting()));
+        baseCounts.entrySet().stream().sorted(Map.Entry.<String, Long>comparingByValue().reversed().thenComparing(Map.Entry.comparingByKey())).forEach(entry -> body.append("<tr><td><code>")
+            .append(escapeHtml(entry.getKey())).append("</code></td><td>").append(entry.getValue()).append("</td><td>")
+            .append(formatPercentage(entry.getValue(), types.size())).append("</td></tr>"));
+        if (baseCounts.isEmpty()) body.append("<tr><td colspan=\"3\">Keine Basistypen vorhanden.</td></tr>");
+        body.append("</tbody></table></div></div></section>")
             .append("<section><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
             .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
@@ -3536,6 +3550,10 @@ public class TaxonomyVisualizationExporter {
             return 0;
         }
         return externalSchemaReferences.stream().filter(ref -> kind.equals(ref.kind())).count();
+    }
+
+    private String formatPercentage(long count, int total) {
+        return total == 0 ? "0.0 %" : String.format(Locale.ROOT, "%.1f %%", count * 100.0 / total);
     }
 
     private String renderEnumDomainValidityHtml(Map<String, List<MappingEntry>> mappingsByConcept,

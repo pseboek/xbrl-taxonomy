@@ -265,6 +265,9 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(externalSchemas.contains("externalSubstitutionGroup"));
         assertTrue(externalSchemas.contains("Import-/Include-Matrix"));
         assertTrue(externalSchemas.contains("externalImportMatrix"));
+        assertTrue(externalSchemas.contains("Typkategorie- und Basistyp-Ranking"));
+        assertTrue(externalSchemas.contains("externalTypeCategoryRanking"));
+        assertTrue(externalSchemas.contains("externalBaseTypeRanking"));
         assertTrue(externalSchemas.contains("Typ-Inventar"));
         assertTrue(externalSchemas.contains("domainItemType"));
         assertTrue(externalSchemas.contains("enumeration"));
