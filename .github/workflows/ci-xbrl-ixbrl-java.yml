@@ -3,20 +3,29 @@ name: ci-xbrl-ixbrl-java
 on:
   push:
     paths:
+      - ".github/workflows/**"
       - "pom.xml"
+      - "checkstyle.xml"
+      - "pmd-ruleset.xml"
       - "src/**"
       - "mapping/**"
       - "templates/**"
       - "scripts/**"
-      - ".github/workflows/ci-xbrl-ixbrl-java.yml"
+      - "xbrl.efrag.org/**"
+      - "META-INF/**"
   pull_request:
     paths:
+      - ".github/workflows/**"
       - "pom.xml"
+      - "checkstyle.xml"
+      - "pmd-ruleset.xml"
       - "src/**"
       - "mapping/**"
       - "templates/**"
       - "scripts/**"
-      - ".github/workflows/ci-xbrl-ixbrl-java.yml"
+      - "xbrl.efrag.org/**"
+      - "META-INF/**"
+  workflow_dispatch:
 
 jobs:
   local-fast-path:
@@ -55,8 +64,8 @@ jobs:
             output/arelle-xbrl.log
             output/arelle-ixbrl.log
 
-  strict-production-validation:
-    name: Strict production validation
+  strict-arelle-gate:
+    name: Strict Arelle gate
     runs-on: windows-latest
 
     steps:
