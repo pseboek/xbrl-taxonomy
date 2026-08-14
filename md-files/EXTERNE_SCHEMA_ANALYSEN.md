@@ -25,3 +25,9 @@ Damit lassen sich zentrale Abhaengigkeiten, isolierte Schemas und auffaellige In
 Die Rankings aggregieren das Typinventar nach Kategorie und Basistyp. Neben der absoluten Anzahl wird der Anteil am gesamten Inventar angezeigt. Die Tabellen koennen ueber die Spaltenkoepfe sortiert werden.
 
 Das Kategorie-Ranking zeigt beispielsweise den Anteil von Enumerationen, komplexen Typen oder Elementen. Das Basistyp-Ranking macht sichtbar, welche XSD- oder XBRL-Basistypen die externen Definitionen dominieren.
+
+## Facet-/Enumeration-Analyse
+
+Die Facet-Tabelle zaehlt, wie oft Constraints wie `length`, `pattern`, `minInclusive` oder `enumeration` in den Typdefinitionen vorkommen. Die Enumeration-Tabelle listet die Typen mit ihrer Anzahl an erlaubten Enumerationswerten, absteigend nach Groesse.
+
+Damit werden stark eingeschraenkte Typen und besonders grosse Wertelisten sichtbar, ohne die einzelnen XSD-Dateien manuell durchsuchen zu muessen.

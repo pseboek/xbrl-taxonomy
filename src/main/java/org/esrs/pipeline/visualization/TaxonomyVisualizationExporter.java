@@ -2,6 +2,7 @@ package org.esrs.pipeline.visualization;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -3353,6 +3354,24 @@ public class TaxonomyVisualizationExporter {
             .append(formatPercentage(entry.getValue(), types.size())).append("</td></tr>"));
         if (baseCounts.isEmpty()) body.append("<tr><td colspan=\"3\">Keine Basistypen vorhanden.</td></tr>");
         body.append("</tbody></table></div></div></section>")
+            .append("<section><h2>Facet-/Enumeration-Analyse</h2><div class=\"split-grid\"><div><h3>Facet-Haeufigkeit</h3><table id=\"externalFacetRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalFacetRanking\" data-sort-column=\"0\">Facet</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalFacetRanking\" data-sort-column=\"1\">Typen</button></th></tr></thead><tbody>");
+        Map<String, Long> facetCounts = new TreeMap<>();
+        for (ExternalSchemaType type : types) {
+            for (String facet : splitFacets(type.facets())) {
+                facetCounts.merge(facet, 1L, Long::sum);
+            }
+        }
+        facetCounts.entrySet().stream().sorted(Map.Entry.<String, Long>comparingByValue().reversed().thenComparing(Map.Entry.comparingByKey())).forEach(entry -> body.append("<tr><td>")
+            .append(escapeHtml(entry.getKey())).append("</td><td>").append(entry.getValue()).append("</td></tr>"));
+        if (facetCounts.isEmpty()) body.append("<tr><td colspan=\"2\">Keine Facets vorhanden.</td></tr>");
+        body.append("</tbody></table></div><div><h3>Enumeration-Groesse</h3><table id=\"externalEnumerationRanking\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalEnumerationRanking\" data-sort-column=\"0\">Typ</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalEnumerationRanking\" data-sort-column=\"1\">Werte</button></th></tr></thead><tbody>");
+        types.stream().map(type -> Map.entry(type, enumerationSize(type.facets())))
+            .filter(entry -> entry.getValue() >= 0)
+            .sorted(Map.Entry.<ExternalSchemaType, Integer>comparingByValue().reversed().thenComparing(entry -> entry.getKey().name()))
+            .forEach(entry -> body.append("<tr><td><code>").append(escapeHtml(entry.getKey().namespace() + ":" + entry.getKey().name())).append("</code></td><td>")
+                .append(entry.getValue()).append("</td></tr>"));
+        if (types.stream().noneMatch(type -> enumerationSize(type.facets()) >= 0)) body.append("<tr><td colspan=\"2\">Keine Enumerationen vorhanden.</td></tr>");
+        body.append("</tbody></table></div></div></section>")
             .append("<section><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
             .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
@@ -3554,6 +3573,21 @@ public class TaxonomyVisualizationExporter {
 
     private String formatPercentage(long count, int total) {
         return total == 0 ? "0.0 %" : String.format(Locale.ROOT, "%.1f %%", count * 100.0 / total);
+    }
+
+    private List<String> splitFacets(String facets) {
+        if (facets == null || facets.isBlank() || "-".equals(facets) || "abstract".equals(facets)) return List.of();
+        return Arrays.stream(facets.split(","))
+            .map(String::trim)
+            .filter(value -> !value.isBlank())
+            .map(value -> value.startsWith("enumeration(") ? "enumeration" : value)
+            .toList();
+    }
+
+    private int enumerationSize(String facets) {
+        if (facets == null) return -1;
+        Matcher matcher = Pattern.compile("enumeration\\((\\d+)\\)").matcher(facets);
+        return matcher.find() ? Integer.parseInt(matcher.group(1)) : -1;
     }
 
     private String renderEnumDomainValidityHtml(Map<String, List<MappingEntry>> mappingsByConcept,
