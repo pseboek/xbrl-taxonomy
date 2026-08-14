@@ -145,7 +145,7 @@ public class TaxonomyVisualizationExporter {
         Files.writeString(dimensionCooccurrenceHtml, renderDimensionCooccurrenceHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(defaultMemberQualityHtml, renderDefaultMemberQualityHtml(metadata), StandardCharsets.UTF_8);
         Files.writeString(enumDomainValidityHtml, renderEnumDomainValidityHtml(mappingsByConcept, metadata), StandardCharsets.UTF_8);
-        Files.writeString(externalSchemasHtml, renderExternalSchemasHtml(metadata.externalSchemaReferences(), metadata.externalSchemaTypes(), metadata.externalSchemaEdges()), StandardCharsets.UTF_8);
+        Files.writeString(externalSchemasHtml, renderExternalSchemasHtml(metadata.externalSchemaReferences(), metadata.externalSchemaTypes(), metadata.externalSchemaEdges(), metadata.externalSchemaSubstitutions()), StandardCharsets.UTF_8);
         Files.writeString(dashboardHtml, renderDashboardHtml(treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, externalSchemasHtml), StandardCharsets.UTF_8);
         Files.writeString(outputHtml, renderOverviewHtml(forest, metadata, mappingsByConcept, layoutSnapshot, treeHtml, graphHtml, layerHtml, matrixHtml, flowHtml, hypercubeHtml, hypercube3dHtml, coverageHtml, enumerationHtml, referenceHtml, calculationHtml, intersectionHtml, validationHtml, allocationHtml, statsHtml, complexityHtml, impactHeatmapHtml, hypercubeDimensionInventoryHtml, mappingFlowHtml, conceptBacklogHtml, scopePeriodHtml, ruleCoverageMatrixHtml, intersectionRiskHtml, traceabilityMatrixHtml, dimensionCooccurrenceHtml, defaultMemberQualityHtml, enumDomainValidityHtml, externalSchemasHtml, dashboardHtml), StandardCharsets.UTF_8);
 
@@ -392,7 +392,7 @@ public class TaxonomyVisualizationExporter {
     private TaxonomyMetadata loadTaxonomyMetadata(Path taxonomyRoot) throws IOException {
         Path taxonomyBase = taxonomyRoot.resolve(TAXONOMY_PATH);
         if (!Files.exists(taxonomyBase)) {
-            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0), Map.of(), List.of(), List.of(), List.of());
+            return new TaxonomyMetadata(0, 0, Map.of(), Map.of(), List.of(), List.of(), Map.of(), Map.of(), Map.of(), new HypercubeMetadata(List.of(), 0), Map.of(), List.of(), List.of(), List.of(), List.of());
         }
 
         long xsdElementCount = 0;
@@ -531,6 +531,7 @@ public class TaxonomyVisualizationExporter {
             .toList();
         ExternalSchemaAnalysis externalSchemaAnalysis = analyzeExternalSchemas(externalSchemaReferences);
         List<ExternalSchemaType> mergedTypes = mergeExternalSchemaTypes(externalSchemaAnalysis.types(), taxonomyBase);
+        List<ExternalSchemaSubstitution> substitutions = mergeExternalSchemaSubstitutions(externalSchemaAnalysis.substitutions(), taxonomyBase);
 
         return new TaxonomyMetadata(
             xsdElementCount,
@@ -546,7 +547,8 @@ public class TaxonomyVisualizationExporter {
             domainMembersByDomain,
             externalSchemaReferences,
             mergedTypes,
-            externalSchemaAnalysis.edges()
+            externalSchemaAnalysis.edges(),
+            substitutions
         );
     }
 
@@ -752,7 +754,7 @@ public class TaxonomyVisualizationExporter {
                             targetNamespace = file.toUri().toString();
                         }
                         List<ExternalSchemaType> localTypes = new ArrayList<>();
-                        collectExternalSchemaTypes(document, targetNamespace, file.toString(), localTypes);
+                        collectExternalSchemaTypes(document, targetNamespace, file.toString(), localTypes, new ArrayList<>());
                         for (ExternalSchemaType type : localTypes) {
                             uniqueTypes.putIfAbsent(type.namespace() + "|" + type.name(), type);
                         }
@@ -770,9 +772,41 @@ public class TaxonomyVisualizationExporter {
         return merged;
     }
 
+    private List<ExternalSchemaSubstitution> mergeExternalSchemaSubstitutions(List<ExternalSchemaSubstitution> externalSubstitutions,
+                                                                                Path taxonomyBase) {
+        Map<String, ExternalSchemaSubstitution> unique = new TreeMap<>();
+        if (externalSubstitutions != null) {
+            for (ExternalSchemaSubstitution substitution : externalSubstitutions) {
+                unique.putIfAbsent(substitution.namespace() + "|" + substitution.element() + "|" + substitution.substitutionGroup(), substitution);
+            }
+        }
+        if (taxonomyBase != null && Files.exists(taxonomyBase)) {
+            try (Stream<Path> stream = Files.walk(taxonomyBase)) {
+                for (Path file : stream.filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".xsd")).toList()) {
+                    try {
+                        Document document = parseXmlText(Files.readString(file, StandardCharsets.UTF_8), file.toString());
+                        String namespace = document.getDocumentElement().getAttribute("targetNamespace");
+                        List<ExternalSchemaSubstitution> local = new ArrayList<>();
+                        collectExternalSchemaSubstitutions(document.getElementsByTagNameNS(XS_NS, "element"), namespace, file.toString(), local);
+                        for (ExternalSchemaSubstitution substitution : local) {
+                            unique.putIfAbsent(substitution.namespace() + "|" + substitution.element() + "|" + substitution.substitutionGroup(), substitution);
+                        }
+                    } catch (IOException ignored) {
+                        // ignore malformed local schema files for the overview
+                    }
+                }
+            } catch (IOException ignored) {
+                // ignore walk failures for the overview
+            }
+        }
+        return new ArrayList<>(unique.values());
+    }
+
     private ExternalSchemaAnalysis analyzeExternalSchemas(List<ExternalSchemaReference> references) {
         List<ExternalSchemaType> types = new ArrayList<>();
         List<ExternalSchemaEdge> edges = new ArrayList<>();
+        List<ExternalSchemaSubstitution> substitutions = new ArrayList<>();
         Map<String, String> responseCache = new HashMap<>();
         for (ExternalSchemaReference reference : references) {
             String location = reference.schemaLocation();
@@ -812,7 +846,7 @@ public class TaxonomyVisualizationExporter {
                 String targetNamespace = root.getAttribute("targetNamespace");
                 if (targetNamespace == null || targetNamespace.isBlank()) targetNamespace = reference.namespace();
                 collectExternalSchemaEdges(document, targetNamespace, location, edges);
-                collectExternalSchemaTypes(document, targetNamespace, location, types);
+                collectExternalSchemaTypes(document, targetNamespace, location, types, substitutions);
             } catch (IOException e) {
                 types.add(new ExternalSchemaType(reference.namespace(), "(XSD nicht parsebar)", "unbekannt", "-", location, "-", "parse error"));
             }
@@ -827,18 +861,34 @@ public class TaxonomyVisualizationExporter {
         }
         List<ExternalSchemaType> deduplicatedTypes = new ArrayList<>(uniqueTypes.values());
         List<ExternalSchemaEdge> deduplicatedEdges = new ArrayList<>(uniqueEdges.values());
+        Map<String, ExternalSchemaSubstitution> uniqueSubstitutions = new TreeMap<>();
+        for (ExternalSchemaSubstitution substitution : substitutions) {
+            uniqueSubstitutions.putIfAbsent(substitution.namespace() + "|" + substitution.element() + "|" + substitution.substitutionGroup(), substitution);
+        }
+        List<ExternalSchemaSubstitution> deduplicatedSubstitutions = new ArrayList<>(uniqueSubstitutions.values());
         deduplicatedTypes.sort(Comparator.comparing(ExternalSchemaType::namespace).thenComparing(ExternalSchemaType::name));
         deduplicatedEdges.sort(Comparator.comparing(ExternalSchemaEdge::source).thenComparing(ExternalSchemaEdge::target));
-        return new ExternalSchemaAnalysis(deduplicatedTypes, deduplicatedEdges);
+        deduplicatedSubstitutions.sort(Comparator.comparing(ExternalSchemaSubstitution::substitutionGroup)
+            .thenComparing(ExternalSchemaSubstitution::namespace).thenComparing(ExternalSchemaSubstitution::element));
+        return new ExternalSchemaAnalysis(deduplicatedTypes, deduplicatedEdges, deduplicatedSubstitutions);
+    }
+
+    private void collectExternalSchemaTypes(Document document,
+                                             String namespace,
+                                             String source,
+                                             List<ExternalSchemaType> types,
+                                             List<ExternalSchemaSubstitution> substitutions) {
+        collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "simpleType"), namespace, source, types, false);
+        collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "complexType"), namespace, source, types, true);
+        collectExternalSchemaElementNodes(document.getElementsByTagNameNS(XS_NS, "element"), namespace, source, types);
+        collectExternalSchemaSubstitutions(document.getElementsByTagNameNS(XS_NS, "element"), namespace, source, substitutions);
     }
 
     private void collectExternalSchemaTypes(Document document,
                                              String namespace,
                                              String source,
                                              List<ExternalSchemaType> types) {
-        collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "simpleType"), namespace, source, types, false);
-        collectExternalSchemaTypeNodes(document.getElementsByTagNameNS(XS_NS, "complexType"), namespace, source, types, true);
-        collectExternalSchemaElementNodes(document.getElementsByTagNameNS(XS_NS, "element"), namespace, source, types);
+        collectExternalSchemaTypes(document, namespace, source, types, new ArrayList<>());
     }
 
     private void collectExternalSchemaTypeNodes(NodeList nodes,
@@ -880,6 +930,25 @@ public class TaxonomyVisualizationExporter {
             }
             String facets = element.hasAttribute("abstract") && Boolean.parseBoolean(element.getAttribute("abstract")) ? "abstract" : "-";
             types.add(new ExternalSchemaType(namespace, name, category, base, source, facets, "loaded"));
+        }
+    }
+
+    private void collectExternalSchemaSubstitutions(NodeList nodes,
+                                                     String namespace,
+                                                     String source,
+                                                     List<ExternalSchemaSubstitution> substitutions) {
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Element element = (Element) nodes.item(i);
+            String substitutionGroup = element.getAttribute("substitutionGroup");
+            if (substitutionGroup == null || substitutionGroup.isBlank()) continue;
+            substitutions.add(new ExternalSchemaSubstitution(
+                namespace,
+                element.getAttribute("name"),
+                element.getAttribute("type"),
+                substitutionGroup,
+                Boolean.parseBoolean(element.getAttribute("abstract")),
+                source
+            ));
         }
     }
 
@@ -3218,7 +3287,8 @@ public class TaxonomyVisualizationExporter {
 
     private String renderExternalSchemasHtml(List<ExternalSchemaReference> externalSchemaReferences,
                                              List<ExternalSchemaType> externalSchemaTypes,
-                                             List<ExternalSchemaEdge> externalSchemaEdges) {
+                                             List<ExternalSchemaEdge> externalSchemaEdges,
+                                             List<ExternalSchemaSubstitution> externalSchemaSubstitutions) {
         StringBuilder body = new StringBuilder();
         List<ExternalSchemaReference> references = externalSchemaReferences == null ? List.of() : externalSchemaReferences;
         List<ExternalSchemaType> types = externalSchemaTypes == null ? List.of() : externalSchemaTypes;
@@ -3233,7 +3303,21 @@ public class TaxonomyVisualizationExporter {
             .append(summaryCard("XBRL Dimensions", countByKind(references, "XBRL dimensions namespace")))
             .append(summaryCard("Analysierte XSD-Typen", types.size()))
             .append(summaryCard("XSD-Importe", edges.size()))
+            .append(summaryCard("Substitution Groups", externalSchemaSubstitutions.size()))
             .append("</div>")
+            .append("<section><h2>Substitution-Group-Tabelle</h2><div class=\"toolbar\"><input id=\"externalSubstitutionSearch\" type=\"search\" placeholder=\"Element, Gruppe, Typ oder Namespace suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Gruppe <select id=\"externalSubstitutionGroup\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
+        externalSchemaSubstitutions.stream().map(ExternalSchemaSubstitution::substitutionGroup).distinct().sorted().forEach(group -> body.append("<option value=\"")
+            .append(escapeHtml(group)).append("\">").append(escapeHtml(group)).append("</option>"));
+        body.append("</select></label></div><table id=\"externalSubstitutionTable\" class=\"layout-table\"><thead><tr><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"0\">Substitution Group</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"1\">Element</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"2\">Typ</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"3\">Namespace</button></th><th><button type=\"button\" class=\"sort-button\" data-sort-table=\"externalSubstitutionTable\" data-sort-column=\"4\">Abstrakt</button></th></tr></thead><tbody>");
+        for (ExternalSchemaSubstitution substitution : externalSchemaSubstitutions) {
+            String search = (substitution.substitutionGroup() + " " + substitution.element() + " " + substitution.type() + " " + substitution.namespace()).toLowerCase(Locale.ROOT);
+            body.append("<tr class=\"external-substitution-row\" data-group=\"").append(escapeHtml(substitution.substitutionGroup())).append("\" data-search=\"")
+                .append(escapeHtml(search)).append("\"><td><code>").append(escapeHtml(substitution.substitutionGroup())).append("</code></td><td><code>")
+                .append(escapeHtml(substitution.element())).append("</code></td><td><code>").append(escapeHtml(substitution.type())).append("</code></td><td><code>")
+                .append(escapeHtml(substitution.namespace())).append("</code></td><td>").append(substitution.abstractElement() ? "ja" : "nein").append("</td></tr>");
+        }
+        if (externalSchemaSubstitutions.isEmpty()) body.append("<tr><td colspan=\"5\">Keine substitutionGroup-Elemente gefunden.</td></tr>");
+        body.append("</tbody></table></section>")
             .append("<section><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
             .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
@@ -3286,6 +3370,9 @@ public class TaxonomyVisualizationExporter {
                 applyExternalSchemaTableFilters();
             }
             function applyExternalSchemaTableFilters(){
+                const substitutionQuery=((document.getElementById('externalSubstitutionSearch')||{}).value||'').toLowerCase().trim();
+                const substitutionGroup=((document.getElementById('externalSubstitutionGroup')||{}).value||'');
+                document.querySelectorAll('.external-substitution-row').forEach(row=>{const match=(!substitutionQuery||(row.dataset.search||'').includes(substitutionQuery))&&(!substitutionGroup||row.dataset.group===substitutionGroup);row.hidden=!match;});
                 const typeQuery=((document.getElementById('externalTypeSearch')||{}).value||'').toLowerCase().trim();
                 const typeCategory=((document.getElementById('externalTypeCategory')||{}).value||'');
                 const typeStatus=((document.getElementById('externalTypeStatus')||{}).value||'');
@@ -5762,7 +5849,8 @@ public class TaxonomyVisualizationExporter {
                                     Map<String, List<String>> domainMembersByDomain,
                                     List<ExternalSchemaReference> externalSchemaReferences,
                                     List<ExternalSchemaType> externalSchemaTypes,
-                                    List<ExternalSchemaEdge> externalSchemaEdges) {
+                                    List<ExternalSchemaEdge> externalSchemaEdges,
+                                    List<ExternalSchemaSubstitution> externalSchemaSubstitutions) {
         private List<String> allLayers() {
             Set<String> layers = new TreeSet<>();
             layers.addAll(fileCountByLayer.keySet());
@@ -5809,6 +5897,14 @@ public class TaxonomyVisualizationExporter {
                                       String status) {
     }
 
+    private record ExternalSchemaSubstitution(String namespace,
+                                              String element,
+                                              String type,
+                                              String substitutionGroup,
+                                              boolean abstractElement,
+                                              String source) {
+    }
+
     private record ExternalSchemaEdge(String source,
                                       String target,
                                       String relation,
@@ -5816,7 +5912,8 @@ public class TaxonomyVisualizationExporter {
     }
 
     private record ExternalSchemaAnalysis(List<ExternalSchemaType> types,
-                                          List<ExternalSchemaEdge> edges) {
+                                          List<ExternalSchemaEdge> edges,
+                                          List<ExternalSchemaSubstitution> substitutions) {
     }
 
     public record VisualizationResult(Path outputPath,

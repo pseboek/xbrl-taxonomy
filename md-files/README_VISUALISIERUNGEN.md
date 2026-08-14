@@ -1,6 +1,10 @@
 # README Visualisierungen: Taxonomy Explorer lesen
 
-Diese Doku erklaert alle 28 Visualisierungsansichten aus dem Taxonomy Explorer:
+Diese Doku erklaert alle 30 Visualisierungsansichten aus dem Taxonomy Explorer:
+
+## Externe Schemas
+
+Die Ansicht `taxonomy-visualization-external-schemas.html` ist eine tabellarische Analyse der referenzierten externen XBRL-Schemata. Die Substitution-Group-Tabelle zeigt Element, Zielgruppe, Typ, Namespace und Abstrakt-Status und kann nach Gruppe, Text und jeder Spalte gefiltert bzw. sortiert werden.
 
 1. Tree
 2. Graph
