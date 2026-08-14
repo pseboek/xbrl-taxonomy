@@ -249,6 +249,13 @@ class TaxonomyVisualizationExporterTest {
 
         String externalSchemas = Files.readString(externalSchemasHtml, StandardCharsets.UTF_8);
         assertTrue(externalSchemas.contains("External Schema References"));
+        assertTrue(externalSchemas.contains("view-jump-links"));
+        assertTrue(externalSchemas.contains("#externalSubstitutions"));
+        assertTrue(externalSchemas.contains("#externalImports"));
+        assertTrue(externalSchemas.contains("#externalRankings"));
+        assertTrue(externalSchemas.contains("#externalFacets"));
+        assertTrue(externalSchemas.contains("#externalTypes"));
+        assertTrue(externalSchemas.contains("#externalNamespaces"));
         assertTrue(externalSchemas.contains("http://www.xbrl.org/dtr/type/2022-03-31"));
         assertTrue(externalSchemas.contains("http://www.xbrl.org/2003/linkbase"));
         assertTrue(externalSchemas.contains("http://www.w3.org/1999/xlink"));
