@@ -171,7 +171,7 @@ Der aktuelle Explorer liefert derzeit 29 HTML-Ansichten plus die zentrale Starts
 25. Dimension Co-Occurrence: Haeufigkeitsanalyse von Dimensionspaaren ueber Hypercubes
 26. Default Member Quality: Status je Dimension fuer fehlende/mehrfache Defaults
 27. Enum Domain Validity: Enumeration-Domain-Konsistenz und Value-Transparenz
-28. External Schemas: Filterbare und sortierbare Tabellen fuer Namespaces, XSD-Typen und Substitution Groups
+28. External Schemas: Filterbare und sortierbare Tabellen fuer Namespaces, XSD-Typen, Substitution Groups und Import-/Include-Matrix
 29. Master Dashboard: Zentrale Hub-Seite mit globaler Suche und Themenfiltern
 30. Indexseite: zentrale Landingpage mit Verlinkung aller Analyseansichten
 

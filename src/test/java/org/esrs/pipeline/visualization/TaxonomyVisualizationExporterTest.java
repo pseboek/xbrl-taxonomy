@@ -263,6 +263,8 @@ class TaxonomyVisualizationExporterTest {
         assertTrue(externalSchemas.contains("externalSubstitutionTable"));
         assertTrue(externalSchemas.contains("externalSubstitutionSearch"));
         assertTrue(externalSchemas.contains("externalSubstitutionGroup"));
+        assertTrue(externalSchemas.contains("Import-/Include-Matrix"));
+        assertTrue(externalSchemas.contains("externalImportMatrix"));
         assertTrue(externalSchemas.contains("Typ-Inventar"));
         assertTrue(externalSchemas.contains("domainItemType"));
         assertTrue(externalSchemas.contains("enumeration"));
