@@ -13,3 +13,9 @@ Die Gruppierung beantwortet insbesondere:
 - Welche Elemente sind abstrakt und damit nicht direkt instanziierbar?
 
 Die Daten stammen aus den geladenen externen XSDs und den lokalen ESRS-Taxonomie-XSDs.
+
+## Import-/Include-Matrix
+
+Die Matrix stellt die gefundenen `xsd:import`- und `xsd:include`-Beziehungen gegenueber. Die Zeilen sind die Quellschemata, die Spalten die Zielnamespaces oder SchemaLocations. Eine Zelle kann `import`, `include` oder beide Beziehungen enthalten.
+
+Damit lassen sich zentrale Abhaengigkeiten, isolierte Schemas und auffaellige Include-Ketten schnell erkennen.

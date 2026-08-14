@@ -3318,6 +3318,27 @@ public class TaxonomyVisualizationExporter {
         }
         if (externalSchemaSubstitutions.isEmpty()) body.append("<tr><td colspan=\"5\">Keine substitutionGroup-Elemente gefunden.</td></tr>");
         body.append("</tbody></table></section>")
+            .append("<section><h2>Import-/Include-Matrix</h2><p class=\"lead\">Zeilen importieren oder inkludieren die in den Spalten aufgefuehrten Namespaces bzw. SchemaLocations.</p><div class=\"table-scroll\"><table id=\"externalImportMatrix\" class=\"layout-table\"><thead><tr><th>Quelle \\ Ziel</th>");
+        Set<String> matrixNamespaces = new TreeSet<>();
+        for (ExternalSchemaEdge edge : edges) {
+            matrixNamespaces.add(edge.source());
+            matrixNamespaces.add(edge.target());
+        }
+        for (String namespace : matrixNamespaces) {
+            body.append("<th><code>").append(escapeHtml(namespace)).append("</code></th>");
+        }
+        body.append("</tr></thead><tbody>");
+        for (String source : matrixNamespaces) {
+            body.append("<tr><th><code>").append(escapeHtml(source)).append("</code></th>");
+            for (String target : matrixNamespaces) {
+                String relation = edges.stream().filter(edge -> source.equals(edge.source()) && target.equals(edge.target()))
+                    .map(ExternalSchemaEdge::relation).distinct().sorted().collect(Collectors.joining(" / "));
+                body.append("<td>").append(relation.isBlank() ? "" : escapeHtml(relation)).append("</td>");
+            }
+            body.append("</tr>");
+        }
+        if (matrixNamespaces.isEmpty()) body.append("<tr><td>Keine Import-/Include-Kanten gefunden.</td></tr>");
+        body.append("</tbody></table></div></section>")
             .append("<section><h2>Typ-Inventar</h2><div class=\"toolbar\"><input id=\"externalTypeSearch\" type=\"search\" placeholder=\"Typ, Namespace, Basistyp oder Facet suchen...\" oninput=\"applyExternalSchemaTableFilters()\"><label class=\"filter\">Kategorie <select id=\"externalTypeCategory\" onchange=\"applyExternalSchemaTableFilters()\"><option value=\"\">Alle</option>");
         types.stream().map(ExternalSchemaType::category).distinct().sorted().forEach(category -> body.append("<option value=\"")
             .append(escapeHtml(category)).append("\">").append(escapeHtml(category)).append("</option>"));
