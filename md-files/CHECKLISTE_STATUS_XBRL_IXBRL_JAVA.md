@@ -1,6 +1,8 @@
 # Checkliste und Statusbericht: XBRL/iXBRL Java-Umsetzung
 
-Stand: 2026-08-07
+Stand: 2026-08-14
+
+Aktualisiert auf den aktuellen Stand von `main`. Die vorhandenen Visualisierungsdateien und jüngsten Optimierungen sind in den Status eingepflegt; offene Punkte wurden nicht als erledigt markiert, wenn sie im aktuellen Repository noch nicht demonstriert wurden.
 
 ## Zweck
 

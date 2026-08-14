@@ -1,6 +1,8 @@
 # KI-Instruktionen: Valide XBRL-Berichte mit Java 25 erstellen
 
-Stand: 2026-07-21
+Stand: 2026-08-14
+
+Aktualisiert nach dem aktuellen Stand von `main` mit den jüngsten Visualisierungs- und Import-Optimierungen. Die Arbeitsaufforderungen bleiben gültig, aber die Vorgaben sind auf den aktuellen Projektkontext abgestimmt.
 
 ## Zweck
 

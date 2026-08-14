@@ -1,6 +1,8 @@
 # Glossar der technischen XBRL- und ESRS-Begriffe
 
-Stand: 2026-07-21
+Stand: 2026-08-14
+
+Aktualisiert nach dem aktuellen Repository-Zustand. Die fachlichen und technischen Begriffe bleiben gültig; die Doku wurde auf den aktuelleren Projektstand und die vorhandenen Output-Artefakte abgestimmt.
 
 Diese Datei ergänzt die technische Gesamtdokumentation um ein kompaktes, praxisnahes Glossar. Jeder Begriff wird mit Bezug auf die Dateien und Strukturen dieses Repositories erklärt.
 

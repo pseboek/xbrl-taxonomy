@@ -1,6 +1,8 @@
 # Projektstruktur-Analyse
 
-Stand: 2026-07-21
+Stand: 2026-08-14
+
+Aktualisiert nach dem aktuellen Git-Stand von `main`, einschließlich der letzten Optimierungen bei Imports und Visualisierungsseiten.
 
 ## Kurzfazit
 

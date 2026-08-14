@@ -1,6 +1,8 @@
 # Technische Grundlagen der ESRS-XBRL-Taxonomie
 
-Stand: 2026-07-21
+Stand: 2026-08-14
+
+Aktualisiert auf den aktuellen Projektstand mit den jüngsten Änderungen an Visualisierungen, Import- und Analysekomponenten. Die fachliche Taxonomie und die technische Struktur bleiben unverändert, die Dokumentation wurde aber auf den aktuellen Repository-Zustand abgeglichen.
 
 Diese Datei erklärt die technische Architektur dieses Projekts so, dass nicht nur die Ordnerstruktur sichtbar ist, sondern auch das zugrundeliegende Modell aus XML, XSD, Namespaces, XBRL-Linkbases, Referenzen, Dimensionslogik und Offline-Auflösung verstanden wird.
 

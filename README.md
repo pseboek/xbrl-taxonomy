@@ -1,5 +1,9 @@
 # ESRS Set1 XBRL Taxonomy - Java 25 Pipeline
 
+Stand: 2026-08-14
+
+Dieser Repository-Stand spiegelt die aktuellen Änderungen auf `main` wider, inklusive aktueller Visualisierungs- und Import-Optimierungen sowie der vorhandenen generierten Output-Dateien unter `output/`.
+
 Dieses Repository enthält:
 
 - das lokale EFRAG ESRS Set-1 Taxonomiepaket,
