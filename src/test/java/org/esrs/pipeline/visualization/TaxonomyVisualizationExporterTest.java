@@ -249,6 +249,9 @@ class TaxonomyVisualizationExporterTest {
 
         String externalSchemas = Files.readString(externalSchemasHtml, StandardCharsets.UTF_8);
         assertTrue(externalSchemas.contains("External Schema References"));
+        assertTrue(externalSchemas.contains("externalSchemaTop"));
+        assertTrue(externalSchemas.contains("back-to-top"));
+        assertTrue(externalSchemas.contains("Nach oben"));
         assertTrue(externalSchemas.contains("view-jump-links"));
         assertTrue(externalSchemas.contains("#externalSubstitutions"));
         assertTrue(externalSchemas.contains("#externalImports"));

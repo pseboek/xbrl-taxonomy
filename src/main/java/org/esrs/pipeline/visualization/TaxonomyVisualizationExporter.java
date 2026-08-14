@@ -3294,7 +3294,7 @@ public class TaxonomyVisualizationExporter {
         List<ExternalSchemaReference> references = externalSchemaReferences == null ? List.of() : externalSchemaReferences;
         List<ExternalSchemaType> types = externalSchemaTypes == null ? List.of() : externalSchemaTypes;
         List<ExternalSchemaEdge> edges = externalSchemaEdges == null ? List.of() : externalSchemaEdges;
-        body.append("<h1>External Schema References</h1>")
+        body.append("<h1 id=\"externalSchemaTop\">External Schema References</h1>")
             .append("<p class=\"lead\">Externe XBRL-Schemata, welche die ESRS-Taxonomie referenziert. Diese Sicht dient als Nachweis der verwendeten Standard-Namespaces und Linkbase-Referenzen.</p>")
             .append("<div class=\"summary\">")
             .append(summaryCard("Externe Schemas", references.size()))
@@ -3406,7 +3406,7 @@ public class TaxonomyVisualizationExporter {
             }
         }
 
-        body.append("</tbody></table></section>");
+        body.append("</tbody></table></section><a class=\"back-to-top\" style=\"position:fixed;right:22px;bottom:22px;z-index:20;background:#17324d;color:#fff;text-decoration:none;border-radius:999px;padding:10px 15px;box-shadow:0 6px 18px rgba(23,50,77,.2);font-weight:600\" href=\"#externalSchemaTop\" aria-label=\"Nach oben springen\">Nach oben</a>");
         return renderPage("External Schema References", body.toString(), renderExternalSchemaTableScript());
     }
 
