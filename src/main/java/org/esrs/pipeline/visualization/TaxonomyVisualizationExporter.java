@@ -2,7 +2,6 @@ package org.esrs.pipeline.visualization;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Arrays;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
