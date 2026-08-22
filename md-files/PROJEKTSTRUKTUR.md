@@ -10,6 +10,12 @@ Dieses Projekt ist ein XBRL-Taxonomy-Paket von EFRAG für die ESRS Set-1 Taxonom
 
 Auf technischer Ebene ist das Projekt eine offline nutzbare, versionierte XBRL-Taxonomie mit zwei Einstiegspunkten: einem vollständigen Paket für die Gesamttaxonomie und einem reduzierten Core-Einstiegspunkt für Grundkonzepte, Labels und References.
 
+## Uebersichtsdiagramm
+
+Das folgende Diagramm aus dem Repository visualisiert die Gesamtstruktur auf einen Blick:
+
+![Projektstruktur Uebersicht](../files/diagram.png)
+
 ## Dokumentationslandkarte
 
 Für eine schnelle Orientierung über die vorhandenen Markdown-Dokumente:

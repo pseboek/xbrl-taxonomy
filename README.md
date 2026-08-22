@@ -17,6 +17,12 @@ Dieses Repository enthält:
 - eine aktuelle Taxonomie-Visualisierungs-Suite mit mehreren HTML-Ansichten,
 - Dokumentation und Checklisten unter `md-files/`.
 
+## Architekturdiagramm
+
+Zur schnellen Orientierung ist ein statisches Diagramm im Repository hinterlegt:
+
+![Projektdiagramm](files/diagram.png)
+
 ## Aktueller Projektstand
 
 Der Ordner `output/` ist bewusst ein Build-/Artifact-Bereich und wird bei jedem Pipeline-Lauf neu erzeugt. Ein lokaler Lauf kann dort generierte Ergebnisse hinterlassen; diese gelten als Artefakte und nicht als Quellcode des Projekts.
