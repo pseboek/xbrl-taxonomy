@@ -11,11 +11,17 @@ Dieser Repository-Stand spiegelt die aktuellen Änderungen auf `main` wider, ink
 Dieses Repository enthält:
 
 - das lokale EFRAG ESRS Set-1 Taxonomiepaket,
+- zusätzlich die Revised ESRS Draft XBRL Taxonomy 2026 als parallel nutzbare Spezifikation,
 - eine Java-25/Maven-Referenzpipeline zur Erzeugung von XBRL und iXBRL,
 - Arelle-basierte Validierung,
 - einen iXBRL-Viewer-Export für eine interaktive HTML-Sicht,
 - eine aktuelle Taxonomie-Visualisierungs-Suite mit mehreren HTML-Ansichten,
 - Dokumentation und Checklisten unter `md-files/`.
+
+Die Übersicht zur neuen Spezifikation liegt unter
+[`md-files/REVISED_ESRS_TAXONOMY_PROJEKTUEBERBLICK.md`](md-files/REVISED_ESRS_TAXONOMY_PROJEKTUEBERBLICK.md). Sie beschreibt Paketstruktur, technische Eckdaten, Unterschiede zur bisherigen ESRS Set 1 Taxonomy, den geplanten Parallelbetrieb, die Eignung der Visualisierungen sowie die Arelle-Prüfung.
+
+Die bisherige Taxonomie bleibt unverändert erhalten. Die neue Fassung wird separat mit eigenem Mapping, passendem `schemaRef` und getrennten Output-Artefakten behandelt. Im Projekt ist derzeit Arelle 2.42.1 enthalten; Arelle 2.45.1 wird für die neue Spezifikation als Zielversion gegen identische Testfälle geprüft.
 
 ## Architekturdiagramm
 

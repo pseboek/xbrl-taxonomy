@@ -1,9 +1,0 @@
-{
-  "booleanItemType": "Boolesk",
-  "dateItemType": "Dato",
-  "stringItemType": "Tekst",
-  "monetaryItemType": "Monetær",
-  "decimalItemType": "Decimal",
-  "pureItemType": "Ren",
-  "sharesItemType": "Aktier"
-}
