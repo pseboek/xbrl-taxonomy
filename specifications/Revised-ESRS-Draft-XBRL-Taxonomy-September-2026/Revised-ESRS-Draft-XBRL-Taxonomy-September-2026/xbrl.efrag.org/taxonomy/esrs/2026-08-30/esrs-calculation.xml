@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<link:linkbase xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.xbrl.org/2003/linkbase http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd http://www.w3.org/1999/xlink http://www.xbrl.org/2003/xlink-2003-12-31.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:link="http://www.xbrl.org/2003/linkbase">
+  <link:roleRef roleURI="https://xbrl.efrag.org/taxonomy/esrs/2026-08-30/roles/role-310500" xlink:href="esrs.xsd#role-310500" xlink:type="simple" />
+  <link:arcroleRef arcroleURI="https://xbrl.org/2023/arcrole/summation-item" xlink:href="https://www.xbrl.org/2023/calculation-1.1.xsd#summation-item" xlink:type="simple" />
+  <link:roleRef roleURI="https://xbrl.efrag.org/taxonomy/esrs/2026-08-30/roles/role-210700" xlink:href="esrs.xsd#role-210700" xlink:type="simple" />
+  <link:calculationLink xlink:type="extended" xlink:role="https://xbrl.efrag.org/taxonomy/esrs/2026-08-30/roles/role-210700">
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalEnergyConsumptionRelatedToTheUndertakingSOwnOperations" xlink:label="loc_esrs_TotalEnergyConsumptionRelatedToTheUndertakingSOwnOperations" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalEnergyConsumptionFromRenewableSources" xlink:label="loc_esrs_TotalEnergyConsumptionFromRenewableSources" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalEnergyConsumptionRelatedToTheUndertakingSOwnOperations" xlink:to="loc_esrs_TotalEnergyConsumptionFromRenewableSources" weight="1" order="4" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalEnergyConsumptionFromNuclearSources" xlink:label="loc_esrs_TotalEnergyConsumptionFromNuclearSources" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalEnergyConsumptionRelatedToTheUndertakingSOwnOperations" xlink:to="loc_esrs_TotalEnergyConsumptionFromNuclearSources" weight="1" order="3" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalEnergyConsumptionFromFossilSources" xlink:label="loc_esrs_TotalEnergyConsumptionFromFossilSources" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalEnergyConsumptionRelatedToTheUndertakingSOwnOperations" xlink:to="loc_esrs_TotalEnergyConsumptionFromFossilSources" weight="1" order="2" />
+  </link:calculationLink>
+  <link:calculationLink xlink:type="extended" xlink:role="https://xbrl.efrag.org/taxonomy/esrs/2026-08-30/roles/role-310500">
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfEmployeesHeadCountAverageOfThePeriod" xlink:label="loc_esrs_TotalNumberOfEmployeesHeadCountAverageOfThePeriod" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfNonGuaranteedHoursEmployeesHeadCountAverageOfThePeriod" xlink:label="loc_esrs_TotalNumberOfNonGuaranteedHoursEmployeesHeadCountAverageOfThePeriod" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalNumberOfEmployeesHeadCountAverageOfThePeriod" xlink:to="loc_esrs_TotalNumberOfNonGuaranteedHoursEmployeesHeadCountAverageOfThePeriod" weight="1" order="4" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfTemporaryHeadCountAverageOfThePeriod" xlink:label="loc_esrs_TotalNumberOfTemporaryHeadCountAverageOfThePeriod" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalNumberOfEmployeesHeadCountAverageOfThePeriod" xlink:to="loc_esrs_TotalNumberOfTemporaryHeadCountAverageOfThePeriod" weight="1" order="3" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfPermanentEmployeesHeadCountAverageOfThePeriod" xlink:label="loc_esrs_TotalNumberOfPermanentEmployeesHeadCountAverageOfThePeriod" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalNumberOfEmployeesHeadCountAverageOfThePeriod" xlink:to="loc_esrs_TotalNumberOfPermanentEmployeesHeadCountAverageOfThePeriod" weight="1" order="2" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfEmployeesHeadCountAtTheEndOfThePeriod" xlink:label="loc_esrs_TotalNumberOfEmployeesHeadCountAtTheEndOfThePeriod" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfNonGuaranteedHoursEmployeesHeadCountAtTheEndOfThePeriod" xlink:label="loc_esrs_TotalNumberOfNonGuaranteedHoursEmployeesHeadCountAtTheEndOfThePeriod" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalNumberOfEmployeesHeadCountAtTheEndOfThePeriod" xlink:to="loc_esrs_TotalNumberOfNonGuaranteedHoursEmployeesHeadCountAtTheEndOfThePeriod" weight="1" order="4" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfTemporaryHeadCountAtTheEndOfThePeriod" xlink:label="loc_esrs_TotalNumberOfTemporaryHeadCountAtTheEndOfThePeriod" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalNumberOfEmployeesHeadCountAtTheEndOfThePeriod" xlink:to="loc_esrs_TotalNumberOfTemporaryHeadCountAtTheEndOfThePeriod" weight="1" order="3" />
+    <link:loc xlink:type="locator" xlink:href="esrs.xsd#esrs_TotalNumberOfPermanentEmployeesHeadCountAtTheEndOfThePeriod" xlink:label="loc_esrs_TotalNumberOfPermanentEmployeesHeadCountAtTheEndOfThePeriod" />
+    <link:calculationArc xlink:type="arc" xlink:arcrole="https://xbrl.org/2023/arcrole/summation-item" xlink:from="loc_esrs_TotalNumberOfEmployeesHeadCountAtTheEndOfThePeriod" xlink:to="loc_esrs_TotalNumberOfPermanentEmployeesHeadCountAtTheEndOfThePeriod" weight="1" order="2" />
+  </link:calculationLink>
+</link:linkbase>
